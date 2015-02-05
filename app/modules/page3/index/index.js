@@ -1,13 +1,10 @@
 
 define('modules/page3/index/index', function (require, exports, module) {
-    var $ = require('$');
-    var manager = require('manager');
+    var $ = require('zepto');
+    var manager = require('../../../models/manager');
     var util = require('util');
     var evt = require('event');
-
-    var _tpl = {
-        main: TEMPLATE.MAIN
-    };
+    var template = require('apptemplate');
 
     var page3Index = {
 
@@ -17,7 +14,7 @@ define('modules/page3/index/index', function (require, exports, module) {
 
         render: function () {
 
-            $('#subcontainer').html(_tpl.main);
+            $('#subcontainer').html(template('page3/index/index')());
 
             this.bindEvent();
         },

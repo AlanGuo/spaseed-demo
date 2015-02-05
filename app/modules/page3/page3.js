@@ -1,21 +1,18 @@
 
 define('modules/page3/page3', function (require, exports, module) {
-    var $ = require('$');
-    var pageManager = require('pageManager');
-    var manager = require('manager');
+    var $ = require('zepto');
+    var pageManager = require('pagemanager');
+    var manager = require('../../models/manager');
     var util = require('util');
     var evt = require('event');
-
-    var _tpl = {
-        main: TEMPLATE.MAIN
-    };
+    var template = require('apptemplate');
 
     var page3 = {
 
         render: function () {
 
             manager.queryPage3({}, function(data) {
-                pageManager.container.html(util.tmpl(_tpl.main, {
+                pageManager.container.html(template('page3/page3')({
                     data: data
                 }));
             });

@@ -1,14 +1,11 @@
 
 define('modules/page2/page2', function (require, exports, module) {
-    var $ = require('$');
-    var pageManager = require('pageManager');
-    var manager = require('manager');
+    var $ = require('zepto');
+    var pageManager = require('pagemanager');
+    var manager = require('../../models/manager');
     var util = require('util');
     var evt = require('event');
-
-    var _tpl = {
-        main: TEMPLATE.MAIN
-    };
+    var template = require('apptemplate');
 
     var page2 = {
 
@@ -19,7 +16,7 @@ define('modules/page2/page2', function (require, exports, module) {
         render: function () {
 
             manager.queryPage2({}, function(data) {
-                pageManager.container.html(util.tmpl(_tpl.main, {
+                pageManager.container.html(template('page2/page2')({
                     data: data
                 }));
             });

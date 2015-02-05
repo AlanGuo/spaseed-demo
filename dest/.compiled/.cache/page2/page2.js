@@ -1,9 +1,9 @@
-/*TMODJS:{"version":2,"md5":"465b405bb54c610031f213aa80661be9"}*/
+/*TMODJS:{"version":3,"md5":"91741ac3744812f00584a2610ce18a2e"}*/
 template('page2/page2',function($data,$filename) {
-'use strict';var $utils=this,$helpers=$utils.$helpers,$escape=$utils.$escape,data=$data.data,$out='';$out+=' <template name="TEMPLATE.MAIN"> <h1>';
+'use strict';var $utils=this,$helpers=$utils.$helpers,$escape=$utils.$escape,data=$data.data,$out='';$out+='<h1>';
 $out+=$escape(data.title);
 $out+='</h1> <div>';
 $out+=$escape(data.description);
-$out+='</div> </template> ';
+$out+='</div> ';
 return new String($out);
 });

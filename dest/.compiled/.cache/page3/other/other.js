@@ -1,2 +1,2 @@
-/*TMODJS:{"version":1,"md5":"1edb1ff4e5274932575c49adc56878ef"}*/
-template('page3/other/other',' <template name="TEMPLATE.MAIN"> <div> This is \'other\' page content </div> </template> ');
+/*TMODJS:{"version":2,"md5":"c9c246fe21a1ba6bd052356635ae87ee"}*/
+template('page3/other/other','<div> This is \'other\' page content </div> ');

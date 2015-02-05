@@ -90,23 +90,20 @@ define("apptemplate", function(require, exports, module) {
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
         return $out += '<h1 data-event="tt_click">', $out += $escape(data.title), $out += "</h1> <div>", 
         $out += $escape(data.description), $out += "</div> ", new String($out);
-    }), /*v:2*/
+    }), /*v:3*/
     template("page2/page2", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
-        return $out += ' <template name="TEMPLATE.MAIN"> <h1>', $out += $escape(data.title), 
-        $out += "</h1> <div>", $out += $escape(data.description), $out += "</div> </template> ", 
-        new String($out);
-    }), /*v:1*/
-    template("page3/index/index", " <template name=\"TEMPLATE.MAIN\"> <div> This is '/page3/index' content </div> </template> "), 
-    /*v:1*/
-    template("page3/other/other", " <template name=\"TEMPLATE.MAIN\"> <div> This is 'other' page content </div> </template> "), 
-    /*v:2*/
+        return $out += "<h1>", $out += $escape(data.title), $out += "</h1> <div>", $out += $escape(data.description), 
+        $out += "</div> ", new String($out);
+    }), /*v:3*/
+    template("page3/index/index", "<div> This is '/page3/index' content </div>"), /*v:2*/
+    template("page3/other/other", "<div> This is 'other' page content </div> "), /*v:4*/
     template("page3/page3", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
-        return $out += ' <template name="TEMPLATE.MAIN"> <h1>', $out += $escape(data.title), 
-        $out += "</h1> <div>", $out += $escape(data.description), $out += '</div> <ul class="menu submenu"> <li><a href="/page3" data-event="nav">/page3/index</a></li> <li><a href="/page3/other" data-event="nav">/page3/other</a></li> </ul> <div id="subcontainer" class="subcontainer"></div> </template> ', 
+        return $out += "<h1>", $out += $escape(data.title), $out += "</h1> <div>", $out += $escape(data.description), 
+        $out += '</div> <ul class="menu submenu"> <li><a href="/page3/index" data-event="nav">/page3/index</a></li> <li><a href="/page3/other" data-event="nav">/page3/other</a></li> </ul> <div id="subcontainer" class="subcontainer"></div> ', 
         new String($out);
     }), module && (module.exports = template);
 });
