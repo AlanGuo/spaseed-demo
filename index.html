@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>spaseed</title>
+    <style>
+    	html,body,a,div,span,ul,li,h1,h2,p{margin: 0; padding: 0}
+    	body {font-family: 'tohoma'}
+    	li {list-style: none}
+    	a {color: #63aa57; text-decoration: none}
+    	#container {position: relative; padding: 50px}
+    	.menu {border-bottom: 1px solid #e1e1e1; padding: 10px}
+    	.menu li {display: inline-block;}
+    	.menu a {display: inline-block; padding: 5px 12px}
+    	.menu .active {background-color: #63b042;}
+    	.menu .active a {color: #fff}
+    	.submenu {border-bottom: none; width:160px; position: absolute; border:1px solid #e1e1e1; margin-top:20px;}
+    	.submenu a {display: block}
+    	.submenu li {display: block; margin: 10px 0}
+    	.submenu .active {background-color: #eee}
+    	.submenu .active a {color: #333}
+    	.subcontainer{margin-left: 180px; padding: 20px}
+    </style>
+</head>
+<body>
+	<div id="pageWrapper">
+		<ul class="menu">
+		    <li><a href="/" data-event="nav">page1</a></li>
+		    <li><a href="/page2" data-event="nav">page2</a></li>
+		    <li><a href="/page3" data-event="nav">page3</a></li>
+		</ul>
+		<div id="container"></div>
+	</div>
+	<!--seajs-->
+	<script type="text/javascript" src="/spm_modules/seajs/2.3.0/dist/sea-debug.js"></script>
+    <script type="text/javascript">
+        seajs.config({
+            base:'/app',
+            alias:{
+                'entry':'/spm_modules/spaseed/1.0.4/main/entry.js',
+                'zepto':'/spm_modules/spaseed/1.0.4/lib/zepto.js'
+            }
+        });
+        seajs.use('/app/main/startup',function(startup){
+            startup.startup();
+        });
+    </script>
+</body>
+</html>

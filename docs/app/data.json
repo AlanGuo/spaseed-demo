@@ -1,0 +1,1506 @@
+{
+    "project": {
+        "name": "spaseed",
+        "description": "a lightweight framework for single-page application",
+        "version": "1.0.0"
+    },
+    "files": {
+        "spaseed\\config\\config.js": {
+            "name": "spaseed\\config\\config.js",
+            "modules": {},
+            "classes": {
+                "spaseedConfig": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "spaseed\\layout\\default.js": {
+            "name": "spaseed\\layout\\default.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "spaseed\\lib\\event.js": {
+            "name": "spaseed\\lib\\event.js",
+            "modules": {},
+            "classes": {
+                "event": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "spaseed\\lib\\jquery-1.10.2.js": {
+            "name": "spaseed\\lib\\jquery-1.10.2.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "spaseed\\lib\\net.js": {
+            "name": "spaseed\\lib\\net.js",
+            "modules": {},
+            "classes": {
+                "net": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "spaseed\\lib\\util.js": {
+            "name": "spaseed\\lib\\util.js",
+            "modules": {},
+            "classes": {
+                "util": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "spaseed\\main\\datamanager.js": {
+            "name": "spaseed\\main\\datamanager.js",
+            "modules": {},
+            "classes": {
+                "dataManager": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "spaseed\\main\\pagemanager.js": {
+            "name": "spaseed\\main\\pagemanager.js",
+            "modules": {},
+            "classes": {
+                "pageManager": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "spaseed\\main\\router.js": {
+            "name": "spaseed\\main\\router.js",
+            "modules": {},
+            "classes": {
+                "router": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {},
+    "classes": {
+        "spaseedConfig": {
+            "name": "spaseedConfig",
+            "shortname": "spaseedConfig",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "spaseed\\config\\config.js",
+            "line": 4,
+            "description": "页面管理参数配置",
+            "static": 1
+        },
+        "event": {
+            "name": "event",
+            "shortname": "event",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "spaseed\\lib\\event.js",
+            "line": 2,
+            "description": "事件管理",
+            "static": 1
+        },
+        "net": {
+            "name": "net",
+            "shortname": "net",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "spaseed\\lib\\net.js",
+            "line": 8,
+            "description": "网络请求",
+            "static": 1
+        },
+        "util": {
+            "name": "util",
+            "shortname": "util",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "spaseed\\lib\\util.js",
+            "line": 6,
+            "description": "工具类",
+            "static": 1
+        },
+        "dataManager": {
+            "name": "dataManager",
+            "shortname": "dataManager",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "spaseed\\main\\datamanager.js",
+            "line": 6,
+            "description": "数据管理",
+            "static": 1
+        },
+        "pageManager": {
+            "name": "pageManager",
+            "shortname": "pageManager",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "spaseed\\main\\pagemanager.js",
+            "line": 8,
+            "description": "页面管理",
+            "static": 1
+        },
+        "router": {
+            "name": "router",
+            "shortname": "router",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "spaseed\\main\\router.js",
+            "line": 8,
+            "description": "路由管理",
+            "static": 1
+        }
+    },
+    "classitems": [
+        {
+            "file": "spaseed\\config\\config.js",
+            "line": 11,
+            "description": "页面模块基础路径",
+            "itemtype": "property",
+            "name": "basePath",
+            "type": "String",
+            "default": "'modules/'",
+            "class": "spaseedConfig"
+        },
+        {
+            "file": "spaseed\\config\\config.js",
+            "line": 19,
+            "description": "页面包裹选择器",
+            "itemtype": "property",
+            "name": "pageWrapper",
+            "type": "String",
+            "default": "'#pageWrapper'",
+            "class": "spaseedConfig"
+        },
+        {
+            "file": "spaseed\\config\\config.js",
+            "line": 27,
+            "description": "页面主容器选择器",
+            "itemtype": "property",
+            "name": "container",
+            "type": "String",
+            "default": "'#container'",
+            "class": "spaseedConfig"
+        },
+        {
+            "file": "spaseed\\config\\config.js",
+            "line": 35,
+            "description": "右侧内容容器选择器",
+            "itemtype": "property",
+            "name": "appArea",
+            "type": "String",
+            "default": "'#appArea'",
+            "class": "spaseedConfig"
+        },
+        {
+            "file": "spaseed\\config\\config.js",
+            "line": 43,
+            "description": "切换页面需要更改class的容器选择器",
+            "itemtype": "property",
+            "name": "classWrapper",
+            "type": "String",
+            "default": "'#container'",
+            "class": "spaseedConfig"
+        },
+        {
+            "file": "spaseed\\config\\config.js",
+            "line": 51,
+            "description": "切换页面需要保留的class",
+            "itemtype": "property",
+            "name": "defaultClass",
+            "type": "String",
+            "default": "''",
+            "class": "spaseedConfig"
+        },
+        {
+            "file": "spaseed\\config\\config.js",
+            "line": 59,
+            "description": "默认标题",
+            "itemtype": "property",
+            "name": "defaultTitle",
+            "type": "String",
+            "default": "'spaseed'",
+            "class": "spaseedConfig"
+        },
+        {
+            "file": "spaseed\\config\\config.js",
+            "line": 67,
+            "description": "导航容器选择器, 在各容器中遍历a标签, 执行选中态匹配",
+            "itemtype": "property",
+            "name": "navContainer",
+            "type": "Array",
+            "default": "['body']",
+            "class": "spaseedConfig"
+        },
+        {
+            "file": "spaseed\\config\\config.js",
+            "line": 75,
+            "description": "导航选中class名",
+            "itemtype": "property",
+            "name": "navActiveClass",
+            "type": "String",
+            "default": "'active'",
+            "class": "spaseedConfig"
+        },
+        {
+            "file": "spaseed\\config\\config.js",
+            "line": 83,
+            "description": "渲染前执行方法",
+            "itemtype": "property",
+            "name": "beforeRender",
+            "type": "Function",
+            "default": "function (controller, action, params) {}",
+            "class": "spaseedConfig"
+        },
+        {
+            "file": "spaseed\\config\\config.js",
+            "line": 92,
+            "description": "扩展路由，优先于框架路由逻辑",
+            "itemtype": "property",
+            "name": "extendRoutes",
+            "type": "Object",
+            "default": "{}",
+            "class": "spaseedConfig"
+        },
+        {
+            "file": "spaseed\\config\\config.js",
+            "line": 100,
+            "description": "改变导航选中态",
+            "itemtype": "property",
+            "name": "changeNavStatus",
+            "type": "Function",
+            "default": "通用方法",
+            "class": "spaseedConfig"
+        },
+        {
+            "file": "spaseed\\config\\config.js",
+            "line": 108,
+            "description": "layout模版",
+            "itemtype": "property",
+            "name": "layout",
+            "type": "Object",
+            "default": "{\n\t\t\t\t\t\t'default': {\n\t\t\t\t\t\t\t'controller': [],\n\t\t\t\t\t\t\t'module': 'spaseed/layout/default'\n\t\t\t\t\t\t}\n\t\t\t\t\t}",
+            "class": "spaseedConfig"
+        },
+        {
+            "file": "spaseed\\config\\config.js",
+            "line": 126,
+            "description": "首页模块名",
+            "itemtype": "property",
+            "name": "root",
+            "type": "String",
+            "default": "'home'",
+            "class": "spaseedConfig"
+        },
+        {
+            "file": "spaseed\\config\\config.js",
+            "line": 134,
+            "description": "css配置",
+            "itemtype": "property",
+            "name": "css",
+            "type": "Object",
+            "default": "{}",
+            "class": "spaseedConfig"
+        },
+        {
+            "file": "spaseed\\config\\config.js",
+            "line": 142,
+            "description": "404提示",
+            "itemtype": "property",
+            "name": "404Html",
+            "type": "String",
+            "default": "'<h2 id=\"tt404\" style=\"text-align:center;padding-top:100px;font-size:20px;line-height:1.5;color:#999\">'+\n\t\t\t\t   ' <p style=\"font-size:44px\">404</p> 您访问的页面没有找到! </h2>'",
+            "class": "spaseedConfig"
+        },
+        {
+            "file": "spaseed\\config\\config.js",
+            "line": 152,
+            "description": "请求错误默认提示文字",
+            "itemtype": "property",
+            "name": "defaultReqErr",
+            "type": "String",
+            "default": "'连接服务器异常，请稍后再试'",
+            "class": "spaseedConfig"
+        },
+        {
+            "file": "spaseed\\config\\config.js",
+            "line": 160,
+            "description": "请求错误回调",
+            "itemtype": "property",
+            "name": "reqErrorHandler",
+            "type": "Function",
+            "default": "null",
+            "class": "spaseedConfig"
+        },
+        {
+            "file": "spaseed\\config\\config.js",
+            "line": 168,
+            "description": "追加的url请求参数",
+            "itemtype": "property",
+            "name": "additionalUrlParam",
+            "type": "Function",
+            "default": "null",
+            "class": "spaseedConfig"
+        },
+        {
+            "file": "spaseed\\layout\\default.js",
+            "line": 2,
+            "description": "默认layout",
+            "class": "event"
+        },
+        {
+            "file": "spaseed\\lib\\event.js",
+            "line": 54,
+            "description": "通用的绑定事件处理",
+            "itemtype": "method",
+            "name": "bindCommonEvent",
+            "params": [
+                {
+                    "name": "要绑定事件的元素",
+                    "description": "",
+                    "type": "Element"
+                },
+                {
+                    "name": "绑定的事件类型",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "事件处理的函数映射",
+                    "description": "",
+                    "type": "Object"
+                },
+                {
+                    "name": "取得事件对应的key的函数",
+                    "description": "",
+                    "type": "Function"
+                }
+            ],
+            "class": "event"
+        },
+        {
+            "file": "spaseed\\lib\\event.js",
+            "line": 76,
+            "description": "支持直接绑定方法",
+            "class": "event"
+        },
+        {
+            "file": "spaseed\\lib\\event.js",
+            "line": 133,
+            "description": "为body添加事件代理",
+            "itemtype": "method",
+            "name": "addCommonEvent",
+            "params": [
+                {
+                    "name": "事件类型",
+                    "description": "",
+                    "type": "Type"
+                },
+                {
+                    "name": "事件处理的函数映射",
+                    "description": "",
+                    "type": "DealFnMap"
+                }
+            ],
+            "class": "event"
+        },
+        {
+            "file": "spaseed\\lib\\jquery-1.10.2.js",
+            "line": 1294,
+            "description": "Create key-value caches of limited size",
+            "return": {
+                "description": "Returns the Object data after storing it on itself with\n\tproperty name the (space-suffixed) string and (if the cache is larger than Expr.cacheLength)\n\tdeleting the oldest entry",
+                "type": "Function(string, Object)"
+            },
+            "class": "net"
+        },
+        {
+            "file": "spaseed\\lib\\jquery-1.10.2.js",
+            "line": 1314,
+            "description": "Mark a function for special use by Sizzle",
+            "params": [
+                {
+                    "name": "fn",
+                    "description": "The function to mark",
+                    "type": "Function"
+                }
+            ],
+            "class": "net"
+        },
+        {
+            "file": "spaseed\\lib\\jquery-1.10.2.js",
+            "line": 1323,
+            "description": "Support testing using an element",
+            "params": [
+                {
+                    "name": "fn",
+                    "description": "Passed the created div and expects a boolean result",
+                    "type": "Function"
+                }
+            ],
+            "class": "net"
+        },
+        {
+            "file": "spaseed\\lib\\jquery-1.10.2.js",
+            "line": 1344,
+            "description": "Adds the same handler for all of the specified attrs",
+            "params": [
+                {
+                    "name": "attrs",
+                    "description": "Pipe-separated list of attributes",
+                    "type": "String"
+                },
+                {
+                    "name": "handler",
+                    "description": "The method that will be applied",
+                    "type": "Function"
+                }
+            ],
+            "class": "net"
+        },
+        {
+            "file": "spaseed\\lib\\jquery-1.10.2.js",
+            "line": 1358,
+            "description": "Checks document order of two siblings",
+            "params": [
+                {
+                    "name": "a",
+                    "description": "",
+                    "type": "Element"
+                },
+                {
+                    "name": "b",
+                    "description": "",
+                    "type": "Element"
+                }
+            ],
+            "return": {
+                "description": "Returns less than 0 if a precedes b, greater than 0 if a follows b",
+                "type": "Number"
+            },
+            "class": "net"
+        },
+        {
+            "file": "spaseed\\lib\\jquery-1.10.2.js",
+            "line": 1387,
+            "description": "Returns a function to use in pseudos for input types",
+            "params": [
+                {
+                    "name": "type",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "net"
+        },
+        {
+            "file": "spaseed\\lib\\jquery-1.10.2.js",
+            "line": 1398,
+            "description": "Returns a function to use in pseudos for buttons",
+            "params": [
+                {
+                    "name": "type",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "net"
+        },
+        {
+            "file": "spaseed\\lib\\jquery-1.10.2.js",
+            "line": 1409,
+            "description": "Returns a function to use in pseudos for positionals",
+            "params": [
+                {
+                    "name": "fn",
+                    "description": "",
+                    "type": "Function"
+                }
+            ],
+            "class": "net"
+        },
+        {
+            "file": "spaseed\\lib\\jquery-1.10.2.js",
+            "line": 1431,
+            "description": "Detect xml",
+            "params": [
+                {
+                    "name": "elem",
+                    "description": "An element or a document",
+                    "type": "Element|Object"
+                }
+            ],
+            "class": "net"
+        },
+        {
+            "file": "spaseed\\lib\\jquery-1.10.2.js",
+            "line": 1445,
+            "description": "Sets document-related variables once based on the current document",
+            "params": [
+                {
+                    "name": "doc",
+                    "description": "An element or document object to use to set the document",
+                    "type": "Element|Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "Returns the current document",
+                "type": "Object"
+            },
+            "class": "net"
+        },
+        {
+            "file": "spaseed\\lib\\jquery-1.10.2.js",
+            "line": 1855,
+            "description": "Document sorting and removing duplicates",
+            "params": [
+                {
+                    "name": "results",
+                    "description": "",
+                    "type": "ArrayLike"
+                }
+            ],
+            "class": "net"
+        },
+        {
+            "file": "spaseed\\lib\\jquery-1.10.2.js",
+            "line": 1884,
+            "description": "Utility function for retrieving the text value of an array of DOM nodes",
+            "params": [
+                {
+                    "name": "elem",
+                    "description": "",
+                    "type": "Array|Element"
+                }
+            ],
+            "class": "net"
+        },
+        {
+            "file": "spaseed\\lib\\net.js",
+            "line": 14,
+            "description": "发起请求",
+            "itemtype": "method",
+            "name": "send",
+            "params": [
+                {
+                    "name": "cgiConfig",
+                    "description": "配置",
+                    "type": "Object"
+                },
+                {
+                    "name": "opt",
+                    "description": "选参",
+                    "type": "Object"
+                }
+            ],
+            "class": "net"
+        },
+        {
+            "file": "spaseed\\lib\\net.js",
+            "line": 74,
+            "description": "GET请求",
+            "itemtype": "method",
+            "name": "get",
+            "params": [
+                {
+                    "name": "url",
+                    "description": "URL",
+                    "type": "String"
+                },
+                {
+                    "name": "data",
+                    "description": "参数",
+                    "type": "Object"
+                },
+                {
+                    "name": "cb",
+                    "description": "回调函数",
+                    "type": "Function"
+                },
+                {
+                    "name": "global",
+                    "description": "是否触发全局 AJAX 事件",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "net"
+        },
+        {
+            "file": "spaseed\\lib\\net.js",
+            "line": 86,
+            "description": "POST请求",
+            "itemtype": "method",
+            "name": "post",
+            "params": [
+                {
+                    "name": "url",
+                    "description": "URL",
+                    "type": "String"
+                },
+                {
+                    "name": "data",
+                    "description": "参数",
+                    "type": "Object"
+                },
+                {
+                    "name": "cb",
+                    "description": "回调函数",
+                    "type": "Function"
+                },
+                {
+                    "name": "global",
+                    "description": "是否触发全局 AJAX 事件",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "net"
+        },
+        {
+            "file": "spaseed\\lib\\util.js",
+            "line": 13,
+            "description": "获取cookie",
+            "itemtype": "method",
+            "name": "get",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "名称",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "class": "util"
+        },
+        {
+            "file": "spaseed\\lib\\util.js",
+            "line": 25,
+            "description": "设置cookie",
+            "itemtype": "method",
+            "name": "set",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "名称",
+                    "type": "String"
+                },
+                {
+                    "name": "value",
+                    "description": "值",
+                    "type": "String"
+                },
+                {
+                    "name": "domain",
+                    "description": "域",
+                    "type": "String"
+                },
+                {
+                    "name": "path",
+                    "description": "路径",
+                    "type": "String"
+                },
+                {
+                    "name": "hour",
+                    "description": "过期时间(小时)",
+                    "type": "String"
+                }
+            ],
+            "class": "util"
+        },
+        {
+            "file": "spaseed\\lib\\util.js",
+            "line": 44,
+            "description": "删除cookie",
+            "itemtype": "method",
+            "name": "del",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "名称",
+                    "type": "String"
+                },
+                {
+                    "name": "domain",
+                    "description": "域",
+                    "type": "String"
+                },
+                {
+                    "name": "path",
+                    "description": "路径",
+                    "type": "String"
+                }
+            ],
+            "class": "util"
+        },
+        {
+            "file": "spaseed\\lib\\util.js",
+            "line": 58,
+            "description": "html模板生成器, =号转义, -号原始输出",
+            "itemtype": "method",
+            "name": "tmpl",
+            "params": [
+                {
+                    "name": "str",
+                    "description": "html模板字符串 | script模版元素Id",
+                    "type": "String"
+                },
+                {
+                    "name": "data",
+                    "description": "用于生成模板的数据对象",
+                    "type": "Object"
+                },
+                {
+                    "name": "mixinTmpl",
+                    "description": "混合模版对象",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "返回 html 字符串",
+                "type": "String"
+            },
+            "example": [
+                " \n\t\tvar careerTmpl = '<div><%=career%></div>';\n\t\tutil.tmpl('<h1><%=user%></h1> <%#careerTmpl%>', {user:'evanyuan', career: '前端工程师'}, {careerTmpl: careerTmpl});"
+            ],
+            "class": "util"
+        },
+        {
+            "file": "spaseed\\lib\\util.js",
+            "line": 109,
+            "description": "将 URL 参数格式转化成对象",
+            "itemtype": "method",
+            "name": "paramsToObject",
+            "params": [
+                {
+                    "name": "queryString",
+                    "description": "要转换的 key-value 字符串，默认为 location.search",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Object"
+            },
+            "class": "util"
+        },
+        {
+            "file": "spaseed\\lib\\util.js",
+            "line": 134,
+            "description": "JSON对象转url字符串",
+            "itemtype": "method",
+            "name": "objectToParams",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "JSON对象",
+                    "type": "Object"
+                },
+                {
+                    "name": "decodeUri",
+                    "description": "url解码",
+                    "type": "Boolean"
+                }
+            ],
+            "return": {
+                "description": "url字符串",
+                "type": "String"
+            },
+            "class": "util"
+        },
+        {
+            "file": "spaseed\\lib\\util.js",
+            "line": 149,
+            "description": "是否移动手机",
+            "itemtype": "method",
+            "name": "isMobile",
+            "return": {
+                "description": "true|false",
+                "type": "Boolean"
+            },
+            "class": "util"
+        },
+        {
+            "file": "spaseed\\lib\\util.js",
+            "line": 158,
+            "description": "是否android",
+            "itemtype": "method",
+            "name": "isAndroid",
+            "return": {
+                "description": "true|false",
+                "type": "Boolean"
+            },
+            "class": "util"
+        },
+        {
+            "file": "spaseed\\lib\\util.js",
+            "line": 168,
+            "description": "是否ios",
+            "itemtype": "method",
+            "name": "isIOS",
+            "return": {
+                "description": "true|false",
+                "type": "Boolean"
+            },
+            "class": "util"
+        },
+        {
+            "file": "spaseed\\lib\\util.js",
+            "line": 177,
+            "description": "获取a标签href相对地址",
+            "itemtype": "method",
+            "name": "getHref",
+            "params": [
+                {
+                    "name": "item",
+                    "description": "dom节点",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "href",
+                "type": "String"
+            },
+            "class": "util"
+        },
+        {
+            "file": "spaseed\\lib\\util.js",
+            "line": 189,
+            "description": "深度拷贝对象",
+            "itemtype": "method",
+            "name": "cloneObject",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "任意对象",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "返回新的拷贝对象",
+                "type": "Object"
+            },
+            "class": "util"
+        },
+        {
+            "file": "spaseed\\lib\\util.js",
+            "line": 205,
+            "description": "插入内部样式",
+            "itemtype": "method",
+            "name": "insertStyle",
+            "params": [
+                {
+                    "name": "rules",
+                    "description": "样式",
+                    "type": "String | Array"
+                },
+                {
+                    "name": "id",
+                    "description": "样式节点Id",
+                    "type": "String"
+                }
+            ],
+            "class": "util"
+        },
+        {
+            "file": "spaseed\\main\\datamanager.js",
+            "line": 23,
+            "description": "公共回调",
+            "itemtype": "method",
+            "name": "commonCb",
+            "params": [
+                {
+                    "name": "ret",
+                    "description": "CGI返回JSON对象",
+                    "type": "Object"
+                },
+                {
+                    "name": "cb",
+                    "description": "成功回调(ret.code == 0)",
+                    "type": "Function"
+                },
+                {
+                    "name": "fail",
+                    "description": "失败回调",
+                    "type": "Function"
+                },
+                {
+                    "name": "tipErr",
+                    "description": "提示公共错误 @default true",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "dataManager"
+        },
+        {
+            "file": "spaseed\\main\\datamanager.js",
+            "line": 42,
+            "description": "获取缓存数据",
+            "itemtype": "method",
+            "name": "get",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "名称",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "缓存数据"
+            },
+            "class": "dataManager"
+        },
+        {
+            "file": "spaseed\\main\\datamanager.js",
+            "line": 52,
+            "description": "设置缓存数据",
+            "itemtype": "method",
+            "name": "set",
+            "params": [
+                {
+                    "name": "name",
+                    "description": "名称",
+                    "type": "String"
+                },
+                {
+                    "name": "value",
+                    "description": "值"
+                }
+            ],
+            "class": "dataManager"
+        },
+        {
+            "file": "spaseed\\main\\datamanager.js",
+            "line": 62,
+            "description": "获取所有缓存数据",
+            "itemtype": "method",
+            "name": "getCache",
+            "return": {
+                "description": "cache 缓存对象"
+            },
+            "class": "dataManager"
+        },
+        {
+            "file": "spaseed\\main\\datamanager.js",
+            "line": 71,
+            "description": "清除所有缓存数据",
+            "itemtype": "method",
+            "name": "clearCache",
+            "class": "dataManager"
+        },
+        {
+            "file": "spaseed\\main\\pagemanager.js",
+            "line": 15,
+            "description": "初始化",
+            "itemtype": "method",
+            "name": "init",
+            "class": "pageManager"
+        },
+        {
+            "file": "spaseed\\main\\pagemanager.js",
+            "line": 20,
+            "description": "页面包裹容器",
+            "itemtype": "property",
+            "name": "pageWrapper",
+            "type": "Object",
+            "class": "pageManager"
+        },
+        {
+            "file": "spaseed\\main\\pagemanager.js",
+            "line": 29,
+            "description": "加载首页",
+            "class": "pageManager"
+        },
+        {
+            "file": "spaseed\\main\\pagemanager.js",
+            "line": 36,
+            "description": "统一加载视图方法",
+            "class": "pageManager"
+        },
+        {
+            "file": "spaseed\\main\\pagemanager.js",
+            "line": 50,
+            "description": "解析路由匹配",
+            "itemtype": "method",
+            "name": "parseMatch",
+            "params": [
+                {
+                    "name": "arr",
+                    "description": "路由匹配到的参数",
+                    "type": "Array"
+                },
+                {
+                    "name": "cb",
+                    "description": "回调函数",
+                    "type": "Function"
+                }
+            ],
+            "class": "pageManager"
+        },
+        {
+            "file": "spaseed\\main\\pagemanager.js",
+            "line": 78,
+            "description": "统一路由处理函数",
+            "itemtype": "method",
+            "name": "loadView",
+            "params": [
+                {
+                    "name": "controller",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "action",
+                    "description": "",
+                    "type": "String"
+                },
+                {
+                    "name": "params",
+                    "description": "",
+                    "type": "Array"
+                }
+            ],
+            "class": "pageManager"
+        },
+        {
+            "file": "spaseed\\main\\pagemanager.js",
+            "line": 122,
+            "description": "页面主容器",
+            "itemtype": "property",
+            "name": "container",
+            "type": "Object",
+            "class": "pageManager"
+        },
+        {
+            "file": "spaseed\\main\\pagemanager.js",
+            "line": 129,
+            "description": "右侧内容容器",
+            "itemtype": "property",
+            "name": "appArea",
+            "type": "Object",
+            "class": "pageManager"
+        },
+        {
+            "file": "spaseed\\main\\pagemanager.js",
+            "line": 136,
+            "description": "切换页面需要更改class的容器",
+            "itemtype": "property",
+            "name": "classWrapper",
+            "type": "Object",
+            "class": "pageManager"
+        },
+        {
+            "file": "spaseed\\main\\pagemanager.js",
+            "line": 226,
+            "description": "通过配置组装css请求\n(单页面模式会有先出dom后出样式的情况，不建议使用这种动态加载方式)",
+            "class": "pageManager"
+        },
+        {
+            "file": "spaseed\\main\\pagemanager.js",
+            "line": 247,
+            "description": "渲染公共模版",
+            "class": "pageManager"
+        },
+        {
+            "file": "spaseed\\main\\pagemanager.js",
+            "line": 275,
+            "description": "渲染视图",
+            "class": "pageManager"
+        },
+        {
+            "file": "spaseed\\main\\pagemanager.js",
+            "line": 300,
+            "description": "渲染404",
+            "itemtype": "method",
+            "name": "render404",
+            "class": "pageManager"
+        },
+        {
+            "file": "spaseed\\main\\pagemanager.js",
+            "line": 310,
+            "description": "设置页面标题",
+            "class": "pageManager"
+        },
+        {
+            "file": "spaseed\\main\\pagemanager.js",
+            "line": 326,
+            "description": "改变导航选中态",
+            "class": "pageManager"
+        },
+        {
+            "file": "spaseed\\main\\pagemanager.js",
+            "line": 365,
+            "description": "页面切换时全局销毁",
+            "class": "pageManager"
+        },
+        {
+            "file": "spaseed\\main\\pagemanager.js",
+            "line": 372,
+            "description": "重置fragment标记(用于强制刷新controller)",
+            "itemtype": "method",
+            "name": "resetFragment",
+            "class": "pageManager"
+        },
+        {
+            "file": "spaseed\\main\\router.js",
+            "line": 14,
+            "description": "初始化",
+            "params": [
+                {
+                    "name": "option",
+                    "description": "参数",
+                    "type": "Object"
+                }
+            ],
+            "itemtype": "method",
+            "name": "init",
+            "class": "router"
+        },
+        {
+            "file": "spaseed\\main\\router.js",
+            "line": 131,
+            "description": "事件监听",
+            "class": "router"
+        },
+        {
+            "file": "spaseed\\main\\router.js",
+            "line": 144,
+            "description": "获取hash值",
+            "itemtype": "method",
+            "name": "getHash",
+            "params": [
+                {
+                    "name": "win",
+                    "description": "窗口对象",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "hash值",
+                "type": "String"
+            },
+            "class": "router"
+        },
+        {
+            "file": "spaseed\\main\\router.js",
+            "line": 155,
+            "description": "获取url片段",
+            "itemtype": "method",
+            "name": "getFragment",
+            "return": {
+                "description": "url片段",
+                "type": "String"
+            },
+            "class": "router"
+        },
+        {
+            "file": "spaseed\\main\\router.js",
+            "line": 180,
+            "description": "监听url变化",
+            "class": "router"
+        },
+        {
+            "file": "spaseed\\main\\router.js",
+            "line": 198,
+            "description": "去除前后#",
+            "class": "router"
+        },
+        {
+            "file": "spaseed\\main\\router.js",
+            "line": 205,
+            "description": "去除前后斜杠",
+            "class": "router"
+        },
+        {
+            "file": "spaseed\\main\\router.js",
+            "line": 212,
+            "description": "导航",
+            "itemtype": "method",
+            "name": "navigate",
+            "params": [
+                {
+                    "name": "url",
+                    "description": "地址",
+                    "type": "String"
+                },
+                {
+                    "name": "slient",
+                    "description": "不改变地址栏",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "replacement",
+                    "description": "替换浏览器的当前会话历史(h5模式时支持)",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "router"
+        },
+        {
+            "file": "spaseed\\main\\router.js",
+            "line": 249,
+            "description": "当前url片段",
+            "itemtype": "property",
+            "name": "fragment",
+            "type": "String",
+            "class": "router"
+        },
+        {
+            "file": "spaseed\\main\\router.js",
+            "line": 260,
+            "description": "低端浏览器设置iframe历史",
+            "class": "router"
+        },
+        {
+            "file": "spaseed\\main\\router.js",
+            "line": 276,
+            "description": "重定向",
+            "itemtype": "method",
+            "name": "redirect",
+            "params": [
+                {
+                    "name": "url",
+                    "description": "地址",
+                    "type": "String"
+                },
+                {
+                    "name": "slient",
+                    "description": "不改变地址栏",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "replacement",
+                    "description": "替换浏览器的当前会话历史(h5模式时支持)",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "router"
+        },
+        {
+            "file": "spaseed\\main\\router.js",
+            "line": 287,
+            "description": "路由匹配",
+            "itemtype": "method",
+            "name": "matchRoute",
+            "params": [
+                {
+                    "name": "rule",
+                    "description": "路由规则",
+                    "type": "String"
+                },
+                {
+                    "name": "url",
+                    "description": "地址",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "参数数组",
+                "type": "Array"
+            },
+            "class": "router"
+        },
+        {
+            "file": "spaseed\\main\\router.js",
+            "line": 316,
+            "description": "扩展路由",
+            "itemtype": "method",
+            "name": "extend",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "路由map",
+                    "type": "Object"
+                }
+            ],
+            "class": "router"
+        },
+        {
+            "file": "spaseed\\main\\router.js",
+            "line": 330,
+            "description": "queryString转对象",
+            "class": "router"
+        },
+        {
+            "file": "spaseed\\main\\router.js",
+            "line": 344,
+            "description": "执行路由匹配的方法",
+            "class": "router"
+        },
+        {
+            "file": "spaseed\\main\\router.js",
+            "line": 352,
+            "description": "加载页面",
+            "itemtype": "method",
+            "name": "loadUrl",
+            "params": [
+                {
+                    "name": "url",
+                    "description": "地址",
+                    "type": "String"
+                }
+            ],
+            "class": "router"
+        }
+    ],
+    "warnings": [
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " spaseed\\lib\\jquery-1.10.2.js:1294"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " spaseed\\lib\\jquery-1.10.2.js:1358"
+        },
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " spaseed\\lib\\jquery-1.10.2.js:1445"
+        },
+        {
+            "message": "Missing item type\n默认layout",
+            "line": " spaseed\\layout\\default.js:2"
+        },
+        {
+            "message": "Missing item type\n支持直接绑定方法",
+            "line": " spaseed\\lib\\event.js:76"
+        },
+        {
+            "message": "Missing item type\nCreate key-value caches of limited size",
+            "line": " spaseed\\lib\\jquery-1.10.2.js:1294"
+        },
+        {
+            "message": "Missing item type\nMark a function for special use by Sizzle",
+            "line": " spaseed\\lib\\jquery-1.10.2.js:1314"
+        },
+        {
+            "message": "Missing item type\nSupport testing using an element",
+            "line": " spaseed\\lib\\jquery-1.10.2.js:1323"
+        },
+        {
+            "message": "Missing item type\nAdds the same handler for all of the specified attrs",
+            "line": " spaseed\\lib\\jquery-1.10.2.js:1344"
+        },
+        {
+            "message": "Missing item type\nChecks document order of two siblings",
+            "line": " spaseed\\lib\\jquery-1.10.2.js:1358"
+        },
+        {
+            "message": "Missing item type\nReturns a function to use in pseudos for input types",
+            "line": " spaseed\\lib\\jquery-1.10.2.js:1387"
+        },
+        {
+            "message": "Missing item type\nReturns a function to use in pseudos for buttons",
+            "line": " spaseed\\lib\\jquery-1.10.2.js:1398"
+        },
+        {
+            "message": "Missing item type\nReturns a function to use in pseudos for positionals",
+            "line": " spaseed\\lib\\jquery-1.10.2.js:1409"
+        },
+        {
+            "message": "Missing item type\nDetect xml",
+            "line": " spaseed\\lib\\jquery-1.10.2.js:1431"
+        },
+        {
+            "message": "Missing item type\nSets document-related variables once based on the current document",
+            "line": " spaseed\\lib\\jquery-1.10.2.js:1445"
+        },
+        {
+            "message": "Missing item type\nDocument sorting and removing duplicates",
+            "line": " spaseed\\lib\\jquery-1.10.2.js:1855"
+        },
+        {
+            "message": "Missing item type\nUtility function for retrieving the text value of an array of DOM nodes",
+            "line": " spaseed\\lib\\jquery-1.10.2.js:1884"
+        },
+        {
+            "message": "Missing item type\n加载首页",
+            "line": " spaseed\\main\\pagemanager.js:29"
+        },
+        {
+            "message": "Missing item type\n统一加载视图方法",
+            "line": " spaseed\\main\\pagemanager.js:36"
+        },
+        {
+            "message": "Missing item type\n通过配置组装css请求\n(单页面模式会有先出dom后出样式的情况，不建议使用这种动态加载方式)",
+            "line": " spaseed\\main\\pagemanager.js:226"
+        },
+        {
+            "message": "Missing item type\n渲染公共模版",
+            "line": " spaseed\\main\\pagemanager.js:247"
+        },
+        {
+            "message": "Missing item type\n渲染视图",
+            "line": " spaseed\\main\\pagemanager.js:275"
+        },
+        {
+            "message": "Missing item type\n设置页面标题",
+            "line": " spaseed\\main\\pagemanager.js:310"
+        },
+        {
+            "message": "Missing item type\n改变导航选中态",
+            "line": " spaseed\\main\\pagemanager.js:326"
+        },
+        {
+            "message": "Missing item type\n页面切换时全局销毁",
+            "line": " spaseed\\main\\pagemanager.js:365"
+        },
+        {
+            "message": "Missing item type\n事件监听",
+            "line": " spaseed\\main\\router.js:131"
+        },
+        {
+            "message": "Missing item type\n监听url变化",
+            "line": " spaseed\\main\\router.js:180"
+        },
+        {
+            "message": "Missing item type\n去除前后#",
+            "line": " spaseed\\main\\router.js:198"
+        },
+        {
+            "message": "Missing item type\n去除前后斜杠",
+            "line": " spaseed\\main\\router.js:205"
+        },
+        {
+            "message": "Missing item type\n低端浏览器设置iframe历史",
+            "line": " spaseed\\main\\router.js:260"
+        },
+        {
+            "message": "Missing item type\nqueryString转对象",
+            "line": " spaseed\\main\\router.js:330"
+        },
+        {
+            "message": "Missing item type\n执行路由匹配的方法",
+            "line": " spaseed\\main\\router.js:344"
+        }
+    ]
+}

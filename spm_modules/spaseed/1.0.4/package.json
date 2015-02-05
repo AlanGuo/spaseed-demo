@@ -1,0 +1,34 @@
+{
+  "name": "spaseed",
+  "version": "1.0.4",
+  "description": "单页面框架",
+  "keywords": [
+    "one page",
+    "framework",
+    "mobile"
+  ],
+  "author": "ggddll123@qq.com",
+  "homepage": "https://github.com/AlanGuo/spaseed",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AlanGuo/spaseed.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AlanGuo/spaseed/issues"
+  },
+  "license": "MIT",
+  "spm": {
+    "include": "relative",
+    "alias":{
+      "zepto":"lib/zepto.js"
+    },
+    "main": "main/entry.js",
+    "dependencies": {
+    },
+    "devDependencies": {},
+    "tests": "test/*-spec.js",
+    "ignore": [
+    ],
+    "buildArgs": "--ignore jquery"
+  }
+}
