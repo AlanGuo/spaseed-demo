@@ -1,12 +1,5 @@
-define(function(require, exports, module) {
-	var $ = require('zepto');
-	/** 
-	 * 页面管理参数配置
-	 * @class spaseedConfig
-	 * @static
-	 */
-	var config = {
-
+define(function(require, exports,module){
+	var spaseedConfig = {
 		/**
 		 * 页面模块基础路径
 		 * @property basePath
@@ -24,12 +17,12 @@ define(function(require, exports, module) {
 		'pageWrapper': '#pageWrapper',
 
 		/**
-		 * 页面主容器
-		 * @property container
+		 * 右侧内容容器选择器
+		 * @property appArea
 		 * @type String
-		 * @default '#container'
+		 * @default '#appArea'
 		 */
-		'container': '#container',
+		'appArea': '#appArea',
 
 		/**
 		 * 切换页面需要更改class的容器选择器
@@ -191,5 +184,5 @@ define(function(require, exports, module) {
 		 'xhrProgress':true
 	};
 
-	module.exports = config;
-});
+	module.exports = spaseedConfig;
+})

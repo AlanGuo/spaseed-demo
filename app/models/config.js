@@ -1,4 +1,4 @@
-define('models/config', function(require, exports, module) {
+define(function(require, exports, module) {
 
 	//cgi配置
 	var daoConfig = {

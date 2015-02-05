@@ -1,7 +1,6 @@
 define(function(require, exports) {
-
-	var config = require('../config/config');
 	var spaseedEntry = require('entry');
+	var config = require('../config');
 
 	//应用入口函数
     var startup = function () {

@@ -30,6 +30,18 @@ module.exports = function(grunt){
 		      }
 		    }
 		},
+		tmod: {
+	      apptemplate: {
+	        src: ['app/modules/**/*.tpl'],
+	        dest: 'dest/.compiled/apptemplate.js',
+	        options: {
+	        	type:'cmd-concat',
+	            base: 'app/modules',
+	            minify:false,
+	            namespace:'apptemplate'
+	        }
+	      }
+	    },
 		mocha: {
 			all: {
 			  src: ['test/index.html'],
@@ -43,7 +55,8 @@ module.exports = function(grunt){
 	grunt.loadNpmTasks('grunt-qc-watch');
 	grunt.loadNpmTasks('grunt-contrib-yuidoc');
 	grunt.loadNpmTasks('grunt-mocha');
+	grunt.loadNpmTasks('grunt-alan-tmod');
 
-    grunt.registerTask('default',['concat','yuidoc','watch']);
+    grunt.registerTask('default',['concat','yuidoc','tmod','watch']);
     grunt.registerTask('test',['mocha:all']);
 }

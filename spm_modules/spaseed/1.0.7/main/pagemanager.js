@@ -1,10 +1,9 @@
 
 define(function(require, exports, module) {
-	var $ = require('zepto');
+	var $ = require('../lib/zepto');
 	var router = require('./router');
 	var util = require('../lib/util');
-	var spaseedConfig = require('../config/config');
-	var dataManager = require('../lib/datamanager');
+	var spaseedConfig = require('../config.js');
 
 	/** 
 	 * 页面管理
@@ -143,14 +142,19 @@ define(function(require, exports, module) {
 
 			params = params || [];
 
+			/*
+			//渲染公共模版
+			this.renderLayout(controller, action, params);
+			*/
+
 			//存储主要jQuery dom对象
 
-			// *
-			//  * 右侧内容容器
-			//  * @property appArea
-			//  * @type Object
-			 
-			// this.appArea = $(spaseedConfig.appArea);
+			/**
+			 * 右侧内容容器
+			 * @property appArea
+			 * @type Object
+			 */
+			this.appArea = $(spaseedConfig.appArea);
 
 			/**
 			 * 切换页面需要更改class的容器
@@ -169,32 +173,18 @@ define(function(require, exports, module) {
 			var moduleArr = []; 
 
 			//检查是否存在controller模块
-			if (true) {
-				moduleArr.push(controllerId);
-			} else {
-				controllerId = '';
-			}
+			moduleArr.push(controllerId);
 
 			//检查是否存在action模块
 			if (action) {
-				if (false) {
-					_self.render404();
-					return
-				}
 				moduleArr.push(actionId);
 			} else {
 				// 未指明action，默认尝试查询index
+				/*
 				var indexUri = basePath + controller + '/index/index';
-				if (true) {
-					moduleArr.push(indexUri);
-					action = 'index';
-				} else {
-					//未指明action，且controller也不曾定义
-					if (!controllerId) {
-						_self.render404();
-						return
-					}
-				}
+				moduleArr.push(indexUri);
+				action = 'index';
+				*/
 			}
 
 			//需加载的css资源
@@ -206,7 +196,6 @@ define(function(require, exports, module) {
 			//获取页面模块对外接口
 			require.async(moduleArr, function(cObj, aObj) {
 				if(!cObj && !aObj){
-					controllerId = '';
 					_self.render404();
 					return;
 				}
@@ -235,6 +224,8 @@ define(function(require, exports, module) {
 		  		//设置页面标题
 		  		_self.setTitle(cObj, aObj); 
 				
+			},function(){
+				alert();
 			});
 
 		},
@@ -317,12 +308,12 @@ define(function(require, exports, module) {
 		 */
 		render404: function () {
 			var notFound = spaseedConfig.html404;
-			var container = this.container;
+			var container = this.appArea.length ?  this.appArea : this.container;
 			container.html(notFound);
 		},
 		renderError: function (msg) {
 			var htmlError = spaseedConfig.htmlError;
-			var container = this.container;
+			var container = this.appArea.length ?  this.appArea : this.container;
 			container.html(htmlError.replace('{{msg}}',msg));
 		},
 		isEmpty:function(){

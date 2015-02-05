@@ -1,7 +1,7 @@
 define('models/manager', function(require, exports, module) {
-	var dataManager = require('dataManager');
+	var dataManager = require('datamanager');
 	var net = require('net');
-	var config = require('daoConfig');
+	var config = require('config');
 
 	//数据管理
 	var manager = {
