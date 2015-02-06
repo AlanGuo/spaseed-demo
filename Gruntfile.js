@@ -1,4 +1,9 @@
 module.exports = function(grunt){
+	var transport = require('grunt-cmd-transport');
+	var style = transport.style.init(grunt);
+	var text = transport.text.init(grunt);
+	var script = transport.script.init(grunt);
+
 	grunt.initConfig({
 		pkg:grunt.file.readJSON('package.json'),
 		concat:{
@@ -42,6 +47,43 @@ module.exports = function(grunt){
 	        }
 	      }
 	    },
+	    transport : {
+		    options : {
+		        paths : ['.'],
+		        alias: '<%= pkg.spm.alias %>',
+		        debug:false,
+		        parsers : {
+		            '.js' : [script.jsParser],
+		            '.css' : [style.css2jsParser],
+		            '.html' : [text.html2jsParser]
+		        }
+		    },
+		    javascript : {
+		    	files : [
+		            {
+		            	expand:true,
+		                cwd : 'app',
+		                src : '**/*.js',
+		                filter : 'isFile',
+		                dest : '.build'
+		            }
+		        ]
+		    },
+		    style : {
+		        options : {
+		            idleading : 'dist/styles/'
+		        },
+		        files : [
+		            {
+		            	expand : true,
+		                cwd : 'styles',
+		                src : '**/*',
+		                filter : 'isFile',
+		                dest : '.build/styles'
+		            }
+		        ]
+		    }
+        },
 		mocha: {
 			all: {
 			  src: ['test/index.html'],
@@ -56,6 +98,7 @@ module.exports = function(grunt){
 	grunt.loadNpmTasks('grunt-contrib-yuidoc');
 	grunt.loadNpmTasks('grunt-mocha');
 	grunt.loadNpmTasks('grunt-alan-tmod');
+	grunt.loadNpmTasks('grunt-cmd-transport');
 
     grunt.registerTask('default',['concat','yuidoc','tmod','watch']);
     grunt.registerTask('test',['mocha:all']);
