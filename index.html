@@ -34,6 +34,8 @@
 	</div>
 	<!--seajs-->
 	<script type="text/javascript" src="/spm_modules/seajs/2.3.0/dist/sea-debug.js"></script>
+    <!--合并之后的文件-->
+    <!--合并之后的文件-->
     <script type="text/javascript">
         seajs.config({
             base:'/app',
@@ -48,8 +50,8 @@
                 'apptemplate':'/dest/.compiled/apptemplate.js'
             }
         });
-        seajs.use('/app/main/startup',function(startup){
-            startup.startup();
+        seajs.use('main/startup',function(main){
+            main.startup();
         });
     </script>
 </body>
