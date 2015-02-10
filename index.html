@@ -35,22 +35,23 @@
 	<!--seajs-->
 	<script type="text/javascript" src="/spm_modules/seajs/2.3.0/dist/sea-debug.js"></script>
     <!--合并之后的文件-->
+    
     <!--合并之后的文件-->
     <script type="text/javascript">
         seajs.config({
-            base:'/app',
+            base:'/',
             alias:{
-                'entry':'/spm_modules/spaseed/1.0.7/main/entry.js',
-                'pagemanager':'/spm_modules/spaseed/1.0.7/main/pagemanager.js',
-                'util':'/spm_modules/spaseed/1.0.7/lib/util.js',
-                'zepto':'/spm_modules/spaseed/1.0.7/lib/zepto.js',
-                'event':'/spm_modules/spaseed/1.0.7/lib/event.js',
-                'net':'/spm_modules/spaseed/1.0.7/lib/net.js',
-                'datamanager':'/spm_modules/spaseed/1.0.7/lib/datamanager.js',
-                'apptemplate':'/dest/.compiled/apptemplate.js'
+                'entry':'spm_modules/spaseed/1.0.7/main/entry.js',
+                'pagemanager':'spm_modules/spaseed/1.0.7/main/pagemanager.js',
+                'util':'spm_modules/spaseed/1.0.7/lib/util.js',
+                'zepto':'spm_modules/spaseed/1.0.7/lib/zepto.js',
+                'event':'spm_modules/spaseed/1.0.7/lib/event.js',
+                'net':'spm_modules/spaseed/1.0.7/lib/net.js',
+                'datamanager':'spm_modules/spaseed/1.0.7/lib/datamanager.js',
+                'apptemplate':'dest/.compiled/apptemplate.js'
             }
         });
-        seajs.use('main/startup',function(main){
+        seajs.use('app/main/startup',function(main){
             main.startup();
         });
     </script>

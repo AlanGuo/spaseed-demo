@@ -44,14 +44,14 @@ module.exports = function(grunt){
 	    },
         combo: {
 	        options: {
-	        	base:'/app',
-	        	alias:'<%=pkg.spm.alias%>'
+	        	alias:'<%=pkg.spm.alias%>',
+	        	base:'/'
 	        },
 	        build: {
 	            files: [{
 	                expand: true,
 	                cwd: './',
-	                src: 'app/main/startup.js',
+	                src: ['app/main/startup.js'],
 	                dest: 'dest',
 	                ext: '.combo.js'
 	            }]

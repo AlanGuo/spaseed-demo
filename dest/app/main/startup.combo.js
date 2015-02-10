@@ -82,14 +82,15 @@
     window.define = define;
 }(window));
 ;
-define("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/app/config", function(require, exports, module) {
+define("/app/config", function(require, exports, module) {
     var config = {
+        basePath: "/app/modules/",
         root: "page1",
         container: "#container"
     };
     module.exports = config;
 });;
-define("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_modules/spaseed/1.0.7/config", function(require, exports, module) {
+define("/spm_modules/spaseed/1.0.7/config", function(require, exports, module) {
     var spaseedConfig = {
         /**
 		 * 页面模块基础路径
@@ -254,7 +255,7 @@ define("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_module
     };
     module.exports = spaseedConfig;
 });;
-define("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_modules/spaseed/1.0.7/lib/datamanager", function(require, exports, module) {
+define("/spm_modules/spaseed/1.0.7/lib/datamanager", function(require, exports, module) {
     var cache = {};
     /**
 	 * 数据管理
@@ -303,8 +304,8 @@ define("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_module
  * @class event
  * @static
  */
-define("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_modules/spaseed/1.0.7/lib/event", function(require, exports, module) {
-    var util = require("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_modules/spaseed/1.0.7/lib/util");
+define("/spm_modules/spaseed/1.0.7/lib/event", function(require, exports, module) {
+    var util = require("spm_modules/spaseed/1.0.7/lib/util");
     //默认判断是否有事件的函数
     var _defalutJudgeFn = function(elem) {
         return !!elem.getAttribute("data-event");
@@ -477,8 +478,8 @@ define("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_module
     //统一绑定body的代理事件
     exports.addCommonEvent = addCommonEvent;
 });;
-define("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_modules/spaseed/1.0.7/lib/util", function(require, exports, module) {
-    var $ = require("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_modules/spaseed/1.0.7/lib/zepto");
+define("/spm_modules/spaseed/1.0.7/lib/util", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.0.7/lib/zepto");
     window.console = window.console || {
         log: function() {}
     };
@@ -842,7 +843,7 @@ define("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_module
     module.exports = util;
 });;
 /* Zepto v1.1.2 - zepto event ajax form ie - zeptojs.com/license */
-define("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_modules/spaseed/1.0.7/lib/zepto", function(require) {
+define("/spm_modules/spaseed/1.0.7/lib/zepto", function(require) {
     (function(window, undefined) {
         var Zepto = function() {
             var undefined, key, $, classList, emptyArray = [], slice = emptyArray.slice, filter = emptyArray.filter, document = window.document, elementDisplay = {}, classCache = {}, cssNumber = {
@@ -2373,12 +2374,12 @@ define("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_module
     })(window);
     return Zepto;
 });;
-define("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_modules/spaseed/1.0.7/main/entry", function(require, exports, module) {
-    var $ = require("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_modules/spaseed/1.0.7/lib/zepto");
-    var evt = require("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_modules/spaseed/1.0.7/lib/event");
-    var router = require("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_modules/spaseed/1.0.7/main/router");
-    var pageManager = require("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_modules/spaseed/1.0.7/main/pagemanager");
-    var spaseedConfig = require("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_modules/spaseed/1.0.7/config");
+define("/spm_modules/spaseed/1.0.7/main/entry", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.0.7/lib/zepto");
+    var evt = require("spm_modules/spaseed/1.0.7/lib/event");
+    var router = require("spm_modules/spaseed/1.0.7/main/router");
+    var pageManager = require("spm_modules/spaseed/1.0.7/main/pagemanager");
+    var spaseedConfig = require("spm_modules/spaseed/1.0.7/config");
     //spaseed初始化
     var init = function(config) {
         //扩展config
@@ -2429,11 +2430,11 @@ define("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_module
         init: init
     };
 });;
-define("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_modules/spaseed/1.0.7/main/pagemanager", function(require, exports, module) {
-    var $ = require("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_modules/spaseed/1.0.7/lib/zepto");
-    var router = require("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_modules/spaseed/1.0.7/main/router");
-    var util = require("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_modules/spaseed/1.0.7/lib/util");
-    var spaseedConfig = require("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_modules/spaseed/1.0.7/config");
+define("/spm_modules/spaseed/1.0.7/main/pagemanager", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.0.7/lib/zepto");
+    var router = require("spm_modules/spaseed/1.0.7/main/router");
+    var util = require("spm_modules/spaseed/1.0.7/lib/util");
+    var spaseedConfig = require("spm_modules/spaseed/1.0.7/config");
     /** 
 	 * 页面管理
 	 * @class pageManager
@@ -2798,8 +2799,8 @@ define("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_module
     };
     module.exports = pageManager;
 });;
-define("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_modules/spaseed/1.0.7/main/router", function(require, exports, module) {
-    var dataManager = require("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_modules/spaseed/1.0.7/lib/datamanager");
+define("/spm_modules/spaseed/1.0.7/main/router", function(require, exports, module) {
+    var dataManager = require("spm_modules/spaseed/1.0.7/lib/datamanager");
     var docMode = document.documentMode;
     var oldIE = /msie [\w.]+/.test(navigator.userAgent.toLowerCase()) && (!docMode || docMode <= 7);
     var pushState = window.history.pushState;
@@ -2966,11 +2967,11 @@ define("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_module
         },
         back: function() {
             //可恶的硬编码
-            if (/detail/.test(window.location.pathname)) {
-                this.navigate("/");
-            } else {
-                history.back();
-            }
+            // if(/detail/.test(window.location.pathname)){
+            //   this.navigate('/')
+            // }
+            // else{
+            history.back();
         },
         /**
      * 去除前后#
@@ -3140,9 +3141,9 @@ define("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_module
     };
     module.exports = router;
 });;
-define("app/main/startup", function(require, exports) {
-    var spaseedEntry = require("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/spm_modules/spaseed/1.0.7/main/entry");
-    var config = require("/Users/Alan/百度云同步盘/U/projects/github/spaseed-demo/app/config");
+define("/app/main/startup", function(require, exports) {
+    var spaseedEntry = require("spm_modules/spaseed/1.0.7/main/entry");
+    var config = require("app/config");
     //应用入口函数
     var startup = function() {
         //spaseed初始化

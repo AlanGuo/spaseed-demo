@@ -1,7 +1,7 @@
-define('models/manager', function(require, exports, module) {
+define(function(require, exports, module) {
 	var dataManager = require('datamanager');
 	var net = require('net');
-	var config = require('config');
+	var config = require('../config');
 
 	//数据管理
 	var manager = {

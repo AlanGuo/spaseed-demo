@@ -21,14 +21,14 @@
   "spm": {
     "main": "app/main/startup",
     "alias": {
-      "entry": "/spm_modules/spaseed/1.0.7/main/entry",
-      "pagemanager": "/spm_modules/spaseed/1.0.7/main/pagemanager",
-      "util": "/spm_modules/spaseed/1.0.7/lib/util",
-      "zepto": "/spm_modules/spaseed/1.0.7/lib/zepto",
-      "event": "/spm_modules/spaseed/1.0.7/lib/event",
-      "net": "/spm_modules/spaseed/1.0.7/lib/net",
-      "datamanager": "/spm_modules/spaseed/1.0.7/lib/datamanager",
-      "apptemplate": "/dest/.compiled/apptemplate"
+      "entry": "spm_modules/spaseed/1.0.7/main/entry",
+      "pagemanager": "spm_modules/spaseed/1.0.7/main/pagemanager",
+      "util": "spm_modules/spaseed/1.0.7/lib/util",
+      "zepto": "spm_modules/spaseed/1.0.7/lib/zepto",
+      "event": "spm_modules/spaseed/1.0.7/lib/event",
+      "net": "spm_modules/spaseed/1.0.7/lib/net",
+      "datamanager": "spm_modules/spaseed/1.0.7/lib/datamanager",
+      "apptemplate": "dest/.compiled/apptemplate"
     },
     "dependencies": {
       "seajs": "2.3.0",

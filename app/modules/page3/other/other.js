@@ -1,5 +1,5 @@
 
-define('modules/page3/other/other', function (require, exports, module) {
+define(function (require, exports, module) {
     var $ = require('zepto');
     var manager = require('../../../models/manager');
     var util = require('util');
