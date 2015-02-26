@@ -35,9 +35,8 @@ module.exports = function(grunt){
 	        src: ['app/modules/**/*.tpl'],
 	        dest: 'dest/.compiled/apptemplate.js',
 	        options: {
-	        	type:'cmd-concat',
 	            base: 'app/modules',
-	            minify:false,
+	            minify: false,
 	            namespace:'apptemplate'
 	        }
 	      }
@@ -45,15 +44,14 @@ module.exports = function(grunt){
         combo: {
 	        options: {
 	        	alias:'<%=pkg.spm.alias%>',
-	        	base:'/'
+	        	base:'/',
+	        	dest:'dest/app.combo.js'
 	        },
 	        build: {
 	            files: [{
 	                expand: true,
 	                cwd: './',
-	                src: ['app/main/startup.js'],
-	                dest: 'dest',
-	                ext: '.combo.js'
+	                src: ['app/main/startup.js','app/modules/**/*.js']
 	            }]
 	        }
 	    },

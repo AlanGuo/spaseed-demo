@@ -1,2 +1,2 @@
-/*TMODJS:{"version":2,"md5":"c9c246fe21a1ba6bd052356635ae87ee"}*/
+/*TMODJS:{"version":2,"md5":"5c7bb77c1d47ca71b2d6c8488f65aae0"}*/
 template('page3/other/other','<div> This is \'other\' page content </div> ');

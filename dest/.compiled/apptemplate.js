@@ -1,5 +1,5 @@
 /*TMODJS:{"version":"1.0.0"}*/
-define("apptemplate", function(require, exports, module) {
+!function(require, exports, module) {
     function template(filename, content) {
         return (/string|function/.test(typeof content) ? compile : renderFile)(filename, content);
     }
@@ -84,21 +84,21 @@ define("apptemplate", function(require, exports, module) {
         }
         global.template = template;
     }
-    /*v:3*/
+    /*v:2*/
     template("page1/page1", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
         return $out += '<h1 data-event="tt_click">', $out += $escape(data.title), $out += "</h1> <div>", 
         $out += $escape(data.description), $out += "</div> ", new String($out);
-    }), /*v:3*/
+    }), /*v:2*/
     template("page2/page2", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
         return $out += "<h1>", $out += $escape(data.title), $out += "</h1> <div>", $out += $escape(data.description), 
         $out += "</div> ", new String($out);
-    }), /*v:3*/
+    }), /*v:2*/
     template("page3/index/index", "<div> This is '/page3/index' content </div>"), /*v:2*/
-    template("page3/other/other", "<div> This is 'other' page content </div> "), /*v:4*/
+    template("page3/other/other", "<div> This is 'other' page content </div> "), /*v:2*/
     template("page3/page3", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
@@ -106,4 +106,4 @@ define("apptemplate", function(require, exports, module) {
         $out += '</div> <ul class="menu submenu"> <li><a href="/page3/index" data-event="nav">/page3/index</a></li> <li><a href="/page3/other" data-event="nav">/page3/other</a></li> </ul> <div id="subcontainer" class="subcontainer"></div> ', 
         new String($out);
     }), module && (module.exports = template);
-});
+}();
