@@ -179,12 +179,10 @@ define(function(require, exports, module) {
 			if (action) {
 				moduleArr.push(actionId);
 			} else {
-				// 未指明action，默认尝试查询index
-				/*
-				var indexUri = basePath + controller + '/index/index';
+				// 未指明action，默认尝试查询controller
+				var indexUri = basePath + controller + '/' + controller;
 				moduleArr.push(indexUri);
 				action = 'index';
-				*/
 			}
 
 			//需加载的css资源
@@ -224,8 +222,6 @@ define(function(require, exports, module) {
 		  		//设置页面标题
 		  		_self.setTitle(cObj, aObj); 
 				
-			},function(){
-				alert();
 			});
 
 		},

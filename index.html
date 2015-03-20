@@ -26,9 +26,9 @@
 <body>
 	<div id="pageWrapper">
 		<ul class="menu">
-		    <li><a href="/" data-event="nav">page1</a></li>
-		    <li><a href="/page2" data-event="nav">page2</a></li>
-		    <li><a href="/page3" data-event="nav">page3</a></li>
+		    <li><a href="#" data-href="/" data-event="router">page1</a></li>
+		    <li><a href="#" data-href="/page2" data-event="router">page2</a></li>
+		    <li><a href="#" data-href="/page3" data-event="router">page3</a></li>
 		</ul>
 		<div id="container"></div>
 	</div>
@@ -41,13 +41,13 @@
         seajs.config({
             base:'/',
             alias:{
-                'entry':'spm_modules/spaseed/1.0.7/main/entry.js',
-                'pagemanager':'spm_modules/spaseed/1.0.7/main/pagemanager.js',
-                'util':'spm_modules/spaseed/1.0.7/lib/util.js',
-                'zepto':'spm_modules/spaseed/1.0.7/lib/zepto.js',
-                'event':'spm_modules/spaseed/1.0.7/lib/event.js',
-                'net':'spm_modules/spaseed/1.0.7/lib/net.js',
-                'datamanager':'spm_modules/spaseed/1.0.7/lib/datamanager.js',
+                'entry':'spm_modules/spaseed/1.0.9/main/entry.js',
+                'pagemanager':'spm_modules/spaseed/1.0.9/main/pagemanager.js',
+                'util':'spm_modules/spaseed/1.0.9/lib/util.js',
+                'zepto':'spm_modules/spaseed/1.0.9/lib/zepto.js',
+                'event':'spm_modules/spaseed/1.0.9/lib/event.js',
+                'net':'spm_modules/spaseed/1.0.9/lib/net.js',
+                'datamanager':'spm_modules/spaseed/1.0.9/lib/datamanager.js',
                 'apptemplate':'dest/.compiled/apptemplate.js'
             }
         });

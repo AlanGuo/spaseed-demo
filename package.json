@@ -32,7 +32,7 @@
     },
     "dependencies": {
       "seajs": "2.3.0",
-      "spaseed": "1.0.7"
+      "spaseed": "1.0.9"
     }
   }
 }

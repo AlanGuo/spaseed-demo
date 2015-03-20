@@ -209,13 +209,14 @@ define(function(require, exports, module) {
       this.navigate(current, false, true);
     },
     back:function(){
+
         //可恶的硬编码
-        // if(/detail/.test(window.location.pathname)){
-        //   this.navigate('/')
-        // }
-        // else{
-        history.back();
-        //}
+        if(/detail/.test(window.location.pathname)){
+          this.navigate('/')
+        }
+        else{
+          history.back();
+        }
         //if(count -1 >0){
         
            /*
