@@ -21,13 +21,13 @@
   "spm": {
     "main": "app/main/startup",
     "alias": {
-      "entry": "spm_modules/spaseed/1.0.7/main/entry",
-      "pagemanager": "spm_modules/spaseed/1.0.7/main/pagemanager",
-      "util": "spm_modules/spaseed/1.0.7/lib/util",
-      "zepto": "spm_modules/spaseed/1.0.7/lib/zepto",
-      "event": "spm_modules/spaseed/1.0.7/lib/event",
-      "net": "spm_modules/spaseed/1.0.7/lib/net",
-      "datamanager": "spm_modules/spaseed/1.0.7/lib/datamanager",
+      "entry": "spm_modules/spaseed/1.0.9/main/entry",
+      "pagemanager": "spm_modules/spaseed/1.0.9/main/pagemanager",
+      "util": "spm_modules/spaseed/1.0.9/lib/util",
+      "zepto": "spm_modules/spaseed/1.0.9/lib/zepto",
+      "event": "spm_modules/spaseed/1.0.9/lib/event",
+      "net": "spm_modules/spaseed/1.0.9/lib/net",
+      "datamanager": "spm_modules/spaseed/1.0.9/lib/datamanager",
       "apptemplate": "dest/.compiled/apptemplate"
     },
     "dependencies": {
