@@ -69,7 +69,7 @@ module.exports = function(grunt){
 	grunt.loadNpmTasks('grunt-contrib-yuidoc');
 	grunt.loadNpmTasks('grunt-mocha');
 	grunt.loadNpmTasks('grunt-alan-tmod');
-	grunt.loadNpmTasks('grunt-cmd-combo');
+	grunt.loadNpmTasks('grunt-seajs-combo');
 
     grunt.registerTask('default',['concat','yuidoc','tmod','watch']);
     grunt.registerTask('test',['mocha:all']);
