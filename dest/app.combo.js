@@ -1,24 +1,336 @@
 ;
-define("/app/config", function(require, exports, module) {
+define("/app/script/config", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.13/lib/$");
     var spaseedconfig = require("spm_modules/spaseed/1.1.13/config");
     var config = $.extend(spaseedconfig, {
-        basePath: "/app/modules/",
+        basePath: "/app/script/module/",
         root: "page1",
-        container: "#container"
+        container: "#container",
+        html5Mode: true
     });
     module.exports = config;
 });;
-define("/app/entry", function(require, exports) {
+define("/app/script/entry", function(require, exports) {
     var spaseedEntry = require("spm_modules/spaseed/1.1.13/main/entry");
-    var config = require("app/config");
     //应用入口函数
     var startup = function() {
         //spaseed初始化
-        spaseedEntry.init(config);
+        spaseedEntry.init();
     };
     exports.startup = startup;
 });;
+define("/app/script/model/manager", function(require, exports, module) {
+    var dataManager = require("spm_modules/spaseed/1.1.13/lib/datamanager");
+    var net = require("spm_modules/spaseed/1.1.13/lib/net");
+    var config = require("app/script/config");
+    //数据管理
+    var manager = {
+        queryPage1: function(data, cb, fail) {
+            var _self = this, _cb = function(ret) {
+                dataManager.commonCb(ret, cb, fail);
+            };
+            //获取服务端数据
+            /*net.send(config.get('queryPage1'), {
+				data: data,
+				cb: _cb
+			});*/
+            cb({
+                title: "Page 1",
+                description: "This is page 1"
+            });
+        },
+        queryPage2: function(data, cb, fail) {
+            var _self = this, _cb = function(ret) {
+                dataManager.commonCb(ret, cb, fail);
+            };
+            //获取服务端数据
+            /*net.send(config.get('queryPage2'), {
+				data: data,
+				cb: _cb
+			});*/
+            cb({
+                title: "Page 2",
+                description: "This is page 2"
+            });
+        },
+        queryPage3: function(data, cb, fail) {
+            var _self = this, _cb = function(ret) {
+                dataManager.commonCb(ret, cb, fail);
+            };
+            //获取服务端数据
+            /*net.send(config.get('queryPage3'), {
+				data: data,
+				cb: _cb
+			});*/
+            cb({
+                title: "Page 3",
+                description: "This is page 3"
+            });
+        }
+    };
+    module.exports = manager;
+});;
+define("/app/script/module/page1/page1", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.1.13/lib/$");
+    var pageManager = require("spm_modules/spaseed/1.1.13/main/pagemanager");
+    var manager = require("app/script/model/manager");
+    var util = require("spm_modules/spaseed/1.1.13/lib/util");
+    var evt = require("spm_modules/spaseed/1.1.13/lib/event");
+    var template = require("dest/views/apptemplate");
+    var page1 = {
+        title: "page1",
+        pageClass: "",
+        render: function() {
+            manager.queryPage1({}, function(data) {
+                pageManager.container.html(template("page1/page1", {
+                    data: data
+                }));
+            });
+            this.bindEvent();
+        },
+        bindEvent: function() {
+            evt.addCommonEvent("click", {
+                tt_click: function() {
+                    alert($(this).text());
+                }
+            });
+        },
+        destroy: function() {}
+    };
+    module.exports = page1;
+});;
+define("/app/script/module/page2/page2", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.1.13/lib/$");
+    var pageManager = require("spm_modules/spaseed/1.1.13/main/pagemanager");
+    var manager = require("app/script/model/manager");
+    var util = require("spm_modules/spaseed/1.1.13/lib/util");
+    var evt = require("spm_modules/spaseed/1.1.13/lib/event");
+    var template = require("dest/views/apptemplate");
+    var page2 = {
+        title: "page2",
+        pageClass: "",
+        render: function() {
+            manager.queryPage2({}, function(data) {
+                pageManager.container.html(template("page2/page2")({
+                    data: data
+                }));
+            });
+            this.bindEvent();
+        },
+        bindEvent: function() {
+            evt.addCommonEvent("click", {});
+        },
+        destroy: function() {}
+    };
+    module.exports = page2;
+});;
+define("/app/script/module/page3/index/index", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.1.13/lib/$");
+    var manager = require("app/script/model/manager");
+    var util = require("spm_modules/spaseed/1.1.13/lib/util");
+    var evt = require("spm_modules/spaseed/1.1.13/lib/event");
+    var page3 = require("app/script/module/page3/page3");
+    var template = require("dest/views/apptemplate");
+    var page3Index = {
+        title: "page3 index",
+        pageClass: "",
+        render: function() {
+            var $subcontainer = $("#subcontainer");
+            if (!$subcontainer.length) {
+                page3.render();
+                $subcontainer = $("#subcontainer");
+            }
+            $("#subcontainer").html(template("page3/index/index")());
+            this.bindEvent();
+        },
+        bindEvent: function() {
+            evt.addCommonEvent("click", {});
+        },
+        destroy: function() {}
+    };
+    module.exports = page3Index;
+});;
+define("/app/script/module/page3/other/other", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.1.13/lib/$");
+    var manager = require("app/script/model/manager");
+    var util = require("spm_modules/spaseed/1.1.13/lib/util");
+    var evt = require("spm_modules/spaseed/1.1.13/lib/event");
+    var page3 = require("app/script/module/page3/page3");
+    var template = require("dest/views/apptemplate");
+    var page3Other = {
+        title: "page3 other",
+        pageClass: "",
+        render: function() {
+            var $subcontainer = $("#subcontainer");
+            if (!$subcontainer.length) {
+                page3.render();
+                $subcontainer = $("#subcontainer");
+            }
+            $("#subcontainer").html(template("page3/other/other")());
+            this.bindEvent();
+        },
+        bindEvent: function() {
+            evt.addCommonEvent("click", {});
+        },
+        destroy: function() {}
+    };
+    module.exports = page3Other;
+});;
+define("/app/script/module/page3/page3", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.1.13/lib/$");
+    var pageManager = require("spm_modules/spaseed/1.1.13/main/pagemanager");
+    var manager = require("app/script/model/manager");
+    var util = require("spm_modules/spaseed/1.1.13/lib/util");
+    var evt = require("spm_modules/spaseed/1.1.13/lib/event");
+    var template = require("dest/views/apptemplate");
+    var page3 = {
+        render: function() {
+            manager.queryPage3({}, function(data) {
+                pageManager.container.html(template("page3/page3")({
+                    data: data
+                }));
+            });
+            this.bindEvent();
+        },
+        bindEvent: function() {
+            evt.addCommonEvent("click", {});
+        },
+        destroy: function() {}
+    };
+    module.exports = page3;
+});;
+define("/app/script/module/page3/page3", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.1.13/lib/$");
+    var pageManager = require("spm_modules/spaseed/1.1.13/main/pagemanager");
+    var manager = require("app/script/model/manager");
+    var util = require("spm_modules/spaseed/1.1.13/lib/util");
+    var evt = require("spm_modules/spaseed/1.1.13/lib/event");
+    var template = require("dest/views/apptemplate");
+    var page3 = {
+        render: function() {
+            manager.queryPage3({}, function(data) {
+                pageManager.container.html(template("page3/page3")({
+                    data: data
+                }));
+            });
+            this.bindEvent();
+        },
+        bindEvent: function() {
+            evt.addCommonEvent("click", {});
+        },
+        destroy: function() {}
+    };
+    module.exports = page3;
+});;
+/*TMODJS:{"version":"1.0.0"}*/
+!function(require, exports, module) {
+    function template(filename, content) {
+        return (/string|function/.test(typeof content) ? compile : renderFile)(filename, content);
+    }
+    function toString(value, type) {
+        return "string" != typeof value && (type = typeof value, "number" === type ? value += "" : value = "function" === type ? toString(value.call(value)) : ""), 
+        value;
+    }
+    function escapeFn(s) {
+        return escapeMap[s];
+    }
+    function escapeHTML(content) {
+        return toString(content).replace(/&(?![\w#]+;)|[<>"']/g, escapeFn);
+    }
+    function each(data, callback) {
+        if (isArray(data)) for (var i = 0, len = data.length; len > i; i++) callback.call(data, data[i], i, data); else for (i in data) callback.call(data, data[i], i);
+    }
+    function resolve(from, to) {
+        var DOUBLE_DOT_RE = /(\/)[^/]+\1\.\.\1/, dirname = ("./" + from).replace(/[^/]+$/, ""), filename = dirname + to;
+        for (filename = filename.replace(/\/\.\//g, "/"); filename.match(DOUBLE_DOT_RE); ) filename = filename.replace(DOUBLE_DOT_RE, "/");
+        return filename;
+    }
+    function renderFile(filename, data) {
+        var fn = template.get(filename) || showDebugInfo({
+            filename: filename,
+            name: "Render Error",
+            message: "Template not found"
+        });
+        return data ? fn(data) : fn;
+    }
+    function compile(filename, fn) {
+        if ("string" == typeof fn) {
+            var string = fn;
+            fn = function() {
+                return new String(string);
+            };
+        }
+        var render = cache[filename] = function(data) {
+            try {
+                return new fn(data, filename) + "";
+            } catch (e) {
+                return showDebugInfo(e)();
+            }
+        };
+        return render.prototype = fn.prototype = utils, render.toString = function() {
+            return fn + "";
+        }, render;
+    }
+    function showDebugInfo(e) {
+        var type = "{Template Error}", message = e.stack || "";
+        if (message) message = message.split("\n").slice(0, 2).join("\n"); else for (var name in e) message += "<" + name + ">\n" + e[name] + "\n\n";
+        return function() {
+            return "object" == typeof console && console.error(type + "\n\n" + message), type;
+        };
+    }
+    var cache = template.cache = {}, String = window.String, escapeMap = {
+        "<": "&#60;",
+        ">": "&#62;",
+        '"': "&#34;",
+        "'": "&#39;",
+        "&": "&#38;"
+    }, isArray = Array.isArray || function(obj) {
+        return "[object Array]" === {}.toString.call(obj);
+    }, utils = template.utils = {
+        $helpers: {},
+        $include: function(filename, data, from) {
+            return filename = resolve(from, filename), renderFile(filename, data);
+        },
+        $string: toString,
+        $escape: escapeHTML,
+        $each: each
+    }, helpers = template.helpers = utils.$helpers;
+    if (template.get = function(filename) {
+        return cache[filename.replace(/^\.\//, "")];
+    }, template.helper = function(name, helper) {
+        helpers[name] = helper;
+    }, "function" == typeof define) define("/dest/views/apptemplate", function() {
+        return template;
+    }); else if ("undefined" != typeof exports) module.exports = template; else {
+        for (var namespaceArray = "apptemplate".split("."), global = window, i = 0; i < namespaceArray.length; i++) {
+            var item = namespaceArray[i];
+            global[item] = global[item] || {}, global = global[item];
+        }
+        global.template = template;
+    }
+    /*v:2*/
+    template("page1/page1", function($data) {
+        "use strict";
+        var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
+        return $out += '<h1 data-event="tt_click">', $out += $escape(data.title), $out += "</h1> <div>", 
+        $out += $escape(data.description), $out += "</div> ", new String($out);
+    }), /*v:2*/
+    template("page2/page2", function($data) {
+        "use strict";
+        var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
+        return $out += "<h1>", $out += $escape(data.title), $out += "</h1> <div>", $out += $escape(data.description), 
+        $out += "</div> ", new String($out);
+    }), /*v:2*/
+    template("page3/index/index", "<div> This is '/page3/index' content </div>"), /*v:2*/
+    template("page3/other/other", "<div> This is 'other' page content </div> "), /*v:2*/
+    template("page3/page3", function($data) {
+        "use strict";
+        var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
+        return $out += "<h1>", $out += $escape(data.title), $out += "</h1> <div>", $out += $escape(data.description), 
+        $out += '</div> <ul class="menu submenu"> <li><a data-href="/page3/index" data-event="router">/page3/index</a></li> <li><a data-href="/page3/other" data-event="router">/page3/other</a></li> </ul> <div id="subcontainer" class="subcontainer"></div> ', 
+        new String($out);
+    }), module && (module.exports = template);
+}();;
 define("/spm_modules/spaseed/1.1.13/config", function(require, exports, module) {
     var spaseedConfig = {
         /**
@@ -181,7 +493,21 @@ define("/spm_modules/spaseed/1.1.13/config", function(require, exports, module) 
 		 * @type boolean
 		 * @default false
 		 */
-        xhrProgress: true
+        xhrProgress: true,
+        /**
+		 * 禁止container以外元素的touch事件
+		 * @property disableTouchOutsideContainer
+		 * @type boolean
+		 * @default true
+		 */
+        disableTouchOutsideContainer: true,
+        /**
+		 * 刷新的时候不replacehistory
+		 * @property silentRefresh
+		 * @type boolean
+		 * @default false
+		 */
+        silentRefresh: false
     };
     module.exports = spaseedConfig;
 });;
@@ -1743,6 +2069,50 @@ define("/spm_modules/spaseed/1.1.13/lib/cookie", function(require, exports, modu
     };
     module.exports = cookie;
 });;
+define("/spm_modules/spaseed/1.1.13/lib/datamanager", function(require, exports, module) {
+    var cache = {};
+    /**
+	 * 数据管理
+	 * @class dataManager
+	 * @static
+	 */
+    var dataManager = {
+        /**
+		 * 获取缓存数据
+		 * @method get
+		 * @param {String} name 名称
+		 * @return 缓存数据
+		 */
+        get: function(name) {
+            return cache[name];
+        },
+        /**
+		 * 设置缓存数据
+		 * @method set
+		 * @param {String} name 名称
+		 * @param value 值
+		 */
+        set: function(name, value) {
+            cache[name] = value;
+        },
+        /**
+		 * 获取所有缓存数据
+		 * @method getCache
+		 * @return cache 缓存对象
+		 */
+        getCache: function() {
+            return cache;
+        },
+        /**
+		 * 清除所有缓存数据
+		 * @method clearCache
+		 */
+        clearCache: function() {
+            cache = {};
+        }
+    };
+    module.exports = dataManager;
+});;
 /**
  * 事件管理
  * @class event
@@ -1920,6 +2290,144 @@ define("/spm_modules/spaseed/1.1.13/lib/event", function(require, exports, modul
     exports.bindCommonEvent = bindCommonEvent;
     //统一绑定body的代理事件
     exports.addCommonEvent = addCommonEvent;
+});;
+define("/spm_modules/spaseed/1.1.13/lib/net", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.1.13/lib/$"), spaseedConfig = require("app/script/config");
+    var objectToParams = function(obj, decodeUri) {
+        var param = $.param(obj);
+        if (decodeUri) {
+            param = decodeURIComponent(param);
+        }
+        return param;
+    };
+    var console = window.console;
+    /**
+     * 网络请求
+     * @class net
+     * @static
+     */
+    var net = {
+        _progressBar: [],
+        /**
+         * 发起请求
+         * @method send
+         * @param  {Object} cgiConfig 配置
+         * @param  {Object} opt       选参
+         */
+        send: function(cgiConfig, opt) {
+            var _self = this, _cgiConfig = cgiConfig, _data = opt.data || {}, _url = "", _cb = null, _global = opt.global;
+            if (!_cgiConfig) {
+                _cgiConfig = {
+                    url: opt.url,
+                    method: opt.method
+                };
+            }
+            if (_cgiConfig) {
+                // 成功回调
+                _cb = function(ret) {
+                    if (typeof ret === "string") {
+                        ret = eval("(" + ret + ")");
+                    }
+                    // 使用友好的提示消息
+                    if (ret && ret["uiMsg"]) {
+                        // 如果有内部错误消息，则输出log
+                        console && console.warn && (ret["code"] !== 0 && console.warn("错误 code=" + ret["code"] + ",msg=" + ret["msg"]));
+                        ret["msg"] = ret["uiMsg"] + "[#" + ret["code"] + "]";
+                        delete ret["uiMsg"];
+                    }
+                    opt.cb && opt.cb(ret);
+                };
+                var urlParams = {
+                    t: new Date().getTime()
+                };
+                if (spaseedConfig.additionalUrlParam) {
+                    $.extend(urlParams, spaseedConfig.additionalUrlParam());
+                }
+                _url = this._addParam(_cgiConfig.url, urlParams);
+                if (_cgiConfig.method && _cgiConfig.method.toLowerCase() === "post") {
+                    return this.post(_url, _data, _cb, _global);
+                } else {
+                    return this.get(_url, _data, _cb, _global);
+                }
+            }
+        },
+        /**
+         * GET请求
+         * @method get
+         * @param  {String}   url    URL
+         * @param  {Object}   data   参数
+         * @param  {Function} cb     回调函数
+         * @param  {Boolean}  global 是否触发全局 AJAX 事件
+         */
+        get: function(url, data, cb, global) {
+            return this._ajax(url, data, "GET", cb, global);
+        },
+        /**
+         * POST请求
+         * @method post
+         * @param  {String}   url    URL
+         * @param  {Object}   data   参数
+         * @param  {Function} cb     回调函数
+         * @param  {Boolean}  global 是否触发全局 AJAX 事件
+         */
+        post: function(url, data, cb, global) {
+            return this._ajax(url, data, "POST", cb, global);
+        },
+        _ajax: function(url, data, method, cb, global) {
+            var self = this;
+            global == undefined && (global = true);
+            var returnVal = null;
+            var progressBar = null;
+            if (spaseedConfig.xhrProgress) {
+                progressBar = self._showProgress();
+            }
+            (function(pbar) {
+                returnVal = $.ajax({
+                    type: method,
+                    url: url,
+                    data: data,
+                    global: global,
+                    success: function(data) {
+                        self._hideProgress(pbar);
+                        cb(data);
+                    },
+                    error: function(jqXHR) {
+                        self._hideProgress(pbar);
+                        if (window.isOnload) {
+                            //避免页面刷新时, 出小黄条错误
+                            cb({
+                                ret: jqXHR.status
+                            });
+                        }
+                    }
+                });
+                if (pbar) {
+                    returnVal.onprogress = function(evt) {
+                        var progressWidth = evt.loaded / (evt.total || (evt.loaded > 1e3 ? evt.loaded : 1e3)) * pbar.clientWidth * .99 | 0;
+                    };
+                }
+            })(progressBar);
+            return returnVal;
+        },
+        _showProgress: function() {
+            var progressBar = document.createElement("div");
+            progressBar.setAttribute("style", "position:fixed;height:3px;top:0;background:green;" + "transition:all .6s ease;width:0;z-index:100");
+            document.body.appendChild(progressBar);
+            progressBar.style.width = document.body.clientWidth + "px";
+            return progressBar;
+        },
+        _hideProgress: function(elem) {
+            if (elem) {
+                document.body.removeChild(elem);
+            }
+        },
+        _addParam: function(url, p) {
+            var s = /\?/.test(url) ? "&" : "?";
+            url += s + objectToParams(p);
+            return url;
+        }
+    };
+    module.exports = net;
 });;
 define("/spm_modules/spaseed/1.1.13/lib/util", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.13/lib/$");
@@ -2181,14 +2689,14 @@ define("/spm_modules/spaseed/1.1.13/main/entry", function(require, exports, modu
     var evt = require("spm_modules/spaseed/1.1.13/lib/event");
     var router = require("spm_modules/spaseed/1.1.13/main/router");
     var pageManager = require("spm_modules/spaseed/1.1.13/main/pagemanager");
-    var spaseedConfig = require("app/config");
+    var spaseedConfig = require("app/script/config");
     //spaseed初始化
     var init = function() {
         //初始化页面管理
         pageManager.init();
         //初始化路由
         router.init({
-            html5Mode: true,
+            html5Mode: spaseedConfig.html5Mode,
             pageManager: pageManager,
             routes: {
                 "/": "loadRoot",
@@ -2213,28 +2721,32 @@ define("/spm_modules/spaseed/1.1.13/main/entry", function(require, exports, modu
         var win = window;
         win.onload = function() {
             win.isOnload = true;
-        };
-        window.addEventListener("touchmove", function(event) {
-            if (!pageManager.container[0].contains(event.target)) {
-                event.preventDefault();
+            //onload
+            if (onload) {
+                onload();
             }
-        }, false);
-        pageManager.container.on("touchstart", function(event) {
-            var startY = startTopScroll = deltaY = undefined, startY = event.touches[0].pageY;
-            startTopScroll = this.scrollTop;
-            if (startTopScroll <= 0) this.scrollTop = 1;
-            if (startTopScroll + this.offsetHeight >= this.scrollHeight) this.scrollTop = this.scrollHeight - this.offsetHeight - 1;
-        });
+        };
+    };
+    var onload = function() {
+        //禁止container以外的touchmove事件
+        if (spaseedConfig.disableTouchOutsideContainer) {
+            window.addEventListener("touchmove", function(event) {
+                if (!pageManager.container[0].contains(event.target)) {
+                    event.preventDefault();
+                }
+            }, false);
+        }
     };
     module.exports = {
-        init: init
+        init: init,
+        onload: onload
     };
 });;
 define("/spm_modules/spaseed/1.1.13/main/pagemanager", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.13/lib/$");
     var router = require("spm_modules/spaseed/1.1.13/main/router");
     var util = require("spm_modules/spaseed/1.1.13/lib/util");
-    var spaseedConfig = require("app/config");
+    var spaseedConfig = require("app/script/config");
     /** 
 	 * 页面管理
 	 * @class pageManager
@@ -2632,32 +3144,44 @@ define("/spm_modules/spaseed/1.1.13/main/pagemanager", function(require, exports
    * @static
    */
 define("/spm_modules/spaseed/1.1.13/main/router", function(require, exports, module) {
-    var docMode = document.documentMode;
-    var oldIE = /msie [\w.]+/.test(navigator.userAgent.toLowerCase()) && (!docMode || docMode <= 7);
-    var pushState = window.history.pushState;
+    var config = require("app/script/config");
+    var win = window;
+    var pushState = win.history.pushState;
     var urls = [];
     var count = 0;
     var router = {
+        option: {
+            //是否使用html5 history API设置路由
+            html5Mode: true,
+            //页面管理对象
+            pageManager: {},
+            //路由映射对象
+            routes: {},
+            //扩展路由，优先于框架内部路由routes对象
+            extendRoutes: {},
+            //低端浏览器监听url变化的时间间隔
+            interval: 50,
+            //低端浏览器如设置了domain, 需要传入
+            domain: ""
+        },
+        start: function() {
+            var initPath = this.getFragment() ? this.getFragment() : "/";
+            if (initPath === "/index.html") {
+                initPath = "/";
+            }
+            //完整路径在hash环境打开则转化为锚点路径后跳转
+            if (!this.option["html5Mode"] && !/#(.*)$/.test(locationHref) && initPath !== "/") {
+                location.replace("/#" + initPath);
+                return;
+            }
+            this.navigate(initPath, config.silentRefresh, true);
+        },
         /**
      * 初始化
      * @param {Object} option 参数
      * @method init
      */
         init: function(option) {
-            this.option = {
-                //是否使用html5 history API设置路由
-                html5Mode: true,
-                //页面管理对象
-                pageManager: {},
-                //路由映射对象
-                routes: {},
-                //扩展路由，优先于框架内部路由routes对象
-                extendRoutes: {},
-                //低端浏览器监听url变化的时间间隔
-                interval: 50,
-                //低端浏览器如设置了domain, 需要传入
-                domain: ""
-            };
             option = option || {};
             for (var p in option) {
                 this.option[p] = option[p];
@@ -2669,59 +3193,18 @@ define("/spm_modules/spaseed/1.1.13/main/router", function(require, exports, mod
             this.option["html5Mode"] = pushState && this.option["html5Mode"];
             //支持debug模式(url加上debug后不改变页面切换逻辑,可有针对性做一些事情)
             this.debug = false;
-            var locationHref = window.location.href;
+            var locationHref = win.location.href;
             if (/\/debug_online/.test(locationHref)) {
                 this.debug = "/debug_online";
             } else if (/\/debug/.test(locationHref)) {
                 this.debug = "/debug";
             }
             var _self = this, evt = this.option["html5Mode"] ? "popstate" : "hashchange";
-            var start = function() {
-                var initPath = _self.getFragment() ? _self.getFragment() : "/";
-                if (initPath === "/index.html") {
-                    initPath = "/";
-                }
-                //完整路径在hash环境打开则转化为锚点路径后跳转
-                if (!_self.option["html5Mode"] && !/#(.*)$/.test(locationHref) && initPath !== "/") {
-                    location.replace("/#" + initPath);
-                    return;
-                }
-                _self.navigate(initPath, false, true);
-            };
-            if (oldIE) {
-                //ie8以下创建iframe模拟hashchange
-                var iframe = document.createElement("iframe");
-                iframe.tabindex = "-1";
-                if (this.option["domain"]) {
-                    iframe.src = "javascript:void(function(){document.open();" + 'document.domain = "' + this.option["domain"] + '";document.close();}());';
-                } else {
-                    iframe.src = "javascript:0";
-                }
-                iframe.style.display = "none";
-                var _iframeOnLoad = function() {
-                    iframe.onload = null;
-                    iframe.detachEvent("onload", _iframeOnLoad);
-                    start();
-                    _self.checkUrlInterval = setInterval(function() {
-                        _self.checkUrl();
-                    }, _self.option["interval"]);
-                };
-                if (iframe.attachEvent) {
-                    iframe.attachEvent("onload", _iframeOnLoad);
-                } else {
-                    iframe.onload = _iframeOnLoad;
-                }
-                document.body.appendChild(iframe);
-                this.iframe = iframe.contentWindow;
-            } else {
-                //其他浏览器监听popstate或hashchange
-                this.addEvent(window, evt, function(e) {
-                    _self.checkUrl(e);
-                });
-            }
-            if (!this.iframe) {
-                start();
-            }
+            //其他浏览器监听popstate或hashchange
+            this.addEvent(win, evt, function(e) {
+                _self.checkUrl(e);
+            });
+            this.start();
         },
         /**
      * 事件监听
@@ -2751,7 +3234,7 @@ define("/spm_modules/spaseed/1.1.13/main/router", function(require, exports, mod
      * @return {String} url片段
      */
         getFragment: function() {
-            var fragment, pathName = window.location.pathname + window.location.search;
+            var fragment, pathName = win.location.pathname + win.location.search;
             if (this.option["html5Mode"]) {
                 fragment = pathName;
                 //如果锚点路径在html5Mode环境打开 
@@ -2790,7 +3273,7 @@ define("/spm_modules/spaseed/1.1.13/main/router", function(require, exports, mod
             history.back();
         },
         /**
-     * 去除前后#
+     * 去除前后#和hash
      */
         stripHash: function(url) {
             return url.replace(/^\#+|\#+$/g, "");
@@ -2848,20 +3331,6 @@ define("/spm_modules/spaseed/1.1.13/main/router", function(require, exports, mod
             _self.fragment = url;
             url = url.split("?")[0];
             _self.loadUrl(url);
-        },
-        /**
-     * 低端浏览器设置iframe历史
-     */
-        historySet: function(hash, historyHash) {
-            var iframeDoc = this.iframe.document;
-            if (hash !== historyHash) {
-                iframeDoc.open();
-                if (this.option["domain"]) {
-                    iframeDoc.write('<script>document.domain="' + this.option["domain"] + '"</script>');
-                }
-                iframeDoc.close();
-                this.iframe.location.hash = hash;
-            }
         },
         /**
      * 重定向
@@ -2936,16 +3405,14 @@ define("/spm_modules/spaseed/1.1.13/main/router", function(require, exports, mod
             var _self = this, extendRoutes = _self.extendRoutes, routes = _self.option.routes, pm = _self.option.pageManager, params = null, urlParam = null, searchReg = /\/?\?.*/, searchMatch = searchReg.exec(url), url = url.replace(searchReg, "");
             searchMatch && (urlParam = this.queryToObj(searchMatch[0]));
             //优先匹配框架外部定义路由
-            /*
-      if (extendRoutes) {
-        for (var exRule in extendRoutes) {
-          if (params = _self.matchRoute(exRule, url)) {
-            this.applyAction(extendRoutes[exRule], params, urlParam, null);
-            return 
-          }
-        }
-      }
-      */
+            if (extendRoutes) {
+                for (var exRule in extendRoutes) {
+                    if (params = _self.matchRoute(exRule, url)) {
+                        this.applyAction(extendRoutes[exRule], params, urlParam, null);
+                        return;
+                    }
+                }
+            }
             //匹配框架内部路由规则
             for (var rule in routes) {
                 if (params = _self.matchRoute(rule, url)) {

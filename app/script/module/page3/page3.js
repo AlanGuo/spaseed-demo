@@ -2,7 +2,7 @@
 define(function (require, exports, module) {
     var $ = require('$');
     var pageManager = require('pagemanager');
-    var manager = require('../../models/manager');
+    var manager = require('../../model/manager');
     var util = require('util');
     var evt = require('event');
     var template = require('apptemplate');

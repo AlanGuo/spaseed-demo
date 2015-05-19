@@ -5,7 +5,8 @@ define(function(require,exports,module){
 	var config = $.extend(spaseedconfig,{
 		basePath:'/app/script/module/',
 		root : 'page1',
-		container:'#container'
+		container:'#container',
+		html5Mode:true
 	});
 	
 	module.exports = config;

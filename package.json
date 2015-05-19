@@ -33,7 +33,7 @@
       "datamanager": "spm_modules/spaseed/1.1.13/lib/datamanager",
       "apptemplate": "dest/views/apptemplate",
 
-      "config":"app/config"
+      "config":"app/script/config"
     },
     "dependencies": {
       "seajs": "2.3.0",

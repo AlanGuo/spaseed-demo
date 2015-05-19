@@ -84,21 +84,21 @@
         }
         global.template = template;
     }
-    /*v:1*/
+    /*v:2*/
     template("page1/page1", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
         return $out += '<h1 data-event="tt_click">', $out += $escape(data.title), $out += "</h1> <div>", 
         $out += $escape(data.description), $out += "</div> ", new String($out);
-    }), /*v:1*/
+    }), /*v:2*/
     template("page2/page2", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
         return $out += "<h1>", $out += $escape(data.title), $out += "</h1> <div>", $out += $escape(data.description), 
         $out += "</div> ", new String($out);
-    }), /*v:1*/
-    template("page3/index/index", "<div> This is '/page3/index' content </div>"), /*v:1*/
-    template("page3/other/other", "<div> This is 'other' page content </div> "), /*v:1*/
+    }), /*v:2*/
+    template("page3/index/index", "<div> This is '/page3/index' content </div>"), /*v:2*/
+    template("page3/other/other", "<div> This is 'other' page content </div> "), /*v:2*/
     template("page3/page3", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";

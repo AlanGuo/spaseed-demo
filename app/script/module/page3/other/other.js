@@ -1,9 +1,10 @@
 
 define(function (require, exports, module) {
     var $ = require('$');
-    var manager = require('../../../models/manager');
+    var manager = require('../../../model/manager');
     var util = require('util');
     var evt = require('event');
+    var page3 = require('../page3');
     var template = require('apptemplate');
 
     var page3Other = {
@@ -13,6 +14,13 @@ define(function (require, exports, module) {
         pageClass: '',
 
         render: function () {
+
+            var $subcontainer = $('#subcontainer');
+
+            if(!$subcontainer.length){
+                page3.render();
+                $subcontainer = $('#subcontainer');
+            }
 
             $('#subcontainer').html(template('page3/other/other')());
 
