@@ -1,39 +1,17 @@
 module.exports = function(grunt){
 	grunt.initConfig({
 		pkg:grunt.file.readJSON('package.json'),
-		concat:{
-			app:{
-				src:['.build/app/~.js'],
-				dest:'dest/app.js'
-			},
-			spaseed:{
-				src:['.build/spaseed/~.js'],
-				dest:'dest/spaseed.js'
-			}
-		},
 		watch:{
 			files:[
-				'spaseed/~.js','spaseed/~.tpl','spaseed/~.ejs',
+				'spm_modules/~.js',
                 'app/~.js','app/~.tpl','app/~.ejs'
             ],
-			tasks:['concat']
-		},
-		yuidoc: {
-		    compile: {
-		      name: '<%= pkg.name %>',
-		      description: '<%= pkg.description %>',
-		      version: '<%= pkg.version %>',
-		      options: {
-		        paths: ['spaseed'],
-		        themedir: 'docs/themes/default',
-		        outdir: 'docs/app/'
-		      }
-		    }
+			tasks:['tmod','combo']
 		},
 		tmod: {
 	      apptemplate: {
 	        src: ['app/modules/**/*.tpl'],
-	        dest: 'dest/.compiled/apptemplate.js',
+	        dest: 'dest/views/apptemplate.js',
 	        options: {
 	            base: 'app/modules',
 	            minify: false,
@@ -45,24 +23,17 @@ module.exports = function(grunt){
 	        options: {
 	        	alias:'<%=pkg.spm.alias%>',
 	        	base:'/',
+      			destPath:'/',
 	        	dest:'dest/app.combo.js'
 	        },
 	        build: {
 	            files: [{
 	                expand: true,
 	                cwd: './',
-	                src: ['app/main/startup.js','app/modules/**/*.js']
+	                src: ['app/script/entry.js','app/script/module/**/*.js']
 	            }]
 	        }
-	    },
-		mocha: {
-			all: {
-			  src: ['test/index.html'],
-			  options: {
-			    run: true
-			  }
-			}
-		}
+	    }
 	});
 	grunt.loadNpmTasks('grunt-qc-concat');
 	grunt.loadNpmTasks('grunt-qc-watch');
@@ -71,6 +42,6 @@ module.exports = function(grunt){
 	grunt.loadNpmTasks('grunt-alan-tmod');
 	grunt.loadNpmTasks('grunt-seajs-combo');
 
-    grunt.registerTask('default',['concat','yuidoc','tmod','watch']);
+    grunt.registerTask('default',['tmod','combo','watch']);
     grunt.registerTask('test',['mocha:all']);
 }

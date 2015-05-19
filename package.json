@@ -7,7 +7,7 @@
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-alan-tmod": "^0.2.1",
-    "grunt-cmd-combo": "^1.0.0",
+    "grunt-seajs-combo": "^1.0.8",
     "grunt-contrib-uglify": "~0.1.2",
     "grunt-contrib-yuidoc": "~0.5.0",
     "grunt-mocha": "~0.4.11",
@@ -21,18 +21,23 @@
   "spm": {
     "main": "app/main/startup",
     "alias": {
-      "entry": "spm_modules/spaseed/1.0.9/main/entry",
-      "pagemanager": "spm_modules/spaseed/1.0.9/main/pagemanager",
-      "util": "spm_modules/spaseed/1.0.9/lib/util",
-      "zepto": "spm_modules/spaseed/1.0.9/lib/zepto",
-      "event": "spm_modules/spaseed/1.0.9/lib/event",
-      "net": "spm_modules/spaseed/1.0.9/lib/net",
-      "datamanager": "spm_modules/spaseed/1.0.9/lib/datamanager",
-      "apptemplate": "dest/.compiled/apptemplate"
+      "$":"spm_modules/spaseed/1.1.13/lib/$",
+      "cookie":"spm_modules/spaseed/1.1.13/lib/cookie",
+      "entry": "spm_modules/spaseed/1.1.13/main/entry",
+      "pagemanager": "spm_modules/spaseed/1.1.13/main/pagemanager",
+      "util": "spm_modules/spaseed/1.1.13/lib/util",
+      "zepto": "spm_modules/spaseed/1.1.13/lib/zepto",
+      "event": "spm_modules/spaseed/1.1.13/lib/event",
+      "net": "spm_modules/spaseed/1.1.13/lib/net",
+      "router": "spm_modules/spaseed/1.1.13/main/router",
+      "datamanager": "spm_modules/spaseed/1.1.13/lib/datamanager",
+      "apptemplate": "dest/views/apptemplate",
+
+      "config":"app/config"
     },
     "dependencies": {
       "seajs": "2.3.0",
-      "spaseed": "1.0.9"
+      "spaseed": "1.1.13"
     }
   }
 }

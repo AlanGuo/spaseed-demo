@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>spaseed</title>
+    <style>
+    	html,body,a,div,span,ul,li,h1,h2,p{margin: 0; padding: 0}
+    	body {font-family: 'tohoma'}
+    	li {list-style: none}
+    	a {color: #63aa57; text-decoration: none}
+    	#container {position: relative; padding: 50px}
+    	.menu {border-bottom: 1px solid #e1e1e1; padding: 10px}
+    	.menu li {display: inline-block;}
+    	.menu a {display: inline-block; padding: 5px 12px}
+    	.menu .active {background-color: #63b042;}
+    	.menu .active a {color: #fff}
+    	.submenu {border-bottom: none; width:160px; position: absolute; border:1px solid #e1e1e1; margin-top:20px;}
+    	.submenu a {display: block}
+    	.submenu li {display: block; margin: 10px 0}
+    	.submenu .active {background-color: #eee}
+    	.submenu .active a {color: #333}
+    	.subcontainer{margin-left: 180px; padding: 20px}
+    </style>
+</head>
+<body>
+	<div id="pageWrapper">
+		<ul class="menu">
+		    <li><a href="#" data-href="/" data-event="router">page1</a></li>
+		    <li><a href="#" data-href="/page2" data-event="router">page2</a></li>
+		    <li><a href="#" data-href="/page3" data-event="router">page3</a></li>
+		</ul>
+		<div id="container"></div>
+	</div>
+	<!--seajs-->
+	<script type="text/javascript" src="/spm_modules/seajs/2.3.0/dist/sea-debug.js"></script>
+    <!--合并之后的文件
+    <script type="text/javascript" src="/dest/app.combo.js"></script>
+    合并之后的文件-->
+    <script type="text/javascript">
+        seajs.config({
+            base:'/',
+            alias:{
+                '$':'spm_modules/spaseed/1.1.13/lib/$',
+                'cookie':'spm_modules/spaseed/1.1.13/lib/cookie',
+                'entry':'spm_modules/spaseed/1.1.13/main/entry',
+                'pagemanager':'spm_modules/spaseed/1.1.13/main/pagemanager',
+                'util':'spm_modules/spaseed/1.1.13/lib/util',
+                'event':'spm_modules/spaseed/1.1.13/lib/event',
+                'net':'spm_modules/spaseed/1.1.13/lib/net',
+                'router':'spm_modules/spaseed/1.1.13/main/router',
+                'datamanager':'spm_modules/spaseed/1.1.13/lib/datamanager',
+                'apptemplate':'dest/views/apptemplate',
+
+                'config':'app/script/config'
+            }
+        });
+        seajs.use('app/script/entry',function(entry){
+            entry.startup();
+        });
+    </script>
+</body>
+</html>

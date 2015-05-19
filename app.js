@@ -52,7 +52,7 @@ function route (pathname, request, response) {
     });
   } else {
     response.writeHead(200, {'Content-Type': 'text/html'});
-    fs.readFile('index.html', function (err, data) {
+    fs.readFile('app/index.html', function (err, data) {
         response.end(data);
     });
   }
