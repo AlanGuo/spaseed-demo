@@ -180,13 +180,14 @@ define(function(require, exports,module){
 		'additionalUrlParam': null,
 
 		/**
+		 * xhr请求进度条，需要后台字段支持
 		 * @property xhrProgress
 		 * @type boolean
 		 * @default false
 		 */
 		 'xhrProgress':true,
 
-		 /**
+		/**
 		 * 禁止container以外元素的touch事件
 		 * @property disableTouchOutsideContainer
 		 * @type boolean
@@ -200,7 +201,23 @@ define(function(require, exports,module){
 		 * @type boolean
 		 * @default false
 		 */
-		 'silentRefresh':false
+		 'silentRefresh':false,
+
+		 /**
+		 * 切换模式
+		 * @property html5Mode
+		 * @type boolean
+		 * @default true
+		 */
+		 'html5Mode':true,
+
+		 /**
+		 * 统计id，目前支持的是baidu统计
+		 * @property statsId
+		 * @type String
+		 * @default ''
+		 */
+		 'statsId':''
 	};
 
 	module.exports = spaseedConfig;

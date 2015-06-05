@@ -1,7 +1,7 @@
 ;
 define("/app/script/config", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.13/lib/$");
-    var spaseedconfig = require("spm_modules/spaseed/1.1.13/config");
+    var $ = require("spm_modules/spaseed/1.1.14/lib/$");
+    var spaseedconfig = require("spm_modules/spaseed/1.1.14/config");
     var config = $.extend(spaseedconfig, {
         basePath: "/app/script/module/",
         root: "page1",
@@ -10,18 +10,9 @@ define("/app/script/config", function(require, exports, module) {
     });
     module.exports = config;
 });;
-define("/app/script/entry", function(require, exports) {
-    var spaseedEntry = require("spm_modules/spaseed/1.1.13/main/entry");
-    //应用入口函数
-    var startup = function() {
-        //spaseed初始化
-        spaseedEntry.init();
-    };
-    exports.startup = startup;
-});;
 define("/app/script/model/manager", function(require, exports, module) {
-    var dataManager = require("spm_modules/spaseed/1.1.13/lib/datamanager");
-    var net = require("spm_modules/spaseed/1.1.13/lib/net");
+    var dataManager = require("spm_modules/spaseed/1.1.14/lib/datamanager");
+    var net = require("spm_modules/spaseed/1.1.14/lib/net");
     var config = require("app/script/config");
     //数据管理
     var manager = {
@@ -70,70 +61,104 @@ define("/app/script/model/manager", function(require, exports, module) {
     };
     module.exports = manager;
 });;
-define("/app/script/module/page1/page1", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.13/lib/$");
-    var pageManager = require("spm_modules/spaseed/1.1.13/main/pagemanager");
+define("/app/script/module/page3/page3", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.1.14/lib/$");
+    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanager");
     var manager = require("app/script/model/manager");
-    var util = require("spm_modules/spaseed/1.1.13/lib/util");
-    var evt = require("spm_modules/spaseed/1.1.13/lib/event");
-    var template = require("dest/views/apptemplate");
-    var page1 = {
-        title: "page1",
-        pageClass: "",
+    var util = require("spm_modules/spaseed/1.1.14/lib/util");
+    var evt = require("spm_modules/spaseed/1.1.14/lib/event");
+    var template = require("dest/view/apptemplate");
+    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
+    var page3 = {
         render: function() {
-            manager.queryPage1({}, function(data) {
-                pageManager.container.html(template("page1/page1", {
-                    data: data
+            asyncRequest.all([ {
+                params: null,
+                request: manager.queryPage3
+            } ], function(values) {
+                pageManager.container.html(template("page3/page3", {
+                    data: values[0]
                 }));
             });
-            this.bindEvent();
         },
-        bindEvent: function() {
-            evt.addCommonEvent("click", {
-                tt_click: function() {
-                    alert($(this).text());
-                }
+        destroy: function() {}
+    };
+    module.exports = page3;
+});;
+define("/app/script/entry", function(require, exports) {
+    var spaseedEntry = require("spm_modules/spaseed/1.1.14/main/entry");
+    //应用入口函数
+    var startup = function() {
+        //spaseed初始化
+        spaseedEntry.init();
+    };
+    exports.startup = startup;
+});;
+"use strict";
+
+define("/app/script/module/page1/page1", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.1.14/lib/$");
+    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanager");
+    var manager = require("app/script/model/manager");
+    var util = require("spm_modules/spaseed/1.1.14/lib/util");
+    var evt = require("spm_modules/spaseed/1.1.14/lib/event");
+    var template = require("dest/view/apptemplate");
+    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
+    var page1 = {
+        title: "page1",
+        render: function() {
+            asyncRequest.all([ {
+                params: null,
+                request: manager.queryPage1
+            } ], function(values) {
+                pageManager.container.html(template("page1/page1", {
+                    data: values[0]
+                }));
             });
+        },
+        events: {
+            click: {
+                tt_click: function() {
+                    alert("tt_click");
+                }
+            }
         },
         destroy: function() {}
     };
     module.exports = page1;
 });;
 define("/app/script/module/page2/page2", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.13/lib/$");
-    var pageManager = require("spm_modules/spaseed/1.1.13/main/pagemanager");
+    var $ = require("spm_modules/spaseed/1.1.14/lib/$");
+    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanager");
     var manager = require("app/script/model/manager");
-    var util = require("spm_modules/spaseed/1.1.13/lib/util");
-    var evt = require("spm_modules/spaseed/1.1.13/lib/event");
-    var template = require("dest/views/apptemplate");
+    var util = require("spm_modules/spaseed/1.1.14/lib/util");
+    var evt = require("spm_modules/spaseed/1.1.14/lib/event");
+    var template = require("dest/view/apptemplate");
+    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
     var page2 = {
         title: "page2",
-        pageClass: "",
         render: function() {
-            manager.queryPage2({}, function(data) {
-                pageManager.container.html(template("page2/page2")({
-                    data: data
+            asyncRequest.all([ {
+                params: null,
+                request: manager.queryPage2
+            } ], function(values) {
+                pageManager.container.html(template("page2/page2", {
+                    data: values[0]
                 }));
             });
-            this.bindEvent();
-        },
-        bindEvent: function() {
-            evt.addCommonEvent("click", {});
         },
         destroy: function() {}
     };
     module.exports = page2;
 });;
 define("/app/script/module/page3/index/index", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.13/lib/$");
+    var $ = require("spm_modules/spaseed/1.1.14/lib/$");
     var manager = require("app/script/model/manager");
-    var util = require("spm_modules/spaseed/1.1.13/lib/util");
-    var evt = require("spm_modules/spaseed/1.1.13/lib/event");
+    var util = require("spm_modules/spaseed/1.1.14/lib/util");
+    var evt = require("spm_modules/spaseed/1.1.14/lib/event");
     var page3 = require("app/script/module/page3/page3");
-    var template = require("dest/views/apptemplate");
+    var template = require("dest/view/apptemplate");
     var page3Index = {
         title: "page3 index",
-        pageClass: "",
         render: function() {
             var $subcontainer = $("#subcontainer");
             if (!$subcontainer.length) {
@@ -141,25 +166,20 @@ define("/app/script/module/page3/index/index", function(require, exports, module
                 $subcontainer = $("#subcontainer");
             }
             $("#subcontainer").html(template("page3/index/index")());
-            this.bindEvent();
-        },
-        bindEvent: function() {
-            evt.addCommonEvent("click", {});
         },
         destroy: function() {}
     };
     module.exports = page3Index;
 });;
 define("/app/script/module/page3/other/other", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.13/lib/$");
+    var $ = require("spm_modules/spaseed/1.1.14/lib/$");
     var manager = require("app/script/model/manager");
-    var util = require("spm_modules/spaseed/1.1.13/lib/util");
-    var evt = require("spm_modules/spaseed/1.1.13/lib/event");
+    var util = require("spm_modules/spaseed/1.1.14/lib/util");
+    var evt = require("spm_modules/spaseed/1.1.14/lib/event");
     var page3 = require("app/script/module/page3/page3");
-    var template = require("dest/views/apptemplate");
+    var template = require("dest/view/apptemplate");
     var page3Other = {
         title: "page3 other",
-        pageClass: "",
         render: function() {
             var $subcontainer = $("#subcontainer");
             if (!$subcontainer.length) {
@@ -167,56 +187,29 @@ define("/app/script/module/page3/other/other", function(require, exports, module
                 $subcontainer = $("#subcontainer");
             }
             $("#subcontainer").html(template("page3/other/other")());
-            this.bindEvent();
-        },
-        bindEvent: function() {
-            evt.addCommonEvent("click", {});
         },
         destroy: function() {}
     };
     module.exports = page3Other;
 });;
 define("/app/script/module/page3/page3", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.13/lib/$");
-    var pageManager = require("spm_modules/spaseed/1.1.13/main/pagemanager");
+    var $ = require("spm_modules/spaseed/1.1.14/lib/$");
+    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanager");
     var manager = require("app/script/model/manager");
-    var util = require("spm_modules/spaseed/1.1.13/lib/util");
-    var evt = require("spm_modules/spaseed/1.1.13/lib/event");
-    var template = require("dest/views/apptemplate");
+    var util = require("spm_modules/spaseed/1.1.14/lib/util");
+    var evt = require("spm_modules/spaseed/1.1.14/lib/event");
+    var template = require("dest/view/apptemplate");
+    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
     var page3 = {
         render: function() {
-            manager.queryPage3({}, function(data) {
-                pageManager.container.html(template("page3/page3")({
-                    data: data
+            asyncRequest.all([ {
+                params: null,
+                request: manager.queryPage3
+            } ], function(values) {
+                pageManager.container.html(template("page3/page3", {
+                    data: values[0]
                 }));
             });
-            this.bindEvent();
-        },
-        bindEvent: function() {
-            evt.addCommonEvent("click", {});
-        },
-        destroy: function() {}
-    };
-    module.exports = page3;
-});;
-define("/app/script/module/page3/page3", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.13/lib/$");
-    var pageManager = require("spm_modules/spaseed/1.1.13/main/pagemanager");
-    var manager = require("app/script/model/manager");
-    var util = require("spm_modules/spaseed/1.1.13/lib/util");
-    var evt = require("spm_modules/spaseed/1.1.13/lib/event");
-    var template = require("dest/views/apptemplate");
-    var page3 = {
-        render: function() {
-            manager.queryPage3({}, function(data) {
-                pageManager.container.html(template("page3/page3")({
-                    data: data
-                }));
-            });
-            this.bindEvent();
-        },
-        bindEvent: function() {
-            evt.addCommonEvent("click", {});
         },
         destroy: function() {}
     };
@@ -299,7 +292,7 @@ define("/app/script/module/page3/page3", function(require, exports, module) {
         return cache[filename.replace(/^\.\//, "")];
     }, template.helper = function(name, helper) {
         helpers[name] = helper;
-    }, "function" == typeof define) define("/dest/views/apptemplate", function() {
+    }, "function" == typeof define) define("/dest/view/apptemplate", function() {
         return template;
     }); else if ("undefined" != typeof exports) module.exports = template; else {
         for (var namespaceArray = "apptemplate".split("."), global = window, i = 0; i < namespaceArray.length; i++) {
@@ -308,30 +301,30 @@ define("/app/script/module/page3/page3", function(require, exports, module) {
         }
         global.template = template;
     }
-    /*v:2*/
+    /*v:1*/
     template("page1/page1", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
-        return $out += '<h1 data-event="tt_click">', $out += $escape(data.title), $out += "</h1> <div>", 
-        $out += $escape(data.description), $out += "</div> ", new String($out);
-    }), /*v:2*/
+        return $out += '<h1 data-click-event="tt_click">', $out += $escape(data.title), 
+        $out += "</h1> <div>", $out += $escape(data.description), $out += "</div> ", new String($out);
+    }), /*v:1*/
     template("page2/page2", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
         return $out += "<h1>", $out += $escape(data.title), $out += "</h1> <div>", $out += $escape(data.description), 
         $out += "</div> ", new String($out);
-    }), /*v:2*/
-    template("page3/index/index", "<div> This is '/page3/index' content </div>"), /*v:2*/
-    template("page3/other/other", "<div> This is 'other' page content </div> "), /*v:2*/
+    }), /*v:1*/
+    template("page3/index/index", "<div> This is '/page3/index' content </div>"), /*v:1*/
+    template("page3/other/other", "<div> This is 'other' page content </div> "), /*v:1*/
     template("page3/page3", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
         return $out += "<h1>", $out += $escape(data.title), $out += "</h1> <div>", $out += $escape(data.description), 
-        $out += '</div> <ul class="menu submenu"> <li><a data-href="/page3/index" data-event="router">/page3/index</a></li> <li><a data-href="/page3/other" data-event="router">/page3/other</a></li> </ul> <div id="subcontainer" class="subcontainer"></div> ', 
+        $out += '</div> <ul class="menu submenu"> <li><a data-href="/page3/index" data-click-event="router">/page3/index</a></li> <li><a data-href="/page3/other" data-click-event="router">/page3/other</a></li> </ul> <div id="subcontainer" class="subcontainer"></div> ', 
         new String($out);
     }), module && (module.exports = template);
 }();;
-define("/spm_modules/spaseed/1.1.13/config", function(require, exports, module) {
+define("/spm_modules/spaseed/1.1.14/config", function(require, exports, module) {
     var spaseedConfig = {
         /**
 		 * 页面模块基础路径
@@ -489,6 +482,7 @@ define("/spm_modules/spaseed/1.1.13/config", function(require, exports, module) 
 		 */
         additionalUrlParam: null,
         /**
+		 * xhr请求进度条，需要后台字段支持
 		 * @property xhrProgress
 		 * @type boolean
 		 * @default false
@@ -507,12 +501,26 @@ define("/spm_modules/spaseed/1.1.13/config", function(require, exports, module) 
 		 * @type boolean
 		 * @default false
 		 */
-        silentRefresh: false
+        silentRefresh: false,
+        /**
+		 * 切换模式
+		 * @property html5Mode
+		 * @type boolean
+		 * @default true
+		 */
+        html5Mode: true,
+        /**
+		 * 统计id，目前支持的是baidu统计
+		 * @property statsId
+		 * @type String
+		 * @default ''
+		 */
+        statsId: ""
     };
     module.exports = spaseedConfig;
 });;
 /* Zepto v1.1.2 - zepto event ajax form ie - zeptojs.com/license */
-define("/spm_modules/spaseed/1.1.13/lib/$", function(require) {
+define("/spm_modules/spaseed/1.1.14/lib/$", function(require) {
     (function(window, undefined) {
         var Zepto = function() {
             var undefined, key, $, classList, emptyArray = [], slice = emptyArray.slice, filter = emptyArray.filter, document = window.document, elementDisplay = {}, classCache = {}, cssNumber = {
@@ -2043,7 +2051,62 @@ define("/spm_modules/spaseed/1.1.13/lib/$", function(require) {
     })(window);
     return Zepto;
 });;
-define("/spm_modules/spaseed/1.1.13/lib/cookie", function(require, exports, module) {
+/**
+ * promise
+ * @class promise
+ * @static
+ */
+define("/spm_modules/spaseed/1.1.14/lib/asyncrequest", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.1.14/lib/$");
+    var asyncRequest = {
+        all: function(requestArray, success, fail) {
+            if (!window.Promise) {
+                var promiseFunctionArray = [];
+                $(requestArray).map(function(index, item) {
+                    promiseFunctionArray.push(new Promise(function(resolve, reject) {
+                        item.request(item.params, function(data) {
+                            resolve(data);
+                        }, function(err) {
+                            reject(err);
+                        });
+                    }));
+                });
+                Promise.all(promiseFunctionArray).then(function(values) {
+                    if (callback) {
+                        callback(values);
+                    }
+                }).catch(function(errs) {
+                    if (fail) {
+                        fail(errs);
+                    }
+                });
+            } else {
+                var count = requestArray.length;
+                var resultsArray = [];
+                //不支持Promise的情况
+                $(requestArray).map(function(index, item) {
+                    item.request(item.params, function(data) {
+                        resultsArray.push(data);
+                        if (!--count) {
+                            if (success) {
+                                success(resultsArray);
+                            }
+                        }
+                    }, function(err) {
+                        resultsArray.push(err);
+                        if (!--count) {
+                            if (fail) {
+                                fail(resultsArray);
+                            }
+                        }
+                    });
+                });
+            }
+        }
+    };
+    module.exports = asyncRequest;
+});;
+define("/spm_modules/spaseed/1.1.14/lib/cookie", function(require, exports, module) {
     var cookie = {
         get: function(name) {
             var cookieStr = document.cookie;
@@ -2069,7 +2132,7 @@ define("/spm_modules/spaseed/1.1.13/lib/cookie", function(require, exports, modu
     };
     module.exports = cookie;
 });;
-define("/spm_modules/spaseed/1.1.13/lib/datamanager", function(require, exports, module) {
+define("/spm_modules/spaseed/1.1.14/lib/datamanager", function(require, exports, module) {
     var cache = {};
     /**
 	 * 数据管理
@@ -2118,14 +2181,17 @@ define("/spm_modules/spaseed/1.1.13/lib/datamanager", function(require, exports,
  * @class event
  * @static
  */
-define("/spm_modules/spaseed/1.1.13/lib/event", function(require, exports, module) {
+define("/spm_modules/spaseed/1.1.14/lib/event", function(require, exports, module) {
+    var util = require("spm_modules/spaseed/1.1.14/lib/util");
+    //事件处理方法
+    var _handlers = {};
     //默认判断是否有事件的函数
-    var _defalutJudgeFn = function(elem) {
-        return !!elem.getAttribute("data-event");
+    var _defalutJudgeFn = function(elem, type) {
+        return !!elem.getAttribute("data-" + type + "-event");
     };
     //默认获取事件key的函数
-    var _defaultGetEventkeyFn = function(elem) {
-        return elem.getAttribute("data-event");
+    var _defaultGetEventkeyFn = function(elem, type) {
+        return elem.getAttribute("data-" + type + "-event");
     };
     //添加事件监听
     var addEvent = function(elem, event, fn) {
@@ -2137,12 +2203,20 @@ define("/spm_modules/spaseed/1.1.13/lib/event", function(require, exports, modul
             elem[event] = fn;
         }
     };
+    //移除事件监听
+    var removeEvent = function(elem, event, fn) {
+        if (elem.removeEventListener) // W3C
+        elem.removeEventListener(event, fn); else if (elem.attachEvent) {
+            // IE
+            elem.detachEvent("on" + event, fn);
+        }
+    };
     //获取元素中包含事件的第一个子元素
-    var getWantTarget = function(evt, topElem, judgeFn) {
+    var getWantTarget = function(evt, topElem, type, judgeFn) {
         judgeFn = judgeFn || this.judgeFn || _defalutJudgeFn;
         var _targetE = evt.srcElement || evt.target;
         while (_targetE) {
-            if (judgeFn(_targetE)) {
+            if (judgeFn(_targetE, type)) {
                 return _targetE;
             }
             if (topElem == _targetE) {
@@ -2155,144 +2229,155 @@ define("/spm_modules/spaseed/1.1.13/lib/event", function(require, exports, modul
     /**
 	 * 通用的绑定事件处理
 	 * @method bindCommonEvent
-	 * @param {Element} 要绑定事件的元素
-	 * @param {String} 绑定的事件类型
-	 * @param {Object} 事件处理的函数映射
-	 * @param {Function} 取得事件对应的key的函数
+	 * @param {Element} topElem 要绑定事件的元素
+	 * @param {String} type 绑定的事件类型
+	 * @param {Object} handlerMap 事件处理的函数映射
+	 * @param {Function} getEventkeyFn 取得事件对应的key的函数
 	 */
-    var bindCommonEvent = function(topElem, type, dealFnMap, getEventkeyFn) {
-        if (type === "click") {
-            (/android/i.test(window.navigator.userAgent) || /iPod|iPad|iPhone/i.test(window.navigator.userAgent)) && (type = "tap");
+    var bindCommonEvent = function(topElem, type, handlerMap, getEventkeyFn) {
+        handlerMap = handlerMap || _handlers[type];
+        var orginType = type, returnVal = null;
+        if (type === "click" && util.isMobile()) {
+            type = "tap";
         }
         getEventkeyFn = getEventkeyFn || _defaultGetEventkeyFn;
-        var judgeFn = function(elem) {
-            return !!getEventkeyFn(elem);
+        var judgeFn = function(elem, type) {
+            return !!getEventkeyFn(elem, type);
         };
         var hdl = function(e) {
             /**
 			 * 支持直接绑定方法
 			 */
-            var _target = getWantTarget(e, topElem, judgeFn), _hit = false;
+            var _target = getWantTarget(e, topElem, orginType, judgeFn), _hit = false;
             if (_target) {
-                var _event = getEventkeyFn(_target);
+                var _event = getEventkeyFn(_target, orginType);
                 var _returnValue;
-                if (Object.prototype.toString.call(dealFnMap) === "[object Function]") {
-                    _returnValue = dealFnMap.call(_target, e, _event);
+                if (/Function/i.test(Object.prototype.toString.call(handlerMap))) {
+                    _returnValue = handlerMap.call(_target, e, _event);
                     _hit = true;
                 } else {
-                    if (dealFnMap[_event]) {
-                        _returnValue = dealFnMap[_event].call(_target, e);
+                    if (handlerMap[_event]) {
+                        _returnValue = handlerMap[_event].call(_target, e);
                         _hit = true;
                     }
                 }
                 if (_hit) {
                     if (!_returnValue) {
-                        if (e.preventDefault) e.preventDefault(); else e.returnValue = false;
+                        if (e.preventDefault) {
+                            e.preventDefault();
+                        } else e.returnValue = false;
                     }
                 }
             }
         };
         if (type === "tap") {
-            (function() {
-                var isTap = true;
-                addEvent(topElem, "touchstart", function() {
-                    isTap = true;
-                });
-                addEvent(topElem, "touchmove", function() {
-                    isTap = false;
-                });
-                addEvent(topElem, "touchend", function(e) {
-                    if (isTap) {
+            var x1 = 0, y1 = 0, x2 = 0, y2 = 0, flag = false;
+            var tstart = function(e) {
+                var touch = e.touches[0];
+                x1 = touch.pageX;
+                y1 = touch.pageY;
+                flag = false;
+            };
+            var tmove = function(e) {
+                var touch = e.touches[0];
+                x2 = touch.pageX;
+                y2 = touch.pageY;
+                flag = true;
+            };
+            var tend = function(e) {
+                if (flag) {
+                    var offset = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                    if (offset < 5) {
                         hdl(e);
                     }
-                });
-            })();
+                } else {
+                    hdl(e);
+                }
+            };
+            addEvent(topElem, "touchstart", tstart);
+            addEvent(topElem, "touchmove", tmove);
+            addEvent(topElem, "touchend", tend);
+            returnVal = {
+                touchstart: tstart,
+                touchmove: tmove,
+                touchend: tend
+            };
         } else {
             addEvent(topElem, type, hdl);
+            returnVal = hdl;
         }
+        //返回hdl用来解绑
+        return returnVal;
     };
-    var commonEvents = {};
-    var initEvent = function(type, topElem) {
-        var getEventkeyFn = _defaultGetEventkeyFn;
-        var judgeFn = function(elem) {
-            return !!getEventkeyFn(elem);
-        };
-        var hdl = function(e) {
-            /**
-			 * 支持直接绑定方法
-			 */
-            var _target = getWantTarget(e, topElem, judgeFn), _hit = false;
-            var dealFnMap = commonEvents[type];
-            if (_target) {
-                var _event = getEventkeyFn(_target);
-                var _returnValue;
-                if (dealFnMap[_event]) {
-                    _returnValue = dealFnMap[_event].call(_target, e);
-                    _hit = true;
+    /**
+	 * 为topElem解绑元素
+	 * @method unbindCommonEvent
+	 * @param {type} 事件类型
+	 * @param {dealFn} 事件处理的函数
+	 */
+    var unbindCommonEvent = function(topElem, type, handler) {
+        if (hander) {
+            if (type === "click" && util.isMobile()) {
+                //解绑touch事件
+                for (p in handler) {
+                    removeEvent(topElem, p, handler[p]);
                 }
-                if (_hit) {
-                    if (!_returnValue) {
-                        if (e.preventDefault) e.preventDefault(); else e.returnValue = false;
-                    }
-                }
+            } else {
+                removeEvent(topElem, type, handler);
             }
-        };
-        if (type === "tap") {
-            (function() {
-                var x1 = 0, y1 = 0, x2 = 0, y2 = 0, flag = false;
-                addEvent(topElem, "touchstart", function(e) {
-                    var touch = e.touches[0];
-                    x1 = touch.pageX;
-                    y1 = touch.pageY;
-                    flag = false;
-                });
-                addEvent(topElem, "touchmove", function(e) {
-                    var touch = e.touches[0];
-                    x2 = touch.pageX;
-                    y2 = touch.pageY;
-                    flag = true;
-                });
-                addEvent(topElem, "touchend", function(e) {
-                    if (flag) {
-                        var offset = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-                        if (offset < 5) {
-                            hdl(e);
-                        }
-                    } else {
-                        hdl(e);
-                    }
-                });
-            })();
-        } else {
-            addEvent(topElem, type, hdl);
         }
     };
     /**
 	 * 为body添加事件代理
-	 * @method addCommonEvent
-	 * @param {type} 事件类型
-	 * @param {dealFnMap} 事件处理的函数映射
+	 * @method bindBodyEvent
+	 * @param {string} type 事件类型
 	 */
-    var addCommonEvent = function(type, dealFnMap) {
-        if (type === "click") {
-            (/android/i.test(window.navigator.userAgent) || /iPod|iPad|iPhone/i.test(window.navigator.userAgent)) && (type = "tap");
+    var bindBodyEvent = function(type) {
+        return bindCommonEvent(document.body, type);
+    };
+    /**
+	 * 为body添加事件代理
+	 * @method unbindBodyEvent
+	 * @param {string} type 事件类型
+	 * @param {function} bodyHandler 事件处理的函数
+	 */
+    var unbindBodyEvent = function(type, bodyHandler) {
+        if (bodyHandler) {
+            unbindCommonEvent(document.body, type, bodyHandler);
         }
-        if (!commonEvents[type]) {
-            commonEvents[type] = dealFnMap || {};
-            initEvent(type, document.body);
+    };
+    /**
+	 * 为body添加事件代理
+	 * @method bindBodyEvent
+	 * @param {string} eventName 事件类型
+	 * @param {function} handler 事件处理的函数
+	 */
+    var on = function(eventName, handlerName, handler) {
+        _handlers[eventName] = _handlers[eventName] || {};
+        _handlers[eventName][handlerName] = handler;
+    };
+    var off = function(eventName, handler) {
+        if (!handler) {
+            if (_handlers[eventName]) {
+                _handlers[eventName] = {};
+            }
         } else {
-            for (var key in dealFnMap) {
-                commonEvents[type][key] = dealFnMap[key];
+            if (_handlers[eventName]) {
+                handlers[eventName][handlerName] = null;
             }
         }
     };
     //绑定代理事件，自定义代理对象
     exports.bindCommonEvent = bindCommonEvent;
-    //统一绑定body的代理事件
-    exports.addCommonEvent = addCommonEvent;
+    exports.unbindCommonEvent = unbindCommonEvent;
+    //统一绑定body代理事件
+    exports.bindBodyEvent = bindBodyEvent;
+    exports.unbindBodyEvent = unbindBodyEvent;
+    exports.on = on;
+    exports.off = off;
 });;
-define("/spm_modules/spaseed/1.1.13/lib/net", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.13/lib/$"), spaseedConfig = require("app/script/config");
+define("/spm_modules/spaseed/1.1.14/lib/net", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.1.14/lib/$"), spaseedConfig = require("app/script/config");
     var objectToParams = function(obj, decodeUri) {
         var param = $.param(obj);
         if (decodeUri) {
@@ -2429,26 +2514,19 @@ define("/spm_modules/spaseed/1.1.13/lib/net", function(require, exports, module)
     };
     module.exports = net;
 });;
-define("/spm_modules/spaseed/1.1.13/lib/util", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.13/lib/$");
-    var cookie = require("spm_modules/spaseed/1.1.13/lib/cookie");
+define("/spm_modules/spaseed/1.1.14/lib/util", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.1.14/lib/$");
+    var cookie = require("spm_modules/spaseed/1.1.14/lib/cookie");
     window.console = window.console || {
         log: function() {}
     };
-    var from = "";
-    (function() {
-        var result = /from=(\w+)/i.exec(window.location.search);
-        if (result) {
-            from = result[1];
-        }
-    })();
     /**
 	 * 工具类
 	 * @class util
 	 * @static
 	 */
     var util = {
-        getAtk: function(name) {
+        gettk: function(name) {
             var _skey = cookie.get(name);
             if (_skey) {
                 var hash = 5381;
@@ -2579,116 +2657,14 @@ define("/spm_modules/spaseed/1.1.13/lib/util", function(require, exports, module
             } else {
                 _insertStyle();
             }
-        },
-        /**
-		 *统计分享时，生成随机UID	
-		 * @method getRandom
-		 * @param  {string} pre 前缀
-		*/
-        getRandom: function(pre) {
-            var pre = pre || "";
-            return pre + Math.round((Math.random() || .5) * 2147483647) * +new Date() % 1e10;
-        },
-        ping: function() {
-            function getUserInfo() {
-                var main = {
-                    pvi: "",
-                    si: "",
-                    arg: "",
-                    ty: 1
-                };
-                main.pvi = function() {
-                    var pvi = cookie.get("pgv_pvi");
-                    !pvi && function() {
-                        main.ty = 0;
-                        pvi = util.getRandom();
-                        cookie.set("pgv_pvi", pvi, "", "", 24 * 365);
-                    }();
-                    return pvi;
-                }();
-                main.si = function() {
-                    var si = cookie.get("pgv_si");
-                    !si && function() {
-                        si = util.getRandom("s");
-                        cookie.set("pgv_si", si);
-                    }();
-                    return si;
-                }();
-                return main;
-            }
-            function getReferer() {
-                if (from) {
-                    return {
-                        rdm: location.hostname,
-                        rurl: "/" + from,
-                        rarg: ""
-                    };
-                } else {
-                    var atag = document.createElement("a"), path;
-                    atag.href = document.referrer;
-                    return {
-                        rdm: atag.hostname,
-                        rurl: atag.path,
-                        rarg: encodeURIComponent(atag.search || "")
-                    };
-                }
-            }
-            function getEnvInfo() {
-                var nav = navigator, sc = screen || {
-                    width: "",
-                    height: "",
-                    colorDepth: ""
-                };
-                var env = {
-                    scr: sc.width + "x" + sc.height,
-                    scl: (window.devicePixelRatio || 1) + "-bit",
-                    lg: nav.language.toLowerCase(),
-                    tz: new Date().getTimezoneOffset() / 60
-                };
-                return env;
-            }
-            return function(r2, dm, url, r3) {
-                var pool = [];
-                var main = {
-                    r2: r2,
-                    dm: dm,
-                    url: url,
-                    r3: r3
-                };
-                for (var i = 0, arr = [ main, getUserInfo(), getReferer(), getEnvInfo(), {
-                    random: +new Date()
-                } ], l = arr.length; i < l; i++) {
-                    for (var p in arr[i]) {
-                        arr[i].hasOwnProperty(p) && pool.push(p + "=" + (arr[i][p] || ""));
-                    }
-                }
-                var src = "http://pingtcss.qq.com/pingd?" + pool.join("&");
-                var img = new Image();
-                img.onload = img.onerror = img.onabort = function() {
-                    img.onload = img.onerror = img.onabort = null;
-                    img = null;
-                };
-                img.src = src;
-            };
-        }()
-    };
-    (function() {
-        var ua = navigator.userAgent;
-        var isApp = /ALA/.test(ua);
-        if (isApp) {
-            if (util.isIOS()) {
-                from = "iosapp";
-            } else if (util.isAndroid()) {
-                from = "androidapp";
-            }
         }
-    })();
+    };
     module.exports = util;
 });;
-define("/spm_modules/spaseed/1.1.13/main/entry", function(require, exports, module) {
-    var evt = require("spm_modules/spaseed/1.1.13/lib/event");
-    var router = require("spm_modules/spaseed/1.1.13/main/router");
-    var pageManager = require("spm_modules/spaseed/1.1.13/main/pagemanager");
+define("/spm_modules/spaseed/1.1.14/main/entry", function(require, exports, module) {
+    var evt = require("spm_modules/spaseed/1.1.14/lib/event");
+    var router = require("spm_modules/spaseed/1.1.14/main/router");
+    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanager");
     var spaseedConfig = require("app/script/config");
     //spaseed初始化
     var init = function() {
@@ -2705,7 +2681,7 @@ define("/spm_modules/spaseed/1.1.13/main/entry", function(require, exports, modu
             extendRoutes: spaseedConfig.extendRoutes
         });
         //全局点击
-        evt.addCommonEvent("click", {
+        evt.bindCommonEvent(document.body, "click", {
             router: function() {
                 var url = this.getAttribute("data-href");
                 pageManager.redirect(url);
@@ -2735,6 +2711,7 @@ define("/spm_modules/spaseed/1.1.13/main/entry", function(require, exports, modu
                     event.preventDefault();
                 }
             }, false);
+            window.addEventListener("touchstart", function() {});
         }
     };
     module.exports = {
@@ -2742,10 +2719,11 @@ define("/spm_modules/spaseed/1.1.13/main/entry", function(require, exports, modu
         onload: onload
     };
 });;
-define("/spm_modules/spaseed/1.1.13/main/pagemanager", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.13/lib/$");
-    var router = require("spm_modules/spaseed/1.1.13/main/router");
-    var util = require("spm_modules/spaseed/1.1.13/lib/util");
+define("/spm_modules/spaseed/1.1.14/main/pagemanager", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.1.14/lib/$");
+    var router = require("spm_modules/spaseed/1.1.14/main/router");
+    var evt = require("spm_modules/spaseed/1.1.14/lib/event");
+    var util = require("spm_modules/spaseed/1.1.14/lib/util");
     var spaseedConfig = require("app/script/config");
     /** 
 	 * 页面管理
@@ -2809,8 +2787,16 @@ define("/spm_modules/spaseed/1.1.13/main/pagemanager", function(require, exports
             }
             cb(controller, action, params);
         },
+        /**
+		 * 图片placeholder
+		 * @method placeholder
+		 * @param {element} container 容器
+		 */
         placeholder: function(container) {
             container = container || this.container;
+            if (!container.find) {
+                container = $(container);
+            }
             container.find("img[raw]").each(function() {
                 var img = $(this);
                 var raw = img.attr("raw");
@@ -2836,7 +2822,7 @@ define("/spm_modules/spaseed/1.1.13/main/pagemanager", function(require, exports
             params = params || [];
             searchparams = searchparams || {};
             for (var p in searchparams) {
-                searchstring += p + "=" + searchparams[p] + "&";
+                searchstring += p + "=" + encodeURIComponent(searchparams[p]) + "&";
             }
             if (arguments.length > 1) {
                 pathname = [ controller, action, params.join("/") ].join("/") + (searchstring ? "?" + searchstring.substring(0, searchstring.length - 1) : "");
@@ -2883,7 +2869,7 @@ define("/spm_modules/spaseed/1.1.13/main/pagemanager", function(require, exports
 		 * @param {String} action 
 		 * @param {Array} params 
 		 */
-        loadView: function(controller, action, params) {
+        loadView: function(controller, action, params, callback) {
             var _self = this;
             //渲染前执行业务逻辑
             if (spaseedConfig.beforeRender) {
@@ -2949,12 +2935,25 @@ define("/spm_modules/spaseed/1.1.13/main/pagemanager", function(require, exports
                 if (action) {
                     _self.renderView(obj, params);
                     _self.currentViewObj = obj;
+                    obj["__callback"] = callback;
                     controllerId && (_self.currentCtrlObj = obj);
                 } else {
                     _self.currentViewObj = obj;
                 }
                 //设置页面标题
                 _self.setTitle(obj);
+                //事件初始化
+                if (obj.events) {
+                    obj.__bodyhandler = obj.__bodyhandler || {};
+                    for (var p in obj.events) {
+                        for (var q in obj.events[p]) {
+                            evt.on(p, q, obj.events[p][q]);
+                        }
+                        if (!obj.__bodyhandler[p]) {
+                            obj.__bodyhandler[p] = evt.bindBodyEvent(p);
+                        }
+                    }
+                }
             });
         },
         /**
@@ -3009,6 +3008,7 @@ define("/spm_modules/spaseed/1.1.13/main/pagemanager", function(require, exports
         renderView: function(obj, params) {
             //debugger
             if (obj && obj.render) {
+                obj.startTime = new Date();
                 obj.render.apply(obj, params);
             } else {
                 this.render404();
@@ -3016,7 +3016,7 @@ define("/spm_modules/spaseed/1.1.13/main/pagemanager", function(require, exports
             /*是不是可以在这里加入*/
             //渲染后执行业务逻辑
             if (spaseedConfig.afterRender) {
-                spaseedConfig.afterRender();
+                spaseedConfig.afterRender(obj);
             }
         },
         /**
@@ -3112,6 +3112,13 @@ define("/spm_modules/spaseed/1.1.13/main/pagemanager", function(require, exports
                 replacement = this.currentViewObj.replacement;
                 //全局销毁
                 this.globalDestroy();
+                var obj = this.currentViewObj;
+                //移除上一个页面的bodyEvents
+                if (obj.events) {
+                    for (var p in obj.events) {
+                        evt.off(p);
+                    }
+                }
                 //销毁前一个
                 var destroy = this.currentViewObj.destroy;
                 try {
@@ -3143,7 +3150,7 @@ define("/spm_modules/spaseed/1.1.13/main/pagemanager", function(require, exports
    * @class router
    * @static
    */
-define("/spm_modules/spaseed/1.1.13/main/router", function(require, exports, module) {
+define("/spm_modules/spaseed/1.1.14/main/router", function(require, exports, module) {
     var config = require("app/script/config");
     var win = window;
     var pushState = win.history.pushState;
@@ -3169,6 +3176,7 @@ define("/spm_modules/spaseed/1.1.13/main/router", function(require, exports, mod
             if (initPath === "/index.html") {
                 initPath = "/";
             }
+            var locationHref = win.location.href;
             //完整路径在hash环境打开则转化为锚点路径后跳转
             if (!this.option["html5Mode"] && !/#(.*)$/.test(locationHref) && initPath !== "/") {
                 location.replace("/#" + initPath);

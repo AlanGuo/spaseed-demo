@@ -1,3 +1,4 @@
+'use strict';
 
 define(function (require, exports, module) {
     var $ = require('$');
@@ -6,35 +7,33 @@ define(function (require, exports, module) {
     var util = require('util');
     var evt = require('event');
     var template = require('apptemplate');
+    var asyncRequest = require('asyncrequest');
 
     var page1 = {
 
         title: 'page1',
 
-        pageClass: '',
-
         render: function () {
 
-            manager.queryPage1({}, function(data) {
-            	pageManager.container.html(template('page1/page1',{
-                    data: data
+            asyncRequest.all([{
+                params:null,
+                request:manager.queryPage1
+            }],function(values){
+                pageManager.container.html(template('page1/page1',{
+                    data: values[0]
                 }));
             });
-
-            this.bindEvent();
         },
 
-        bindEvent: function () {
-
-            evt.addCommonEvent('click', { 
-                'tt_click': function () {
-                    alert($(this).text())
+        events:{
+            'click':{
+                'tt_click':function(){
+                    alert('tt_click');
                 }
-            });
+            }
         },
 
         destroy: function () {
-
         }
     };
         

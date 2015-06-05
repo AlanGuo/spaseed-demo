@@ -11,8 +11,6 @@ define(function (require, exports, module) {
 
         title: 'page3 other',
 
-        pageClass: '',
-
         render: function () {
 
             var $subcontainer = $('#subcontainer');
@@ -23,15 +21,6 @@ define(function (require, exports, module) {
             }
 
             $('#subcontainer').html(template('page3/other/other')());
-
-            this.bindEvent();
-        },
-
-        bindEvent: function () {
-
-            evt.addCommonEvent('click', { 
-                
-            });
         },
 
         destroy: function () {

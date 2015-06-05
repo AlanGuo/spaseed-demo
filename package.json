@@ -21,23 +21,24 @@
   "spm": {
     "main": "app/main/startup",
     "alias": {
-      "$":"spm_modules/spaseed/1.1.13/lib/$",
-      "cookie":"spm_modules/spaseed/1.1.13/lib/cookie",
-      "entry": "spm_modules/spaseed/1.1.13/main/entry",
-      "pagemanager": "spm_modules/spaseed/1.1.13/main/pagemanager",
-      "util": "spm_modules/spaseed/1.1.13/lib/util",
-      "zepto": "spm_modules/spaseed/1.1.13/lib/zepto",
-      "event": "spm_modules/spaseed/1.1.13/lib/event",
-      "net": "spm_modules/spaseed/1.1.13/lib/net",
-      "router": "spm_modules/spaseed/1.1.13/main/router",
-      "datamanager": "spm_modules/spaseed/1.1.13/lib/datamanager",
-      "apptemplate": "dest/views/apptemplate",
+      "$":"spm_modules/spaseed/1.1.14/lib/$",
+      "cookie":"spm_modules/spaseed/1.1.14/lib/cookie",
+      "entry": "spm_modules/spaseed/1.1.14/main/entry",
+      "pagemanager": "spm_modules/spaseed/1.1.14/main/pagemanager",
+      "util": "spm_modules/spaseed/1.1.14/lib/util",
+      "zepto": "spm_modules/spaseed/1.1.14/lib/zepto",
+      "event": "spm_modules/spaseed/1.1.14/lib/event",
+      "net": "spm_modules/spaseed/1.1.14/lib/net",
+      "router": "spm_modules/spaseed/1.1.14/main/router",
+      "datamanager": "spm_modules/spaseed/1.1.14/lib/datamanager",
+      "asyncrequest":"spm_modules/spaseed/1.1.14/lib/asyncrequest",
+      "apptemplate": "dest/view/apptemplate",
 
       "config":"app/script/config"
     },
     "dependencies": {
       "seajs": "2.3.0",
-      "spaseed": "1.1.13"
+      "spaseed": "1.1.14"
     }
   }
 }

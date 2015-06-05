@@ -1,6 +1,6 @@
 define(function(require,exports,module){
 	var $ = require('$');
-	var spaseedconfig = require('spm_modules/spaseed/1.1.13/config');
+	var spaseedconfig = require('spm_modules/spaseed/1.1.14/config');
 
 	var config = $.extend(spaseedconfig,{
 		basePath:'/app/script/module/',

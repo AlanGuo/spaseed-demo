@@ -6,24 +6,19 @@ define(function (require, exports, module) {
     var util = require('util');
     var evt = require('event');
     var template = require('apptemplate');
+    var asyncRequest = require('asyncrequest');
 
     var page3 = {
 
         render: function () {
 
-            manager.queryPage3({}, function(data) {
-                pageManager.container.html(template('page3/page3')({
-                    data: data
+            asyncRequest.all([{
+                params:null,
+                request:manager.queryPage3
+            }],function(values){
+                pageManager.container.html(template('page3/page3',{
+                    data: values[0]
                 }));
-            });
-
-            this.bindEvent();
-        },
-
-        bindEvent: function () {
-            
-            evt.addCommonEvent('click', { 
-                
             });
         },
 

@@ -89,23 +89,6 @@ define(function(require, exports, module) {
      
     };
 
-
-    /**
-     * 低端浏览器设置iframe历史
-     */
-    comprouter.historySet = function(hash, historyHash) {
-        var iframeDoc = this.iframe.document;
-
-        if (hash !== historyHash) {
-          iframeDoc.open();
-          if (this.option['domain']) {
-            iframeDoc.write('<script>document.domain="' + this.option['domain'] + '"</script>');
-          }
-          iframeDoc.close();
-          this.iframe.location.hash = hash;
-        }
-    };
-
     module.exports = comprouter;
 
 });

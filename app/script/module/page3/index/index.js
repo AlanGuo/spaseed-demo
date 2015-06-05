@@ -11,8 +11,6 @@ define(function (require, exports, module) {
 
         title: 'page3 index',
 
-        pageClass: '',
-
         render: function () {
             var $subcontainer = $('#subcontainer');
 
@@ -22,14 +20,6 @@ define(function (require, exports, module) {
             }
 
             $('#subcontainer').html(template('page3/index/index')());
-
-            this.bindEvent();
-        },
-
-        bindEvent: function () {
-            evt.addCommonEvent('click', { 
-                
-            });
         },
 
         destroy: function () {

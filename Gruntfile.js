@@ -10,10 +10,10 @@ module.exports = function(grunt){
 		},
 		tmod: {
 	      apptemplate: {
-	        src: ['app/script/module/**/*.tpl'],
-	        dest: 'dest/views/apptemplate.js',
+	        src: ['app/view/**/*.tpl'],
+	        dest: 'dest/view/apptemplate.js',
 	        options: {
-	            base: 'app/script/module',
+	            base: 'app/view',
 	            minify: false,
 	            namespace:'apptemplate'
 	        }
