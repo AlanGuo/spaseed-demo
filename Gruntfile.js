@@ -30,7 +30,7 @@ module.exports = function(grunt){
 	            files: [{
 	                expand: true,
 	                cwd: './',
-	                src: ['app/script/entry.js','app/script/module/**/*.js']
+	                src: ['app/script/entry.js','app/script/module/page1/page1.js']
 	            }]
 	        }
 	    }

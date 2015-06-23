@@ -6,6 +6,8 @@
 'use strict';
 
 define(function(require, exports, module) {
+	var selectors = '[bind-content],[bind-value],[bind-attr]';
+
 	var binders = {
 		value:function(node, onchange) {
 	        node.addEventListener('keyup', function() {
@@ -26,7 +28,7 @@ define(function(require, exports, module) {
 	            }
 	        };
 	    },
-	    event: function(node, onchange, object, eventType) {
+	    click: function(node, onchange, object) {
 	        var previous;
 	        return {
 	            updateProperty: function(fn) {
@@ -38,30 +40,87 @@ define(function(require, exports, module) {
 	                    node.removeEventListener(previous);
 	                    previous = listener;
 	                }
-	                node.addEventListener(eventType, listener);
+	                node.addEventListener('click', listener);
+	            }
+	        };
+	    },
+	    attribute: function(node, onchange, object, attrname){
+	    	return {
+	            updateProperty: function(value,attrname) {
+	                node.setAttribute(attrname, value);
 	            }
 	        };
 	    }
 	};
 
 	var bindEngine = {
-
 		bind:function(container, object){
-			function bindObject(node, binderName, object, propertyName, eventType) {
-		        var updateValue = function(newValue) {
-		            object[propertyName] = newValue;
-		        };
-		        var binder = binders[binderName](node, updateValue, object, eventType);
-		        binder.updateProperty(object[propertyName]);
-		        var observer = function(changes) {
+			function getDirectObject(object, propertyName){
+				var val = object;
+				if(/\./.test(propertyName)){
+					var pnamearray = propertyName.split('.');
+					for(var i=0;i<pnamearray.length-1;i++){
+						if(val){
+							val = val[pnamearray[i]];
+						}
+						else{
+							break;
+						}
+					}
+					return val;
+				}
+				else{
+					return object;
+				}
+			}
+			function bindObject(node, binderName, object, propertyName) {
+				//绑定属性
+				var observer = null;
+				var bindProperty = function(bnName, propObj){
+					var prop = propObj.prop,
+						attr = propObj.attr;
+
+					var dobject = getDirectObject(object,prop),
+					dproperty = prop.split('.').slice(-1)[0];
+
+			        var updateValue = function(newValue) {
+			            dobject[dproperty] = newValue;
+			        };
+			        var binder = binders[bnName](node, updateValue, object, attr);
+			        binder.updateProperty(dobject[dproperty],attr);
+
+			        return {
+			        	dobject:dobject,
+			        	dproperty:dproperty,
+			        	binder:binder,
+			        	attribute:attr
+			        };
+				};
+
+				var objArray = [];
+				for(var i=0;i<binderName.length;i++){
+					objArray.push(bindProperty(binderName[i], propertyName[i]));
+				}
+				observer = function(changes) {
+					var index =null; 
 		            var changed = changes.some(function(change) {
-		                return change.name === propertyName;
+		            	return objArray.filter(function(item,i){
+		            		if(change.name === item.dproperty && 
+		            			change.object === item.dobject){
+		            			
+		            			index = i;
+		            			return item;
+		            		};
+		            	}).length;
 		            });
-		            if (changed) {
-		                binder.updateProperty(object[propertyName]);
+		            if (changed && objArray!=null) {
+		            	var obj = objArray[index];
+		                obj.binder.updateProperty(obj.dobject[obj.dproperty],obj.attribute);
 		            }
 		        };
-		        Object.observe(object, observer);
+
+				Object.observe(object, observer);
+
 		        return {
 		            unobserve: function() {
 		                Object.unobserve(object, observer);
@@ -137,27 +196,28 @@ define(function(require, exports, module) {
 	            return Array.prototype.filter.call(collection, isDirectNested);
 	        }
 
-	        var bindings = onlyDirectNested('[data-bind],[data-model]').map(function(node) {
-	        	var bindType = '',
-	        		propertyName = '',
-	        		eventType = null;
-	        	if(node.dataset.model){
-	        		bindType = 'value';
-	        		propertyName = node.dataset.model;
+	        var bindings = onlyDirectNested(selectors).map(function(node) {
+	        	var bindType = [],
+	        		propertyName = [],
+	        		attributeName;
+	        	if(node.getAttribute('bind-value')){
+	        		bindType.push('value');
+	        		propertyName.push({prop:node.getAttribute('bind-value')});
 	        	}
-	        	else if(node.dataset.bind){
-	        		bindType = 'content';
-	        		propertyName = node.dataset.bind;
+	        	if(node.getAttribute('bind-content')){
+	        		bindType.push('content');
+	        		propertyName.push({prop:node.getAttribute('bind-content')});
 	        	}
-	        	else if(node.dataset.eventBind){
-	        		bindType = 'event';
-	        		var temp = node.dataset.eventBind.split('|');
-	        		propertyName = temp[1];
-	        		eventType = temp[0];
+	        	if(node.getAttribute('bind-attr')){
+	        		var keyvalArray = node.getAttribute('bind-attr').split(',');
+	        		
+	        		for(var i=0;i<keyvalArray.length;i++){
+        				var keyval = keyvalArray[i].split('=');
+        				bindType.push('attribute');
+        				propertyName.push({prop:keyval[1],attr:keyval[0]});
+	        		}
 	        	}
-	        	
-	        	var parts = node.dataset.bind;
-	        	return bindObject(node, bindType, object, propertyName, eventType);
+	        	return bindObject(node, bindType, object, propertyName);
 
 		    }).concat(onlyDirectNested('[data-repeat]').map(function(node) {
 		    	return bindCollection(node, object[node.dataset.repeat]);

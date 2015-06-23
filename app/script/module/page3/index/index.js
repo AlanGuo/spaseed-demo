@@ -1,11 +1,8 @@
 
 define(function (require, exports, module) {
     var $ = require('$');
-    var manager = require('../../../model/manager');
-    var util = require('util');
-    var evt = require('event');
     var page3 = require('../page3');
-    var template = require('apptemplate');
+    var template = require('template');
 
     var page3Index = {
 

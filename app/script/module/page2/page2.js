@@ -2,11 +2,9 @@
 define(function (require, exports, module) {
     var $ = require('$');
     var pageManager = require('pagemanager');
-    var manager = require('../../model/manager');
-    var util = require('util');
-    var evt = require('event');
-    var template = require('apptemplate');
+    var template = require('template');
     var asyncRequest = require('asyncrequest');
+    var request = require('request');
 
     var page2 = {
 
@@ -15,8 +13,8 @@ define(function (require, exports, module) {
         render: function () {
 
             asyncRequest.all([{
-                params:null,
-                request:manager.queryPage2
+                params:{title:'page2',description:'page2 description'},
+                request:request.sample
             }],function(values){
                 pageManager.container.html(template('page2/page2',{
                     data: values[0]

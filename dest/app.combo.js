@@ -19,76 +19,37 @@ define("/app/script/entry", function(require, exports) {
     };
     exports.startup = startup;
 });;
-define("/app/script/model/manager", function(require, exports, module) {
-    var dataManager = require("spm_modules/spaseed/1.1.14/lib/datamanager");
-    var net = require("spm_modules/spaseed/1.1.14/lib/net");
-    var config = require("app/script/config");
-    //数据管理
-    var manager = {
-        queryPage1: function(data, cb, fail) {
-            var _self = this, _cb = function(ret) {
-                dataManager.commonCb(ret, cb, fail);
-            };
-            //获取服务端数据
-            /*net.send(config.get('queryPage1'), {
-				data: data,
-				cb: _cb
-			});*/
-            cb({
-                title: "Page 1",
-                description: "This is page 1"
-            });
-        },
-        queryPage2: function(data, cb, fail) {
-            var _self = this, _cb = function(ret) {
-                dataManager.commonCb(ret, cb, fail);
-            };
-            //获取服务端数据
-            /*net.send(config.get('queryPage2'), {
-				data: data,
-				cb: _cb
-			});*/
-            cb({
-                title: "Page 2",
-                description: "This is page 2"
-            });
-        },
-        queryPage3: function(data, cb, fail) {
-            var _self = this, _cb = function(ret) {
-                dataManager.commonCb(ret, cb, fail);
-            };
-            //获取服务端数据
-            /*net.send(config.get('queryPage3'), {
-				data: data,
-				cb: _cb
-			});*/
-            cb({
-                title: "Page 3",
-                description: "This is page 3"
-            });
-        }
-    };
-    module.exports = manager;
+"use strict";
+
+define("/app/script/model/request", function(require, exports, module) {
+    var requestmanager = require("spm_modules/spaseed/1.1.14/lib/requestmanager");
+    requestmanager.add("sample", "/cgi/sample", function(data, cb, fail, options) {
+        setTimeout(function() {
+            cb && cb(data);
+        }, 100);
+    });
+    module.exports = requestmanager;
 });;
 "use strict";
 
 define("/app/script/module/page1/page1", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
     var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanager");
-    var manager = require("app/script/model/manager");
-    var util = require("spm_modules/spaseed/1.1.14/lib/util");
-    var evt = require("spm_modules/spaseed/1.1.14/lib/event");
     var template = require("dest/view/apptemplate");
     var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
     var binder = require("spm_modules/spaseed/1.1.14/lib/binder");
+    var request = require("app/script/model/request");
     var page1 = {
         title: "page1",
         detail: 0,
         render: function() {
             var self = this;
             asyncRequest.all([ {
-                params: null,
-                request: manager.queryPage1
+                params: {
+                    title: "page1",
+                    description: "page1 description"
+                },
+                request: request.sample
             } ], function(values) {
                 pageManager.container.html(template("page1/page1", {
                     data: values[0]
@@ -108,118 +69,6 @@ define("/app/script/module/page1/page1", function(require, exports, module) {
         destroy: function() {}
     };
     module.exports = page1;
-});;
-define("/app/script/module/page2/page2", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
-    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanager");
-    var manager = require("app/script/model/manager");
-    var util = require("spm_modules/spaseed/1.1.14/lib/util");
-    var evt = require("spm_modules/spaseed/1.1.14/lib/event");
-    var template = require("dest/view/apptemplate");
-    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
-    var page2 = {
-        title: "page2",
-        render: function() {
-            asyncRequest.all([ {
-                params: null,
-                request: manager.queryPage2
-            } ], function(values) {
-                pageManager.container.html(template("page2/page2", {
-                    data: values[0]
-                }));
-            });
-        },
-        destroy: function() {}
-    };
-    module.exports = page2;
-});;
-define("/app/script/module/page3/index/index", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
-    var manager = require("app/script/model/manager");
-    var util = require("spm_modules/spaseed/1.1.14/lib/util");
-    var evt = require("spm_modules/spaseed/1.1.14/lib/event");
-    var page3 = require("app/script/module/page3/page3");
-    var template = require("dest/view/apptemplate");
-    var page3Index = {
-        title: "page3 index",
-        render: function() {
-            var $subcontainer = $("#subcontainer");
-            if (!$subcontainer.length) {
-                page3.render();
-                $subcontainer = $("#subcontainer");
-            }
-            $("#subcontainer").html(template("page3/index/index")());
-        },
-        destroy: function() {}
-    };
-    module.exports = page3Index;
-});;
-define("/app/script/module/page3/other/other", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
-    var manager = require("app/script/model/manager");
-    var util = require("spm_modules/spaseed/1.1.14/lib/util");
-    var evt = require("spm_modules/spaseed/1.1.14/lib/event");
-    var page3 = require("app/script/module/page3/page3");
-    var template = require("dest/view/apptemplate");
-    var page3Other = {
-        title: "page3 other",
-        render: function() {
-            var $subcontainer = $("#subcontainer");
-            if (!$subcontainer.length) {
-                page3.render();
-                $subcontainer = $("#subcontainer");
-            }
-            $("#subcontainer").html(template("page3/other/other")());
-        },
-        destroy: function() {}
-    };
-    module.exports = page3Other;
-});;
-define("/app/script/module/page3/page3", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
-    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanager");
-    var manager = require("app/script/model/manager");
-    var util = require("spm_modules/spaseed/1.1.14/lib/util");
-    var evt = require("spm_modules/spaseed/1.1.14/lib/event");
-    var template = require("dest/view/apptemplate");
-    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
-    var page3 = {
-        render: function() {
-            asyncRequest.all([ {
-                params: null,
-                request: manager.queryPage3
-            } ], function(values) {
-                pageManager.container.html(template("page3/page3", {
-                    data: values[0]
-                }));
-            });
-        },
-        destroy: function() {}
-    };
-    module.exports = page3;
-});;
-define("/app/script/module/page3/page3", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
-    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanager");
-    var manager = require("app/script/model/manager");
-    var util = require("spm_modules/spaseed/1.1.14/lib/util");
-    var evt = require("spm_modules/spaseed/1.1.14/lib/event");
-    var template = require("dest/view/apptemplate");
-    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
-    var page3 = {
-        render: function() {
-            asyncRequest.all([ {
-                params: null,
-                request: manager.queryPage3
-            } ], function(values) {
-                pageManager.container.html(template("page3/page3", {
-                    data: values[0]
-                }));
-            });
-        },
-        destroy: function() {}
-    };
-    module.exports = page3;
 });;
 /*TMODJS:{"version":"1.0.0"}*/
 !function(require, exports, module) {
@@ -307,12 +156,12 @@ define("/app/script/module/page3/page3", function(require, exports, module) {
         }
         global.template = template;
     }
-    /*v:5*/
+    /*v:9*/
     template("page1/page1", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
         return $out += '<h1 data-click-event="tt_click">', $out += $escape(data.title), 
-        $out += "</h1> <div>", $out += $escape(data.description), $out += '</div> <div data-bind="detail"></div> ', 
+        $out += "</h1> <div>", $out += $escape(data.description), $out += '</div> <div bind-content="detail"></div> ', 
         new String($out);
     }), /*v:2*/
     template("page2/page2", function($data) {
@@ -557,24 +406,26 @@ define("/spm_modules/spaseed/1.1.14/lib/asyncrequest", function(require, exports
                 });
             } else {
                 var count = requestArray.length;
-                var resultsArray = [];
+                var resultsArray = new Array(count);
                 //不支持Promise的情况
                 $(requestArray).map(function(index, item) {
-                    item.request(item.params, function(data) {
-                        resultsArray.push(data);
-                        if (!--count) {
-                            if (success) {
-                                success(resultsArray);
+                    (function(i) {
+                        item.request(item.params, function(data) {
+                            resultsArray[i] = data;
+                            if (!--count) {
+                                if (success) {
+                                    success(resultsArray);
+                                }
                             }
-                        }
-                    }, function(err) {
-                        resultsArray.push(err);
-                        if (!--count) {
-                            if (fail) {
-                                fail(resultsArray);
+                        }, function(err) {
+                            resultsArray[i] = err;
+                            if (!--count) {
+                                if (fail) {
+                                    fail(resultsArray);
+                                }
                             }
-                        }
-                    });
+                        });
+                    })(index);
                 });
             }
         }
@@ -588,6 +439,7 @@ define("/spm_modules/spaseed/1.1.14/lib/asyncrequest", function(require, exports
 "use strict";
 
 define("/spm_modules/spaseed/1.1.14/lib/binder", function(require, exports, module) {
+    var selectors = "[bind-content],[bind-value],[bind-attr]";
     var binders = {
         value: function(node, onchange) {
             node.addEventListener("keyup", function() {
@@ -608,7 +460,7 @@ define("/spm_modules/spaseed/1.1.14/lib/binder", function(require, exports, modu
                 }
             };
         },
-        event: function(node, onchange, object, eventType) {
+        click: function(node, onchange, object) {
             var previous;
             return {
                 updateProperty: function(fn) {
@@ -620,25 +472,71 @@ define("/spm_modules/spaseed/1.1.14/lib/binder", function(require, exports, modu
                         node.removeEventListener(previous);
                         previous = listener;
                     }
-                    node.addEventListener(eventType, listener);
+                    node.addEventListener("click", listener);
+                }
+            };
+        },
+        attribute: function(node, onchange, object, attrname) {
+            return {
+                updateProperty: function(value, attrname) {
+                    node.setAttribute(attrname, value);
                 }
             };
         }
     };
     var bindEngine = {
         bind: function(container, object) {
-            function bindObject(node, binderName, object, propertyName, eventType) {
-                var updateValue = function(newValue) {
-                    object[propertyName] = newValue;
+            function getDirectObject(object, propertyName) {
+                var val = object;
+                if (/\./.test(propertyName)) {
+                    var pnamearray = propertyName.split(".");
+                    for (var i = 0; i < pnamearray.length - 1; i++) {
+                        if (val) {
+                            val = val[pnamearray[i]];
+                        } else {
+                            break;
+                        }
+                    }
+                    return val;
+                } else {
+                    return object;
+                }
+            }
+            function bindObject(node, binderName, object, propertyName) {
+                //绑定属性
+                var observer = null;
+                var bindProperty = function(bnName, propObj) {
+                    var prop = propObj.prop, attr = propObj.attr;
+                    var dobject = getDirectObject(object, prop), dproperty = prop.split(".").slice(-1)[0];
+                    var updateValue = function(newValue) {
+                        dobject[dproperty] = newValue;
+                    };
+                    var binder = binders[bnName](node, updateValue, object, attr);
+                    binder.updateProperty(dobject[dproperty], attr);
+                    return {
+                        dobject: dobject,
+                        dproperty: dproperty,
+                        binder: binder,
+                        attribute: attr
+                    };
                 };
-                var binder = binders[binderName](node, updateValue, object, eventType);
-                binder.updateProperty(object[propertyName]);
-                var observer = function(changes) {
+                var objArray = [];
+                for (var i = 0; i < binderName.length; i++) {
+                    objArray.push(bindProperty(binderName[i], propertyName[i]));
+                }
+                observer = function(changes) {
+                    var index = null;
                     var changed = changes.some(function(change) {
-                        return change.name === propertyName;
+                        return objArray.filter(function(item, i) {
+                            if (change.name === item.dproperty && change.object === item.dobject) {
+                                index = i;
+                                return item;
+                            }
+                        }).length;
                     });
-                    if (changed) {
-                        binder.updateProperty(object[propertyName]);
+                    if (changed && objArray != null) {
+                        var obj = objArray[index];
+                        obj.binder.updateProperty(obj.dobject[obj.dproperty], obj.attribute);
                     }
                 };
                 Object.observe(object, observer);
@@ -712,22 +610,32 @@ define("/spm_modules/spaseed/1.1.14/lib/binder", function(require, exports, modu
                 var collection = container.querySelectorAll(selector);
                 return Array.prototype.filter.call(collection, isDirectNested);
             }
-            var bindings = onlyDirectNested("[data-bind],[data-model]").map(function(node) {
-                var bindType = "", propertyName = "", eventType = null;
-                if (node.dataset.model) {
-                    bindType = "value";
-                    propertyName = node.dataset.model;
-                } else if (node.dataset.bind) {
-                    bindType = "content";
-                    propertyName = node.dataset.bind;
-                } else if (node.dataset.eventBind) {
-                    bindType = "event";
-                    var temp = node.dataset.eventBind.split("|");
-                    propertyName = temp[1];
-                    eventType = temp[0];
+            var bindings = onlyDirectNested(selectors).map(function(node) {
+                var bindType = [], propertyName = [], attributeName;
+                if (node.getAttribute("bind-value")) {
+                    bindType.push("value");
+                    propertyName.push({
+                        prop: node.getAttribute("bind-value")
+                    });
                 }
-                var parts = node.dataset.bind;
-                return bindObject(node, bindType, object, propertyName, eventType);
+                if (node.getAttribute("bind-content")) {
+                    bindType.push("content");
+                    propertyName.push({
+                        prop: node.getAttribute("bind-content")
+                    });
+                }
+                if (node.getAttribute("bind-attr")) {
+                    var keyvalArray = node.getAttribute("bind-attr").split(",");
+                    for (var i = 0; i < keyvalArray.length; i++) {
+                        var keyval = keyvalArray[i].split("=");
+                        bindType.push("attribute");
+                        propertyName.push({
+                            prop: keyval[1],
+                            attr: keyval[0]
+                        });
+                    }
+                }
+                return bindObject(node, bindType, object, propertyName);
             }).concat(onlyDirectNested("[data-repeat]").map(function(node) {
                 return bindCollection(node, object[node.dataset.repeat]);
             }));
@@ -770,49 +678,229 @@ define("/spm_modules/spaseed/1.1.14/lib/cookie", function(require, exports, modu
     };
     module.exports = cookie;
 });;
-define("/spm_modules/spaseed/1.1.14/lib/datamanager", function(require, exports, module) {
-    var cache = {};
-    /**
-	 * 数据管理
-	 * @class dataManager
-	 * @static
-	 */
-    var dataManager = {
-        /**
-		 * 获取缓存数据
-		 * @method get
-		 * @param {String} name 名称
-		 * @return 缓存数据
-		 */
-        get: function(name) {
-            return cache[name];
-        },
-        /**
-		 * 设置缓存数据
-		 * @method set
-		 * @param {String} name 名称
-		 * @param value 值
-		 */
-        set: function(name, value) {
-            cache[name] = value;
-        },
-        /**
-		 * 获取所有缓存数据
-		 * @method getCache
-		 * @return cache 缓存对象
-		 */
-        getCache: function() {
-            return cache;
-        },
-        /**
-		 * 清除所有缓存数据
-		 * @method clearCache
-		 */
-        clearCache: function() {
-            cache = {};
+"use strict";
+
+/**
+ * @dialog 模块
+ * dialog.show(template,{
+		header:true,
+		buttons:[{
+			name:'确定',
+			dataEvent:'closeDialog'
+		}]
+ * });
+ * 一个带通用头部和底部确定按钮的对话框
+ * dialog.show(template)
+ * 一个完全自定义的对话框
+ * dialog.alert('文本');
+ * 一个标准的提示对话框
+ *
+ * 目前只支持两个按钮
+ */
+define("/spm_modules/spaseed/1.1.14/lib/dialog", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
+    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanager");
+    var evt = require("spm_modules/spaseed/1.1.14/lib/event");
+    var template = require("dest/view/apptemplate");
+    var env = require("spm_modules/spaseed/1.1.14/lib/env");
+    var dialog = {
+        status: 0,
+        height: 0
+    };
+    dialog.alert = function(text, option) {
+        option = option || {};
+        option.zIndex = option.zIndex || 5;
+        option.header = option.header === true ? true : false;
+        option.buttons = option.buttons || [ {
+            name: "确定"
+        } ];
+        this._setTemplate(template("common/dialog/dialog", {
+            text: text,
+            option: option
+        }), option);
+        if (option.buttons) {
+            this._addButton(option);
+        }
+        this.showMask();
+        this.status = 1;
+    };
+    dialog.show = function(html, option) {
+        option = option || {};
+        option.zIndex = option.zIndex || 5;
+        if (html) {
+            //更新模板，显示对话框
+            this._setTemplate(template("common/dialog/dialog", {
+                html: html,
+                option: option
+            }), option);
+        } else {
+            //直接系那是对话框
+            this._showTemplate();
+        }
+        //底部按钮
+        if (option.buttons) {
+            //删除之前的按钮
+            pageManager.dialog.find(".bottom-button").remove();
+            this._addButton(option);
+        }
+        this.showMask();
+        var inputs = $(pageManager.dialog).find("input");
+        if (inputs.length) {
+            if (!inputs.prop("readonly") && !inputs.prop("disabled")) {
+                if (env.isAndroid) {
+                    setTimeout(function() {
+                        inputs[0].focus();
+                    }, 200);
+                } else {
+                    inputs[0].focus();
+                }
+            }
+        }
+        //监听resize事件做处理
+        window.onresize = function() {
+            if ($(window).height() < dialog.height) {
+                pageManager.dialog.css("height", "100%");
+            } else {
+                pageManager.dialog.css("height", "auto");
+            }
+        };
+        this.status = 1;
+    };
+    dialog._addButton = function(option) {
+        //底部按钮
+        if (option.buttons) {
+            var buttonPanel = document.createElement("div");
+            $(buttonPanel).html(template("common/buttombutton/buttons", {
+                buttons: option.buttons
+            }));
+            this.bottomButtons = $(buttonPanel).children();
+            this.bottomButtons.css("z-index", option.zIndex + 1);
+            pageManager.dialog.append(this.bottomButtons);
         }
     };
-    module.exports = dataManager;
+    dialog._removeButton = function() {
+        //底部按钮
+        if (this.bottomButtons) {
+            this.bottomButtons.remove();
+        }
+    };
+    dialog._setTemplate = function(html) {
+        var height = pageManager.dialog.html(html).show().height();
+        pageManager.dialog.css("bottom", -height + "px");
+        pageManager.dialog[0].clientHeight = pageManager.dialog[0].clientHeight;
+        pageManager.dialog.css("bottom", 0);
+        this.height = height;
+    };
+    dialog._showTemplate = function() {
+        pageManager.dialog.show().css("bottom", -pageManager.dialog.height() + "px");
+        pageManager.dialog[0].clientHeight = pageManager.dialog[0].clientHeight;
+        pageManager.dialog.css("bottom", 0);
+    };
+    dialog.hide = function() {
+        this.hideMask();
+        pageManager.dialog.css("bottom", -pageManager.dialog.height() + "px");
+        //底部按钮的样式
+        //pageManager.dialog.find('.bottom-button').css('position','absolute');
+        setTimeout(function() {
+            pageManager.dialog.hide();
+        }, 200);
+        //this._removeButton();
+        this.status = 0;
+        document.activeElement.blur();
+    };
+    dialog.showError = function(msg) {
+        var container = document;
+        if (this.status) {
+            container = pageManager.dialog;
+        }
+        var errorEl = $(container).find("div[data-error]");
+        errorEl.html(msg).removeClass("fade-out").show();
+        setTimeout(function() {
+            errorEl.addClass("fade-out");
+            setTimeout(function() {
+                errorEl.hide();
+            }, 200);
+        }, 2e3);
+    };
+    dialog.wxshare = function() {
+        var helper = $('<div class="popup-wxshare"><span class="share-wx">点击右上角，分享到朋友圈</span><a class="icon-close"> 点击关闭</a></div>');
+        this.showMask();
+        helper.appendTo("body");
+        var close = function() {
+            dialog.hideMask();
+            helper.remove();
+            helper = undefined;
+        };
+        helper.on("touchstart", close);
+        setTimeout(function() {
+            if (helper) {
+                close();
+            }
+        }, 5e3);
+    };
+    dialog.wxopeninbrowser = function() {
+        var helper = $('<div class="popup-wxshare"><span class="pay-wx">点击右上角，用浏览器打开再支付</span><a class="icon-close"> 点击关闭</a></div>');
+        this.showMask();
+        helper.appendTo("body");
+        var close = function() {
+            dialog.hideMask();
+            helper.remove();
+            helper = undefined;
+        };
+        helper.on("touchstart", close);
+        setTimeout(function() {
+            if (helper) {
+                close();
+            }
+        }, 5e3);
+    };
+    dialog.getParams = function() {
+        var params = {};
+        $(pageManager.dialog).find("input").each(function() {
+            params[this.name] = this.value;
+        });
+        return params;
+    };
+    dialog.msgbox = function(msg, ms) {
+        pageManager.msgbox.removeClass("fade-out").html("<p>" + msg + "</p>").show();
+        setTimeout(function() {
+            pageManager.msgbox.addClass("fade-out");
+            setTimeout(function() {
+                pageManager.msgbox.hide();
+            }, 500);
+        }, ms || 2e3);
+    };
+    dialog.showMask = function() {
+        pageManager.mask.css("height", env.resolution.y).show();
+    };
+    dialog.hideMask = function() {
+        pageManager.mask.hide();
+    };
+    evt.bindCommonEvent("click", {
+        "dialog-hide": function() {
+            dialog.hide();
+        }
+    });
+    module.exports = dialog;
+});;
+"use strict";
+
+define("/spm_modules/spaseed/1.1.14/lib/env", function(require, exports, module) {
+    var util = require("spm_modules/spaseed/1.1.14/lib/util");
+    var env = {}, ua = navigator.userAgent;
+    env.defaultTitle = "spaseed";
+    env.cdn = window.cdn;
+    env.isIOS = util.isIOS();
+    env.isAndroid = util.isAndroid();
+    env.isWX = /micromessenger/i.test(ua);
+    env.isMQQB = /mqqbrowser/i.test(ua);
+    //env.appid = 'wx';
+    var doc = document.documentElement;
+    var bod = document.body;
+    env.resolution = {};
+    env.resolution.x = Math.max(doc.clientWidth, bod.clientWidth);
+    env.resolution.y = Math.max(doc.clientHeight, bod.clientHeight);
+    module.exports = env;
 });;
 /**
  * 事件管理
@@ -1015,6 +1103,71 @@ define("/spm_modules/spaseed/1.1.14/lib/event", function(require, exports, modul
     exports.on = on;
     exports.off = off;
 });;
+"use strict";
+
+define("/spm_modules/spaseed/1.1.14/lib/model", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
+    var net = require("spm_modules/spaseed/1.1.14/lib/net");
+    var dialog = require("spm_modules/spaseed/1.1.14/lib/dialog");
+    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanager");
+    var util = require("spm_modules/spaseed/1.1.14/lib/util");
+    var config = require("app/script/config");
+    //数据管理
+    var manager = {
+        isBusy: false,
+        //所有正常cgi调用都通过这个门面方法进行调用
+        cgiFacade: function(cgi, data, cb, fail, option) {
+            var eventName = "";
+            var startTime = new Date();
+            var _cb = function(ret) {
+                var _code = ret.code;
+                manager.isBusy = false;
+                if (config.defaultStats) {
+                    //cgi返回码统计
+                    util.tj("cgi", cgi.url.split("?")[0], ret.code, new Date() - startTime);
+                }
+                //恢复按钮
+                if (option.button) {
+                    $(option.button).removeClass("disabled").data("event", eventName);
+                }
+                if (_code === 0) {
+                    if (cb) {
+                        cb(ret.data);
+                    }
+                } else if (_code === 403) {
+                    dialog.hide();
+                    pageManager.redirect("account", "login", null, {
+                        pathname: encodeURIComponent(location.pathname)
+                    });
+                } else {
+                    if (fail) {
+                        fail(ret.msg, _code, ret.data);
+                    } else {
+                        if (pageManager.isEmpty()) {
+                            pageManager.renderError(ret.msg || "系统繁忙");
+                        } else {
+                            dialog.msgbox(ret.msg || "系统繁忙");
+                        }
+                    }
+                }
+            };
+            this.isBusy = true;
+            //获取服务端数据
+            net.send(cgi, {
+                data: data,
+                cb: _cb,
+                url: cgi
+            });
+            option = option || {};
+            //禁用按钮
+            if (option.button) {
+                eventName = $(option.button).addClass("disabled").data("event");
+                $(option.button).removeAttr("data-click-event");
+            }
+        }
+    };
+    module.exports = manager;
+});;
 define("/spm_modules/spaseed/1.1.14/lib/net", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.14/lib/zepto"), spaseedConfig = require("app/script/config");
     var objectToParams = function(obj, decodeUri) {
@@ -1049,16 +1202,13 @@ define("/spm_modules/spaseed/1.1.14/lib/net", function(require, exports, module)
             if (_cgiConfig) {
                 // 成功回调
                 _cb = function(ret) {
-                    if (typeof ret === "string") {
-                        ret = eval("(" + ret + ")");
-                    }
                     // 使用友好的提示消息
-                    if (ret && ret["uiMsg"]) {
-                        // 如果有内部错误消息，则输出log
-                        console && console.warn && (ret["code"] !== 0 && console.warn("错误 code=" + ret["code"] + ",msg=" + ret["msg"]));
-                        ret["msg"] = ret["uiMsg"] + "[#" + ret["code"] + "]";
-                        delete ret["uiMsg"];
-                    }
+                    // if (ret && ret['uiMsg']) {
+                    //     // 如果有内部错误消息，则输出log
+                    //     console && console.warn && (ret['code'] !== 0 && console.warn('错误 code=' + ret['code'] + ',msg=' + ret['msg']));
+                    //     ret['msg'] = ret['uiMsg'] + '[#' + ret['code'] + ']';
+                    //     delete ret['uiMsg'];
+                    // }
                     opt.cb && opt.cb(ret);
                 };
                 var urlParams = {
@@ -1119,9 +1269,16 @@ define("/spm_modules/spaseed/1.1.14/lib/net", function(require, exports, module)
                         self._hideProgress(pbar);
                         if (window.isOnload) {
                             //避免页面刷新时, 出小黄条错误
-                            cb({
-                                ret: jqXHR.status
-                            });
+                            var data = {};
+                            try {
+                                data = JSON.parse(jqXHR.responseText);
+                            } catch (e) {
+                                console.error("jqXHR.responseText parse error");
+                                data.code = jqXHR.status;
+                                data.msg = jqXHR.statusText;
+                                data.data = {};
+                            }
+                            cb(data);
                         }
                     }
                 });
@@ -1152,6 +1309,54 @@ define("/spm_modules/spaseed/1.1.14/lib/net", function(require, exports, module)
         }
     };
     module.exports = net;
+});;
+"use strict";
+
+define("/spm_modules/spaseed/1.1.14/lib/requestconstructor", function(require, exports, module) {
+    var util = require("spm_modules/spaseed/1.1.14/lib/util");
+    var requestconstructor = {
+        create: function(option) {
+            var cgi = option.url;
+            var params = [];
+            var tk = util.gettk("skey");
+            if (tk) {
+                params.push("tk=" + tk);
+            }
+            // if(window.userinfo.userId){
+            // 	params.push('uin='+window.userinfo.userId);
+            // }
+            if (params.length) {
+                cgi += /\?/.test(cgi) ? "&" : "?";
+                cgi += params.join("&");
+            }
+            return {
+                url: cgi,
+                method: option.method
+            };
+        }
+    };
+    module.exports = requestconstructor;
+});;
+"use strict";
+
+define("/spm_modules/spaseed/1.1.14/lib/requestmanager", function(require, exports, module) {
+    var model = require("spm_modules/spaseed/1.1.14/lib/model");
+    var requestConstructor = require("spm_modules/spaseed/1.1.14/lib/requestconstructor");
+    var requestmanager = {
+        add: function(name, url, fakecallback) {
+            this[name] = function(data, cb, fail, option) {
+                if (fakecallback) {
+                    fakecallback(data, cb, fail, option);
+                } else {
+                    model.cgiFacade(requestConstructor.get({
+                        url: url,
+                        method: "post"
+                    }), data, cb, fail, option);
+                }
+            };
+        }
+    };
+    module.exports = requestmanager;
 });;
 define("/spm_modules/spaseed/1.1.14/lib/util", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
@@ -2852,13 +3057,13 @@ define("/spm_modules/spaseed/1.1.14/main/entry", function(require, exports, modu
             extendRoutes: spaseedConfig.extendRoutes
         });
         //全局点击
-        evt.bindCommonEvent(document.body, "click", {
-            router: function() {
-                var url = this.getAttribute("data-href");
+        evt.bindCommonEvent(null, document.body, "click", {
+            router: function(target) {
+                var url = target.getAttribute("data-href");
                 pageManager.redirect(url);
             },
-            back: function() {
-                pageManager.back(this.getAttribute("data-href"));
+            back: function(target) {
+                pageManager.back(target.getAttribute("data-href"));
             },
             reload: function() {
                 pageManager.reload();
