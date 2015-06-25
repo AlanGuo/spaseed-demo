@@ -6,7 +6,8 @@ define("/app/script/config", function(require, exports, module) {
         basePath: "/app/script/module/",
         root: "page1",
         container: "#container",
-        html5Mode: true
+        pageWrapper: "#pageWrapper",
+        switchMode: "slideLeft"
     });
     module.exports = config;
 });;
@@ -23,7 +24,7 @@ define("/app/script/entry", function(require, exports) {
 
 define("/app/script/model/request", function(require, exports, module) {
     var requestmanager = require("spm_modules/spaseed/1.1.14/lib/requestmanager");
-    requestmanager.add("sample", "/cgi/sample", function(data, cb, fail, options) {
+    requestmanager.add("sample", "/cgi/sample", "GET", function(data, cb, fail, options) {
         setTimeout(function() {
             cb && cb(data);
         }, 100);
@@ -34,7 +35,7 @@ define("/app/script/model/request", function(require, exports, module) {
 
 define("/app/script/module/page1/page1", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
-    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanager");
+    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanagerwithpageswitcher");
     var template = require("dest/view/apptemplate");
     var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
     var binder = require("spm_modules/spaseed/1.1.14/lib/binder");
@@ -51,9 +52,11 @@ define("/app/script/module/page1/page1", function(require, exports, module) {
                 },
                 request: request.sample
             } ], function(values) {
-                pageManager.container.html(template("page1/page1", {
-                    data: values[0]
-                }));
+                pageManager.html({
+                    container: template("page1/page1", {
+                        data: values[0]
+                    })
+                });
                 //绑定数据
                 binder.bind(pageManager.container[0], self);
             });
@@ -186,30 +189,44 @@ define("/spm_modules/spaseed/1.1.14/config", function(require, exports, module) 
 		 * 页面模块基础路径
 		 * @property basePath
 		 * @type String
-		 * @default 'modules/'
+		 * @default '/app/script/module/'
 		 */
-        basePath: "modules/",
+        basePath: "/app/script/module/",
         /**
 		 * 页面包裹选择器
 		 * @property pageWrapper
 		 * @type String
-		 * @default '#pageWrapper'
+		 * @default '#wrapper-all'
 		 */
-        pageWrapper: "#pageWrapper",
+        pageWrapper: "#wrapper-all",
         /**
-		 * 右侧内容容器选择器
-		 * @property appArea
+		 * 页面顶部包裹元素
+		 * @property top
 		 * @type String
-		 * @default '#appArea'
+		 * @default '#top'
 		 */
-        appArea: "#appArea",
+        top: "#top",
+        /**
+		 * 页面底部包裹元素
+		 * @property bottom
+		 * @type String
+		 * @default '#bottom'
+		 */
+        bottom: "#bottom",
+        /**
+		 * 页面body容器
+		 * @property container
+		 * @type String
+		 * @default '#body-container'
+		 */
+        container: "#body-container",
         /**
 		 * 切换页面需要更改class的容器选择器
 		 * @property classWrapper
 		 * @type String
-		 * @default '#container'
+		 * @default '#wrapper-all'
 		 */
-        classWrapper: "#container",
+        classWrapper: "#wrapper-all",
         /**
 		 * 切换页面需要保留的class
 		 * @property defaultClass
@@ -224,6 +241,7 @@ define("/spm_modules/spaseed/1.1.14/config", function(require, exports, module) 
 		 * @default 'spaseed'
 		 */
         defaultTitle: "spaseed",
+        //导航相关
         /**
 		 * 导航容器选择器, 在各容器中遍历a标签, 执行选中态匹配
 		 * @property navContainer
@@ -240,25 +258,11 @@ define("/spm_modules/spaseed/1.1.14/config", function(require, exports, module) 
         navActiveClass: "active",
         /**
 		 * 页面切换方式
-		 * @property switchMode
+		 * @property switchMode  slideLeft,slideRight,fadeIn,
 		 * @type String
 		 * @default null
 		 */
         switchMode: null,
-        /**
-		 * 渲染前执行方法
-		 * @property beforeRender
-		 * @type Function
-		 * @default function (controller, action, params) {}
-		 */
-        beforeRender: function(controller, action, params) {},
-        /**
-		 * 渲染后执行方法
-		 * @property beforeRender
-		 * @type Function
-		 * @default function (controller, action, params) {}
-		 */
-        afterRender: function() {},
         /**
 		 * 扩展路由，优先于框架路由逻辑
 		 * @property extendRoutes
@@ -267,39 +271,12 @@ define("/spm_modules/spaseed/1.1.14/config", function(require, exports, module) 
 		 */
         extendRoutes: {},
         /**
-		 * 改变导航选中态
-		 * @property changeNavStatus
-		 * @type Function
-		 * @default 通用方法
-		 */
-        changeNavStatus: null,
-        /**
-		 * @obsolete
-		 * layout模版
-		 * @property layout
-		 * @type Object
-		 * @default {
-						'default': {
-							'controller': [],
-							'module': 'spaseed/layout/default'
-						}
-					}
-		 */
-        /*
-		'layout': {
-			'default': {
-				'controller': [],
-				'module': 'spaseed/layout/default'
-			}
-		},
-		*/
-        /**
 		 * 首页模块名
 		 * @property root
 		 * @type String
 		 * @default 'home'
 		 */
-        root: "home",
+        root: "index",
         /**
 		 * css配置
 		 * @property css
@@ -315,7 +292,14 @@ define("/spm_modules/spaseed/1.1.14/config", function(require, exports, module) 
 				   ' <p style="font-size:44px">404</p> 您访问的页面没有找到! </h2>'
 		 */
         html404: '<h2 id="tt404" style="text-align:center;padding-top:100px;font-size:20px;line-height:1.5;color:#999">' + ' <p style="font-size:44px">404</p> 您访问的页面没有找到! </h2>',
-        htmlError: '<section class="page-404"><div class="wrap-404" data-event="reload" style="text-align: center;margin-top: 35%;"><div class="tips">{{msg}}</div><div class="tips">轻触屏幕重新加载</div></div></section>',
+        htmlError: '<section class="page-404"><div class="wrap-404" data-click-event="reload" style="text-align: center;margin-top: 35%;"><div class="tips">{{msg}}</div><div class="tips">轻触屏幕重新加载</div></div></section>',
+        /**
+		 * 请求错误时展示更多错误信息
+		 * @property showDetailError
+		 * @type String
+		 * @default true
+		 */
+        showDetailError: true,
         /**
 		 * 请求错误默认提示文字
 		 * @property defaultReqErr
@@ -323,13 +307,6 @@ define("/spm_modules/spaseed/1.1.14/config", function(require, exports, module) 
 		 * @default '连接服务器异常，请稍后再试'
 		 */
         defaultReqErr: "连接服务器异常，请稍后再试",
-        /**
-		 * 请求错误回调
-		 * @property reqErrorHandler
-		 * @type Function
-		 * @default null
-		 */
-        reqErrorHandler: null,
         /**
 		 * 追加的url请求参数
 		 * @property additionalUrlParam
@@ -371,7 +348,14 @@ define("/spm_modules/spaseed/1.1.14/config", function(require, exports, module) 
 		 * @type String
 		 * @default ''
 		 */
-        statsId: ""
+        statsId: "a2ede337a0b21b2991bd02c69befdc07",
+        /**
+		 * 默认开启统计
+		 * @property defaultStats
+		 * @type boolean
+		 * @default true
+		 */
+        defaultStats: true
     };
     module.exports = spaseedConfig;
 });;
@@ -699,7 +683,7 @@ define("/spm_modules/spaseed/1.1.14/lib/cookie", function(require, exports, modu
  */
 define("/spm_modules/spaseed/1.1.14/lib/dialog", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
-    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanager");
+    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanagerwithpageswitcher");
     var evt = require("spm_modules/spaseed/1.1.14/lib/event");
     var template = require("dest/view/apptemplate");
     var env = require("spm_modules/spaseed/1.1.14/lib/env");
@@ -1109,8 +1093,8 @@ define("/spm_modules/spaseed/1.1.14/lib/model", function(require, exports, modul
     var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
     var net = require("spm_modules/spaseed/1.1.14/lib/net");
     var dialog = require("spm_modules/spaseed/1.1.14/lib/dialog");
-    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanager");
-    var util = require("spm_modules/spaseed/1.1.14/lib/util");
+    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanagerwithpageswitcher");
+    var stats = require("spm_modules/spaseed/1.1.14/lib/stats");
     var config = require("app/script/config");
     //数据管理
     var manager = {
@@ -1124,7 +1108,7 @@ define("/spm_modules/spaseed/1.1.14/lib/model", function(require, exports, modul
                 manager.isBusy = false;
                 if (config.defaultStats) {
                     //cgi返回码统计
-                    util.tj("cgi", cgi.url.split("?")[0], ret.code, new Date() - startTime);
+                    stats.trackEvent("cgi", cgi.url.split("?")[0], ret.code, new Date() - startTime);
                 }
                 //恢复按钮
                 if (option.button) {
@@ -1143,10 +1127,14 @@ define("/spm_modules/spaseed/1.1.14/lib/model", function(require, exports, modul
                     if (fail) {
                         fail(ret.msg, _code, ret.data);
                     } else {
+                        var str = config.defaultReqErr;
+                        if (config.showDetailError) {
+                            str = ret.msg || config.defaultReqErr;
+                        }
                         if (pageManager.isEmpty()) {
-                            pageManager.renderError(ret.msg || "系统繁忙");
+                            pageManager.renderError(str);
                         } else {
-                            dialog.msgbox(ret.msg || "系统繁忙");
+                            dialog.msgbox(str);
                         }
                     }
                 }
@@ -1310,6 +1298,99 @@ define("/spm_modules/spaseed/1.1.14/lib/net", function(require, exports, module)
     };
     module.exports = net;
 });;
+define("/spm_modules/spaseed/1.1.14/lib/pageswitcher", function(require, exports, module) {
+    var spaseedConfig = require("app/script/config");
+    var pageswitcher = {
+        switchMode: spaseedConfig.switchMode || "none",
+        method: {
+            slideLeft: {
+                elemIn: {
+                    cssBefore: {
+                        position: "absolute",
+                        "z-index": "15",
+                        top: "0",
+                        left: "0",
+                        transform: "translateX(100%) translateZ(0)",
+                        transition: "transform .4s ease",
+                        width: "100%",
+                        height: "100%"
+                    },
+                    cssAfter: {
+                        transform: ""
+                    },
+                    duration: 600
+                },
+                elemOut: {
+                    cssBefore: {
+                        transition: "transform 1.6s ease",
+                        transform: "translateX(0) translateZ(0)"
+                    },
+                    cssAfter: {
+                        transform: "translateX(-100%) translateZ(0)"
+                    },
+                    duration: 1600
+                }
+            },
+            slideRight: {
+                elemIn: {
+                    cssBefore: {
+                        position: "absolute",
+                        "z-index": "15",
+                        top: "0",
+                        left: "0",
+                        transform: "translateX(-100%) translateZ(0)",
+                        transition: "transform .4s ease",
+                        width: "100%",
+                        height: "100%"
+                    },
+                    cssAfter: {
+                        transform: ""
+                    },
+                    duration: 600
+                },
+                elemOut: {
+                    cssBefore: {
+                        transition: "transform 1.6s ease",
+                        transform: "translateX(0) translateZ(0)"
+                    },
+                    cssAfter: {
+                        transform: "translateX(100%) translateZ(0)"
+                    },
+                    duration: 1600
+                }
+            },
+            fadeIn: {
+                elemIn: {
+                    cssBefore: {
+                        position: "absolute",
+                        "z-index": "15",
+                        top: "0",
+                        left: "0",
+                        transition: "opacity .4s ease",
+                        opacity: "0",
+                        width: "100%",
+                        height: "100%"
+                    },
+                    cssAfter: {
+                        opacity: "1"
+                    },
+                    duration: 600
+                },
+                elemOut: {
+                    cssBefore: {
+                        transition: "opacity 1.6s ease",
+                        opacity: "1"
+                    },
+                    cssAfter: {
+                        opacity: "0"
+                    },
+                    duration: 1600
+                }
+            }
+        }
+    };
+    module.exports = pageswitcher;
+});;
 "use strict";
 
 define("/spm_modules/spaseed/1.1.14/lib/requestconstructor", function(require, exports, module) {
@@ -1343,20 +1424,76 @@ define("/spm_modules/spaseed/1.1.14/lib/requestmanager", function(require, expor
     var model = require("spm_modules/spaseed/1.1.14/lib/model");
     var requestConstructor = require("spm_modules/spaseed/1.1.14/lib/requestconstructor");
     var requestmanager = {
-        add: function(name, url, fakecallback) {
+        add: function(name, url, method, fakecallback) {
             this[name] = function(data, cb, fail, option) {
                 if (fakecallback) {
                     fakecallback(data, cb, fail, option);
                 } else {
-                    model.cgiFacade(requestConstructor.get({
+                    model.cgiFacade(requestConstructor.create({
                         url: url,
-                        method: "post"
+                        method: method || "GET"
                     }), data, cb, fail, option);
                 }
             };
         }
     };
     module.exports = requestmanager;
+});;
+/**
+ * stats
+ * @class stats
+ * @static
+ */
+define("/spm_modules/spaseed/1.1.14/lib/stats", function(require, exports, module) {
+    var config = require("app/script/config");
+    var stats = {
+        requestUrl: location.protocol + "//log.hm.baidu.com/hm.gif",
+        fixedData: [ "cc=1", "ck=" + (navigator.cookieEnabled ? 1 : 0), "cl=" + window.screen.colorDepth + "-bit", "ds=" + window.screen.width + "x" + window.screen.height, "fl=17.0", "ja=" + (navigator.javaEnabled() ? 1 : 0), "ln=" + navigator.language || navigator.browserLanguage || navigator.systemLanguage || navigator.userLanguage || "", "lo=0", "nv=1", "si=" + config.statsId, "st=1", "v=1.0.94", "lv=2" ],
+        _send: function(params) {
+            var src = this.requestUrl + "?" + params.concat(this.fixedData).join("&");
+            var img = new Image();
+            img.onload = img.onerror = img.onabort = function() {
+                img.onload = img.onerror = img.onabort = null;
+                img = null;
+            };
+            setTimeout(function() {
+                img.src = src;
+            }, 500);
+        },
+        /**
+		  * pv,uv
+		  * @method pv
+		  * 统计页面pv，在页面底部调用即可
+		  * @param {number} domReadyTime 
+		  * @param {number} loadEventTime 
+		  */
+        pv: function(domReadyTime, loadEventTime) {
+            //请求一
+            var params = [ "et=0", "rnd=" + Math.round(Math.random() * 2147483647), "tt=" + encodeURIComponent(document.title) ];
+            this._send(params.concat(this.fixedData));
+            var self = this;
+            setTimeout(function() {
+                //请求二
+                params = [ "et=87", 'ep={"netAll":1,"netDns":0,"netTcp":0,"srv":39,"dom":' + (domReadyTime ? domReadyTime : 0) + ',"loadEvent":' + (loadEventTime ? loadEventTime : 0) + ',"qid":"","bdDom":0,"bdRun":0,"bdDef":0}', "rnd=" + Math.round(Math.random() * 2147483647), "tt=" + encodeURIComponent(document.title) ];
+                self._send(params);
+            }, 100);
+        },
+        /**
+		  * 自定义事件
+		  * @method trackEvent
+		  * 自定义统计事件
+		  * @param {string} category 
+		  * @param {string} action 
+		  * @param {string} label 
+		  * @param {string} value 
+		  */
+        trackEvent: function(category, action, label, value) {
+            var str = [ category, action, label, value ];
+            var params = [ "et=4", "rnd=" + Math.round(Math.random() * 2147483647), "ep=" + encodeURIComponent(str.join("*")) ];
+            this._send(params);
+        }
+    };
+    module.exports = stats;
 });;
 define("/spm_modules/spaseed/1.1.14/lib/util", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
@@ -3040,7 +3177,7 @@ define("/spm_modules/spaseed/1.1.14/lib/zepto", function(require) {
 define("/spm_modules/spaseed/1.1.14/main/entry", function(require, exports, module) {
     var evt = require("spm_modules/spaseed/1.1.14/lib/event");
     var router = require("spm_modules/spaseed/1.1.14/main/router");
-    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanager");
+    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanagerwithpageswitcher");
     var spaseedConfig = require("app/script/config");
     //spaseed初始化
     var init = function() {
@@ -3247,24 +3384,11 @@ define("/spm_modules/spaseed/1.1.14/main/pagemanager", function(require, exports
 		 */
         loadView: function(controller, action, params, callback) {
             var _self = this;
-            //渲染前执行业务逻辑
-            if (spaseedConfig.beforeRender) {
-                if (spaseedConfig.beforeRender(controller, action, params) === false) {
-                    return;
-                }
-            }
             params = params || [];
             /*
 			//渲染公共模版
 			this.renderLayout(controller, action, params);
 			*/
-            //存储主要jQuery dom对象
-            /**
-			 * 右侧内容容器
-			 * @property appArea
-			 * @type Object
-			 */
-            this.appArea = $(spaseedConfig.appArea);
             /**
 			 * 切换页面需要更改class的容器
 			 * @property classWrapper
@@ -3389,11 +3513,6 @@ define("/spm_modules/spaseed/1.1.14/main/pagemanager", function(require, exports
             } else {
                 this.render404();
             }
-            /*是不是可以在这里加入*/
-            //渲染后执行业务逻辑
-            if (spaseedConfig.afterRender) {
-                spaseedConfig.afterRender(obj);
-            }
         },
         /**
 		 * 渲染404
@@ -3401,7 +3520,7 @@ define("/spm_modules/spaseed/1.1.14/main/pagemanager", function(require, exports
 		 */
         render404: function() {
             var notFound = spaseedConfig.html404;
-            var container = this.appArea.length ? this.appArea : this.container;
+            var container = this.container;
             container.html(notFound);
         },
         renderError: function(msg) {
@@ -3521,6 +3640,34 @@ define("/spm_modules/spaseed/1.1.14/main/pagemanager", function(require, exports
     };
     module.exports = pageManager;
 });;
+define("/spm_modules/spaseed/1.1.14/main/pagemanagerwithpageswitcher", function(require, exports, module) {
+    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanager");
+    var pageswitcher = require("spm_modules/spaseed/1.1.14/lib/pageswitcher");
+    var config = require("app/script/config");
+    var parentHtml = pageManager.html;
+    //改写pageManager的html方法
+    pageManager.html = function(option) {
+        var self = this;
+        parentHtml.call(this, option);
+        var method = pageswitcher.method[option.switchMode || config.switchMode];
+        if (method) {
+            var $cloneWrapper = this.pageWrapper.clone();
+            $cloneWrapper.css(method.elemIn.cssBefore);
+            this.pageWrapper.css(method.elemOut.cssBefore);
+            $("body").append($cloneWrapper);
+            $cloneWrapper.height();
+            $cloneWrapper.css(method.elemIn.cssAfter);
+            this.pageWrapper.css(method.elemOut.cssAfter);
+            setTimeout(function() {
+                self.pageWrapper.remove();
+                self.pageWrapper = $cloneWrapper;
+                self.pageWrapper.removeAttr("style");
+            }, method.elemIn.duration);
+        }
+    };
+    pageManager.pageswitcher = pageswitcher;
+    module.exports = pageManager;
+});;
 /**
    * 路由管理
    * @class router
@@ -3548,7 +3695,8 @@ define("/spm_modules/spaseed/1.1.14/main/router", function(require, exports, mod
             domain: ""
         },
         start: function() {
-            var initPath = this.getFragment() ? this.getFragment() : "/";
+            var frag = this.getFragment();
+            var initPath = frag ? frag : "/";
             if (initPath === "/index.html") {
                 initPath = "/";
             }
@@ -3620,11 +3768,8 @@ define("/spm_modules/spaseed/1.1.14/main/router", function(require, exports, mod
         getFragment: function() {
             var fragment, pathName = win.location.pathname + win.location.search;
             if (this.option["html5Mode"]) {
+                //锚点在html5模式下不作处理
                 fragment = pathName;
-                //如果锚点路径在html5Mode环境打开 
-                if (fragment === "/" && this.getHash()) {
-                    fragment = this.getHash();
-                }
             } else {
                 fragment = this.getHash();
                 //如果完整路径在hash环境打开

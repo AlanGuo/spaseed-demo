@@ -3,13 +3,14 @@ define(function(require, exports, module){
 
 	var pageManager = require('./pagemanager');
 	var pageswitcher = require('pageswitcher');
+	var config = require('config');
 
 	var parentHtml = pageManager.html;
 	//改写pageManager的html方法
 	pageManager.html = function(option){
 		var self = this;
 		parentHtml.call(this,option);
-		var method = pageswitcher.method[option.switchMode];
+		var method = pageswitcher.method[option.switchMode || config.switchMode];
 
 		if(method){
 			var $cloneWrapper = this.pageWrapper.clone();

@@ -16,9 +16,9 @@ define(function (require, exports, module) {
                 params:{title:'page2',description:'page2 description'},
                 request:request.sample
             }],function(values){
-                pageManager.container.html(template('page2/page2',{
-                    data: values[0]
-                }));
+                pageManager.html({
+                    container:template('page2/page2',{data: values[0]})
+                });
             });
         },
 

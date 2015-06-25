@@ -6,7 +6,8 @@ define(function(require,exports,module){
 		basePath:'/app/script/module/',
 		root : 'page1',
 		container:'#container',
-		html5Mode:true
+		pageWrapper:'#pageWrapper',
+		switchMode:'slideLeft'
 	});
 	
 	module.exports = config;

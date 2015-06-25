@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>spaseed</title>
     <style>
     	html,body,a,div,span,ul,li,h1,h2,p{margin: 0; padding: 0}
@@ -26,9 +27,9 @@
 <body>
 	<div id="pageWrapper">
 		<ul class="menu">
-		    <li><a href="#" data-href="/" data-click-event="router">page1</a></li>
-		    <li><a href="#" data-href="/page2" data-click-event="router">page2</a></li>
-		    <li><a href="#" data-href="/page3" data-click-event="router">page3</a></li>
+		    <li><a data-href="/" data-click-event="router">page1</a></li>
+		    <li><a data-href="/page2" data-click-event="router">page2</a></li>
+		    <li><a data-href="/page3" data-click-event="router">page3</a></li>
 		</ul>
 		<div id="container"></div>
 	</div>
@@ -45,7 +46,8 @@
                 'binder':'spm_modules/spaseed/1.1.14/lib/binder',
                 'cookie':'spm_modules/spaseed/1.1.14/lib/cookie',
                 'entry':'spm_modules/spaseed/1.1.14/main/entry',
-                'pagemanager':'spm_modules/spaseed/1.1.14/main/pagemanager',
+                'pagemanager':'spm_modules/spaseed/1.1.14/main/pagemanagerwithpageswitcher',
+                'pageswitcher':'spm_modules/spaseed/1.1.14/lib/pageswitcher',
                 'util':'spm_modules/spaseed/1.1.14/lib/util',
                 'env':'spm_modules/spaseed/1.1.14/lib/env',
                 'event':'spm_modules/spaseed/1.1.14/lib/event',
@@ -55,6 +57,7 @@
                 'datamanager':'spm_modules/spaseed/1.1.14/lib/datamanager',
                 'asyncrequest':'spm_modules/spaseed/1.1.14/lib/asyncrequest',
                 'model':'spm_modules/spaseed/1.1.14/lib/model',
+                'stats':'spm_modules/spaseed/1.1.14/lib/stats',
                 'requestconstructor':'spm_modules/spaseed/1.1.14/lib/requestconstructor',
                 'requestmanager':'spm_modules/spaseed/1.1.14/lib/requestmanager',
 

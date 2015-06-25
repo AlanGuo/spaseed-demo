@@ -28,9 +28,9 @@ define(function(require, exports, module){
 			$cloneWrapper = this.pageWrapper.clone();
 		}
 		
-		this.top = $cloneWrapper.find('#top');
-		this.bottom = $cloneWrapper.find('#bottom');
-		this.container = this.classWrapper = $cloneWrapper.find('#container');
+		this.top = $cloneWrapper.find(config.top);
+		this.bottom = $cloneWrapper.find(config.bottom);
+		this.container = this.classWrapper = $cloneWrapper.find(config.container);
 		
 		if(option.top !== undefined){
 			var defaultTopClass = config.defaultTopClass,
@@ -55,17 +55,17 @@ define(function(require, exports, module){
         }
 
         //滚动逻辑
-        if(option.scroll !== undefined){
-			setTimeout(function(){
-				var defaultClass = config.defaultClass,
-					classWrapper = pageManager.classWrapper,
-					className = (defaultClass || '') +' ' +(option.className||'');
+        
+		setTimeout(function(){
+			var defaultClass = config.defaultClass,
+				classWrapper = pageManager.classWrapper,
+				className = (defaultClass || '') +' ' +(option.className||'');
 
-				classWrapper.attr('class', option.exclusiveClassName || className);
-			},0);
-
-        	this.container.scrollTop(option.scroll || 0);
-        }
+			classWrapper.attr('class', option.exclusiveClassName || className);
+		},0);
+		if(option.scroll !== undefined){
+    		this.container.scrollTop(option.scroll || 0);
+    	}
 
         if(method && $cloneWrapper){
 	        $cloneWrapper.css(method.elemIn.cssBefore);

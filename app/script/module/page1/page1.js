@@ -20,9 +20,9 @@ define(function (require, exports, module) {
                 params:{title:'page1',description:'page1 description'},
                 request:request.sample
             }],function(values){
-                pageManager.container.html(template('page1/page1',{
-                    data: values[0]
-                }));
+                pageManager.html({
+                    container:template('page1/page1',{data: values[0]})
+                });
 
                 //绑定数据
                 binder.bind(pageManager.container[0],self);

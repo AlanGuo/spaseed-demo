@@ -25,7 +25,8 @@
       "binder":"spm_modules/spaseed/1.1.14/lib/binder",
       "cookie":"spm_modules/spaseed/1.1.14/lib/cookie",
       "entry":"spm_modules/spaseed/1.1.14/main/entry",
-      "pagemanager":"spm_modules/spaseed/1.1.14/main/pagemanager",
+      "pagemanager":"spm_modules/spaseed/1.1.14/main/pagemanagerwithpageswitcher",
+      "pageswitcher":"spm_modules/spaseed/1.1.14/lib/pageswitcher",
       "util":"spm_modules/spaseed/1.1.14/lib/util",
       "dialog":"spm_modules/spaseed/1.1.14/lib/dialog",
       "event":"spm_modules/spaseed/1.1.14/lib/event",
@@ -35,6 +36,7 @@
       "datamanager":"spm_modules/spaseed/1.1.14/lib/datamanager",
       "asyncrequest":"spm_modules/spaseed/1.1.14/lib/asyncrequest",
       "model":"spm_modules/spaseed/1.1.14/lib/model",
+      "stats":"spm_modules/spaseed/1.1.14/lib/stats",
       "requestconstructor":"spm_modules/spaseed/1.1.14/lib/requestconstructor",
       "requestmanager":"spm_modules/spaseed/1.1.14/lib/requestmanager",
 
