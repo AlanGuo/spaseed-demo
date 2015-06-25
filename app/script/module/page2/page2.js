@@ -11,12 +11,14 @@ define(function (require, exports, module) {
         title: 'page2',
 
         render: function () {
-
+            var self = this;
             asyncRequest.all([{
                 params:{title:'page2',description:'page2 description'},
                 request:request.sample
             }],function(values){
                 pageManager.html({
+                    switchStyle:{top:'49px',height:'auto'},
+                    isRefresh:self.isRefresh,
                     container:template('page2/page2',{data: values[0]})
                 });
             });

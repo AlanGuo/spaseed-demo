@@ -24,14 +24,19 @@
     	.subcontainer{margin-left: 180px; padding: 20px}
     </style>
 </head>
-<body>
-	<div id="pageWrapper">
+<body style="overflow:hidden">
+    <style type="text/css">
+    .padding{
+        padding:3rem;
+    }
+    </style>
+	<div id="switchWrapper" style="overflow:hidden">
 		<ul class="menu">
 		    <li><a data-href="/" data-click-event="router">page1</a></li>
 		    <li><a data-href="/page2" data-click-event="router">page2</a></li>
 		    <li><a data-href="/page3" data-click-event="router">page3</a></li>
 		</ul>
-		<div id="container"></div>
+		<div id="pageWrapper" class="padding"></div>
 	</div>
 	<!--seajs-->
 	<script type="text/javascript" src="/spm_modules/seajs/2.3.0/dist/sea-debug.js"></script>

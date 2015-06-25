@@ -9,12 +9,14 @@ define(function (require, exports, module) {
     var page3 = {
 
         render: function () {
-
+            var self = this;
             asyncRequest.all([{
                 params:{title:'page3',description:'page3 description'},
                 request:request.sample
             }],function(values){
                 pageManager.html({
+                    switchStyle:{top:'49px',height:'auto'},
+                    isRefresh:self.isRefresh,
                     container:template('page3/page3',{data: values[0]})
                 });
             });

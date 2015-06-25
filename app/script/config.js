@@ -7,7 +7,8 @@ define(function(require,exports,module){
 		root : 'page1',
 		container:'#container',
 		pageWrapper:'#pageWrapper',
-		switchMode:'slideLeft'
+		switchMode:'fadeIn',
+		switchWrapper:'#switchWrapper'
 	});
 	
 	module.exports = config;

@@ -30,14 +30,13 @@ module.exports = function(grunt){
 	            files: [{
 	                expand: true,
 	                cwd: './',
-	                src: ['app/script/entry.js','app/script/module/page1/page1.js']
+	                src: ['app/script/entry.js','app/script/module/**/**.js']
 	            }]
 	        }
 	    }
 	});
 	grunt.loadNpmTasks('grunt-qc-concat');
 	grunt.loadNpmTasks('grunt-qc-watch');
-	grunt.loadNpmTasks('grunt-contrib-yuidoc');
 	grunt.loadNpmTasks('grunt-mocha');
 	grunt.loadNpmTasks('grunt-alan-tmod');
 	grunt.loadNpmTasks('grunt-seajs-combo');

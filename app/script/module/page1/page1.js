@@ -21,9 +21,10 @@ define(function (require, exports, module) {
                 request:request.sample
             }],function(values){
                 pageManager.html({
+                    switchStyle:{top:'49px',height:'auto'},
+                    isRefresh:self.isRefresh,
                     container:template('page1/page1',{data: values[0]})
                 });
-
                 //绑定数据
                 binder.bind(pageManager.container[0],self);
             });
