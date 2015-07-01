@@ -13,9 +13,6 @@ define(function(require, exports, module) {
 			if(tk){
 				params.push('tk='+tk);
 			}
-			// if(window.userinfo.userId){
-			// 	params.push('uin='+window.userinfo.userId);
-			// }
 			
 			if(params.length){
 				cgi += /\?/.test(cgi) ? '&' : '?';

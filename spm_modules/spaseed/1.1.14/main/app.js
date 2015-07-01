@@ -5,7 +5,7 @@ define(function(require, exports, module){
 	//route parse
 	function parse(url,option){
 
-		var atag,pathname,search,params = {},view,arr,pair;
+		var atag,pathname,search,params = {},view,arr,pair,filename;
 
 		atag = document.createElement('a');
 		atag.href = url;
@@ -17,7 +17,9 @@ define(function(require, exports, module){
 			pathname = this.config.root || '/index';
 		}
 
-		view = option.viewfolder + pathname;
+		//文件名和最后一个文件夹相同
+		filename = pathname.split('/').slice(-1);
+		view = this.config.viewfolder + pathname + '/' + filename;
 
 		for(var p in option){
 			params[p] = option[p];
@@ -36,7 +38,6 @@ define(function(require, exports, module){
 			params:params,
 			template:pathname.substr(1)
 		};
-
 	}
 
 	var App = Node.extend({
@@ -45,6 +46,7 @@ define(function(require, exports, module){
 		history:[],
 		historyIndex:0,
 		config:{root:'/index'},
+
 		ctor:function(data){
 			this.$super(data);
 			window.addEventListener('popstate',function(e){
@@ -64,10 +66,12 @@ define(function(require, exports, module){
 			}.bind(this));
 
 			//router事件
-			this.on('click','router',function(target,dataset){
-				this.loadUrl(target.getAttribute('router'),dataset)
+			var self = this;
+			this.$event.on('click','router',function(target){
+				self.loadUrl(target.getAttribute('data-href'));
 			});
 		},
+
 		loadUrl:function(url,option,cacheHtml,effect){
 			//数据校验
 			if(!url){
@@ -77,8 +81,6 @@ define(function(require, exports, module){
 			//配置
 			if(!option){
 				option = {};
-				//viewfolder
-				option.viewfolder = this.config.viewfolder;
 			}
 
 			if(cacheHtml){
@@ -103,35 +105,21 @@ define(function(require, exports, module){
 			else{
 				var self = this;
 				require.async(obj.view,function(View){
-					var map = {
-						left:'translate3d(100%, 0, 0)',
-						right:'translate3d(-20%, 0, 0)'
-					};
 					if(View){ 
-						view = new View({
-							style:{
-								WebkitTransition:'-webkit-transform .4s',
-								WebkitTransform:map[option.effect],
-								position:'absolute',
-								top:0,
-								right:0,
-								bottom:0,
-								left:0
-							}
-						});
+						view = new View();
 
 						view._ = obj.view;
 
 						view.params = obj.params;
-						this.loadView(view);
+						self.loadView(view);
 					}
 
-					self.history.push([url,option,view.$.innerHTML]);
+					self.history.push([url,option,view.$elem.html()]);
 					if(self.history.length > 10){
 						self.history = self.history.slice(5);
 					}
 
-					self.historyIndex++
+					self.historyIndex++;
 
 					if(!option.browser){
 						history.pushState({url:url,option:option,historyIndex:self.historyIndex},view.title,url);
@@ -140,28 +128,18 @@ define(function(require, exports, module){
 				});
 			}
 		},
+
 		addChild:function(view){
 			this.$super(view);
 			this.view = view;
 		},
-		loadView:function(view){
-			var effect = view.params.effect;
-			if(this.view){
-				(function(){
-					var last = this.view;
-					last.slideout(effect,function(){
-						last.destroy()
-						this.removeChild(last);
-					}.bind(this))
-				}.bind(this))();
-			}
-			
-			this.addChild(view);
 
-			this.view.slidein(effect,function(){});
+		loadView:function(view){
+			this.addChild(view);
 			this.view.render();
 			document.title = this.view.title;
 		},
+
 		backView:function(){
 			this.history.pop();
 
@@ -170,13 +148,14 @@ define(function(require, exports, module){
 
 			this.loadUrl.apply(this,record);
 		},
+
 		startup:function(option){
 			for(var p in option){
 				this.config[p] = option[p];
 			}
-			this.loadUrl(window.location.href)
+			this.loadUrl(window.location.href);
 		}
-	})
+	});
 
 	App.create = function(data){
 		return new App(data);

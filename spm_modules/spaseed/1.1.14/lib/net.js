@@ -1,6 +1,6 @@
 define(function (require, exports, module) {
-    var mp = require('mp');
-        spaseedConfig = require('config');
+    var mp = require('mp'),
+        $ = require('$');
     
     var objectToParams = function (obj, decodeUri) {
         var param = $.param(obj);
@@ -20,7 +20,7 @@ define(function (require, exports, module) {
     var Net = mp.Class.extend({
 
         ctor:function(mpNode){
-
+            this.app = mpNode;
         },
         
         _progressBar:[],
@@ -35,8 +35,7 @@ define(function (require, exports, module) {
                 _cgiConfig = cgiConfig,
                 _data = opt.data || {},
                 _url = "",
-                _cb = null,
-                _global = opt.global;
+                _cb = null;
 
             if (!_cgiConfig) {
                 _cgiConfig = {
@@ -49,15 +48,6 @@ define(function (require, exports, module) {
 
                 // 成功回调
                 _cb = function (ret) {
-
-                    // 使用友好的提示消息
-                    // if (ret && ret['uiMsg']) {
-                    //     // 如果有内部错误消息，则输出log
-                    //     console && console.warn && (ret['code'] !== 0 && console.warn('错误 code=' + ret['code'] + ',msg=' + ret['msg']));
-                    //     ret['msg'] = ret['uiMsg'] + '[#' + ret['code'] + ']';
-                    //     delete ret['uiMsg'];
-                    // }
-
                     opt.cb && opt.cb(ret);
                 };
 
@@ -65,16 +55,12 @@ define(function (require, exports, module) {
                     t: new Date().getTime()
                 };
 
-                if (spaseedConfig.additionalUrlParam) {
-                    $.extend(urlParams, spaseedConfig.additionalUrlParam())
-                }
-
                 _url = this._addParam(_cgiConfig.url, urlParams);
 
                 if (_cgiConfig.method && _cgiConfig.method.toLowerCase() === "post") {
-                    return this.post(_url, _data, _cb, _global);
+                    return this.post(_url, _data, _cb);
                 } else {
-                    return this.get(_url, _data, _cb, _global);
+                    return this.get(_url, _data, _cb);
                 }
 
             }
@@ -86,10 +72,9 @@ define(function (require, exports, module) {
          * @param  {String}   url    URL
          * @param  {Object}   data   参数
          * @param  {Function} cb     回调函数
-         * @param  {Boolean}  global 是否触发全局 AJAX 事件
          */
-        get: function (url, data, cb, global) {
-            return this._ajax(url, data, 'GET', cb, global);
+        get: function (url, data, cb) {
+            return this._ajax(url, data, 'GET', cb);
         },
         
         /**
@@ -98,30 +83,49 @@ define(function (require, exports, module) {
          * @param  {String}   url    URL
          * @param  {Object}   data   参数
          * @param  {Function} cb     回调函数
-         * @param  {Boolean}  global 是否触发全局 AJAX 事件
          */
-        post: function (url, data, cb, global) {
-            return this._ajax(url, data, 'POST', cb, global);
+        post: function (url, data, cb) {
+            return this._ajax(url, data, 'POST', cb);
         },
 
-        _ajax: function (url, data, method, cb, global) {
+        /**
+         * POST请求
+         * @method post
+         * @param  {String}   url    URL
+         * @param  {Object}   data   参数
+         * @param  {Function} cb     回调函数
+         */
+        request:function(request,data,cb){
+            if(request.fakecallback){
+                request.fakecallback(data,cb);
+            }
+            else{
+                this[request.method](request.url,data,cb);
+            }
+        },
+
+        _ajax: function (url, data, method, cb) {
             var self =this;
-            (global == undefined) && (global = true);
             var returnVal = null;
             var progressBar = null;
 
-            if(spaseedConfig.xhrProgress){
+            if(this.app.config.xhrProgress){
                 progressBar = self._showProgress();
             }
+
+            var starttime = +new Date();
             (function(pbar){
                 returnVal = $.ajax({
                     type: method,
                     url: url,
                     data: data,
-                    global: global,
                     success: function (data) {
                         self._hideProgress(pbar);
-                        cb(data);
+                        //全局的netback，可以对特殊的返回码做特殊处理
+                        if(self.app.config.netback){
+                            self.app.config.netback.call(self.app,url,data,cb);
+                        }
+                        cb(data, {starttime:starttime});
                     },
                     error: function (jqXHR) {
                         self._hideProgress(pbar);
@@ -136,14 +140,13 @@ define(function (require, exports, module) {
                                 data.msg = jqXHR.statusText;
                                 data.data = {};
                             }
-                            cb(data);
+                            cb(data, {starttime:starttime});
                         }
                     }
                 });
                 if(pbar){
                     returnVal.onprogress = function(evt){
                         var progressWidth = ((evt.loaded / (evt.total || (evt.loaded>1000?evt.loaded:1000))) * pbar.clientWidth*0.99) | 0;
-                        //pbar.style.width = progressWidth + 'px';
                     };
                 }
             })(progressBar);
@@ -178,5 +181,5 @@ define(function (require, exports, module) {
         return new Net(mpNode);
     };
 
-    module.exports = net;
+    module.exports = Net;
 });

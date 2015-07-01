@@ -12,42 +12,82 @@ define("/app/script/config", function(require, exports, module) {
 "use strict";
 
 define("/app/script/model/request", function(require, exports, module) {
-    var requestmanager = require("spm_modules/spaseed/1.1.14/lib/requestmanager");
-    requestmanager.add("sample", "/cgi/sample", "GET", function(data, cb, fail, options) {
-        setTimeout(function() {
-            cb && cb(data);
-        }, 100);
-    });
-    module.exports = requestmanager;
+    var request = {
+        sample: {
+            url: "/cgi/sample",
+            method: "get",
+            fakecallback: function(data, cb) {
+                setTimeout(function() {
+                    cb(data);
+                }, 200);
+            }
+        }
+    };
+    module.exports = request;
+});;
+define("/app/script/module/page3/page3", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
+    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanagerwithpageswitcher");
+    var request = require("app/script/model/request");
+    var template = require("dest/view/apptemplate");
+    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
+    var page3 = {
+        render: function() {
+            var self = this;
+            asyncRequest.all([ {
+                params: {
+                    title: "page3",
+                    description: "page3 description"
+                },
+                request: request.sample
+            } ], function(values) {
+                pageManager.html({
+                    switchStyle: {
+                        top: "49px",
+                        height: "auto"
+                    },
+                    isRefresh: self.isRefresh,
+                    container: template("page3/page3", {
+                        data: values[0]
+                    })
+                });
+            });
+        },
+        destroy: function() {}
+    };
+    module.exports = page3;
 });;
 "use strict";
 
 define("/app/script/module/page1/page1", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
-    var mp = require("spm_modules/spaseed/1.1.14/main/mp");
-    //var template = require('template');
-    //var asyncRequest = require('asyncrequest');
-    //var binder = require('binder');
+    var View = require("spm_modules/spaseed/1.1.14/main/view");
+    var Net = require("spm_modules/spaseed/1.1.14/lib/net");
+    var template = require("dest/view/apptemplate");
+    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
+    var binder = require("spm_modules/spaseed/1.1.14/lib/binder");
     var request = require("app/script/model/request");
-    var page1 = mp.Class.extend({
+    var Page1 = View.extend({
+        $elem: $("#pageWrapper"),
         ctor: function(data) {
             this.$super(data);
         },
         render: function() {
-            //var self = this;
-            // asyncRequest.all([{
-            //     params:{title:'page1',description:'page1 description'},
-            //     request:request.sample
-            // }],function(values){
-            //     pageManager.html({
-            //         switchStyle:{top:'49px',height:'auto'},
-            //         isRefresh:self.isRefresh,
-            //         container:template('page1/page1',{data: values[0]})
-            //     });
-            //     //绑定数据
-            //     //binder.bind(pageManager.container[0],self);
-            // });
-            this.$.innerHTML = template("page1/page1", {});
+            var self = this;
+            asyncRequest.all([ {
+                params: {
+                    title: "page1",
+                    description: "page1 description"
+                },
+                request: request.sample,
+                net: this.$net
+            } ], function(values) {
+                self.$elem.html(template("page1/page1", {
+                    data: values[0]
+                }));
+                //绑定数据
+                binder.bind(self.$elem[0], self);
+            });
         },
         title: "page1",
         detail: 0,
@@ -58,19 +98,19 @@ define("/app/script/module/page1/page1", function(require, exports, module) {
                     this.detail++;
                 }
             }
-        },
-        destroy: function() {}
+        }
     });
-    module.exports = page1;
+    module.exports = Page1;
 });;
 define("/app/script/module/page2/page2", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
-    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanagerwithpageswitcher");
     var template = require("dest/view/apptemplate");
     var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
     var request = require("app/script/model/request");
-    var page2 = {
+    var View = require("spm_modules/spaseed/1.1.14/main/view");
+    var page2 = View.extend({
         title: "page2",
+        $elem: $("#pageWrapper"),
         render: function() {
             var self = this;
             asyncRequest.all([ {
@@ -78,22 +118,16 @@ define("/app/script/module/page2/page2", function(require, exports, module) {
                     title: "page2",
                     description: "page2 description"
                 },
-                request: request.sample
+                request: request.sample,
+                net: this.$net
             } ], function(values) {
-                pageManager.html({
-                    switchStyle: {
-                        top: "49px",
-                        height: "auto"
-                    },
-                    isRefresh: self.isRefresh,
-                    container: template("page2/page2", {
-                        data: values[0]
-                    })
-                });
+                self.$elem.html(template("page2/page2", {
+                    data: values[0]
+                }));
             });
         },
         destroy: function() {}
-    };
+    });
     module.exports = page2;
 });;
 define("/app/script/module/page3/index/index", function(require, exports, module) {
@@ -131,38 +165,6 @@ define("/app/script/module/page3/other/other", function(require, exports, module
         destroy: function() {}
     };
     module.exports = page3Other;
-});;
-define("/app/script/module/page3/page3", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
-    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanagerwithpageswitcher");
-    var request = require("app/script/model/request");
-    var template = require("dest/view/apptemplate");
-    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
-    var page3 = {
-        render: function() {
-            var self = this;
-            asyncRequest.all([ {
-                params: {
-                    title: "page3",
-                    description: "page3 description"
-                },
-                request: request.sample
-            } ], function(values) {
-                pageManager.html({
-                    switchStyle: {
-                        top: "49px",
-                        height: "auto"
-                    },
-                    isRefresh: self.isRefresh,
-                    container: template("page3/page3", {
-                        data: values[0]
-                    })
-                });
-            });
-        },
-        destroy: function() {}
-    };
-    module.exports = page3;
 });;
 define("/app/script/module/page3/page3", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
@@ -282,22 +284,22 @@ define("/app/script/module/page3/page3", function(require, exports, module) {
         }
         global.template = template;
     }
-    /*v:9*/
+    /*v:2*/
     template("page1/page1", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
         return $out += '<h1 data-click-event="tt_click">', $out += $escape(data.title), 
         $out += "</h1> <div>", $out += $escape(data.description), $out += '</div> <div bind-content="detail"></div> ', 
         new String($out);
-    }), /*v:2*/
+    }), /*v:1*/
     template("page2/page2", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
         return $out += "<h1>", $out += $escape(data.title), $out += "</h1> <div>", $out += $escape(data.description), 
         $out += "</div> ", new String($out);
-    }), /*v:2*/
-    template("page3/index/index", "<div> This is '/page3/index' content </div>"), /*v:2*/
-    template("page3/other/other", "<div> This is 'other' page content </div> "), /*v:2*/
+    }), /*v:1*/
+    template("page3/index/index", "<div> This is '/page3/index' content </div>"), /*v:1*/
+    template("page3/other/other", "<div> This is 'other' page content </div> "), /*v:1*/
     template("page3/page3", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
@@ -495,20 +497,21 @@ define("/spm_modules/spaseed/1.1.14/config", function(require, exports, module) 
  * @static
  */
 define("/spm_modules/spaseed/1.1.14/lib/asyncrequest", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
     var asyncRequest = {
         all: function(requestArray, success, fail) {
             if (window.Promise) {
                 var promiseFunctionArray = [];
-                $(requestArray).map(function(index, item) {
-                    promiseFunctionArray.push(new Promise(function(resolve, reject) {
-                        item.request(item.params, function(data) {
-                            resolve(data);
-                        }, function(err) {
-                            reject(err);
-                        });
-                    }));
-                });
+                for (var i = 0; i < requestArray.length; i++) {
+                    (function(item, index) {
+                        promiseFunctionArray.push(new Promise(function(resolve, reject) {
+                            item.net.request(item.request, item.params, function(data) {
+                                resolve(data);
+                            }, function(err) {
+                                reject(err);
+                            });
+                        }));
+                    })(requestArray[i], i);
+                }
                 Promise.all(promiseFunctionArray).then(function(values) {
                     if (success) {
                         success(values);
@@ -522,29 +525,247 @@ define("/spm_modules/spaseed/1.1.14/lib/asyncrequest", function(require, exports
                 var count = requestArray.length;
                 var resultsArray = new Array(count);
                 //不支持Promise的情况
-                $(requestArray).map(function(index, item) {
-                    (function(i) {
-                        item.request(item.params, function(data) {
-                            resultsArray[i] = data;
+                for (var i = 0; i < count; i++) {
+                    (function(item, index) {
+                        item.net.request(item.request, item.params, function(data) {
+                            resultsArray[index] = data;
                             if (!--count) {
                                 if (success) {
                                     success(resultsArray);
                                 }
                             }
                         }, function(err) {
-                            resultsArray[i] = err;
+                            resultsArray[index] = err;
                             if (!--count) {
                                 if (fail) {
                                     fail(resultsArray);
                                 }
                             }
                         });
-                    })(index);
-                });
+                    })(requestArray[i], i);
+                }
             }
         }
     };
     module.exports = asyncRequest;
+});;
+/**
+ * @module binder
+ * 绑定模块，提供双向绑定功能
+ */
+"use strict";
+
+define("/spm_modules/spaseed/1.1.14/lib/binder", function(require, exports, module) {
+    var selectors = "[bind-content],[bind-value],[bind-attr]";
+    var binders = {
+        value: function(node, onchange) {
+            node.addEventListener("keyup", function() {
+                onchange(node.value);
+            });
+            return {
+                updateProperty: function(value) {
+                    if (value !== node.value) {
+                        node.value = value;
+                    }
+                }
+            };
+        },
+        content: function(node) {
+            return {
+                updateProperty: function(value) {
+                    node.textContent = value;
+                }
+            };
+        },
+        click: function(node, onchange, object) {
+            var previous;
+            return {
+                updateProperty: function(fn) {
+                    var listener = function(e) {
+                        fn.apply(object, arguments);
+                        e.preventDefault();
+                    };
+                    if (previous) {
+                        node.removeEventListener(previous);
+                        previous = listener;
+                    }
+                    node.addEventListener("click", listener);
+                }
+            };
+        },
+        attribute: function(node, onchange, object, attrname) {
+            return {
+                updateProperty: function(value, attrname) {
+                    node.setAttribute(attrname, value);
+                }
+            };
+        }
+    };
+    var bindEngine = {
+        bind: function(container, object) {
+            function getDirectObject(object, propertyName) {
+                var val = object;
+                if (/\./.test(propertyName)) {
+                    var pnamearray = propertyName.split(".");
+                    for (var i = 0; i < pnamearray.length - 1; i++) {
+                        if (val) {
+                            val = val[pnamearray[i]];
+                        } else {
+                            break;
+                        }
+                    }
+                    return val;
+                } else {
+                    return object;
+                }
+            }
+            function bindObject(node, binderName, object, propertyName) {
+                //绑定属性
+                var observer = null;
+                var bindProperty = function(bnName, propObj) {
+                    var prop = propObj.prop, attr = propObj.attr;
+                    var dobject = getDirectObject(object, prop), dproperty = prop.split(".").slice(-1)[0];
+                    var updateValue = function(newValue) {
+                        dobject[dproperty] = newValue;
+                    };
+                    var binder = binders[bnName](node, updateValue, object, attr);
+                    binder.updateProperty(dobject[dproperty], attr);
+                    return {
+                        dobject: dobject,
+                        dproperty: dproperty,
+                        binder: binder,
+                        attribute: attr
+                    };
+                };
+                var objArray = [];
+                for (var i = 0; i < binderName.length; i++) {
+                    objArray.push(bindProperty(binderName[i], propertyName[i]));
+                }
+                observer = function(changes) {
+                    var index = null;
+                    var changed = changes.some(function(change) {
+                        return objArray.filter(function(item, i) {
+                            if (change.name === item.dproperty && change.object === item.dobject) {
+                                index = i;
+                                return item;
+                            }
+                        }).length;
+                    });
+                    if (changed && objArray != null) {
+                        var obj = objArray[index];
+                        obj.binder.updateProperty(obj.dobject[obj.dproperty], obj.attribute);
+                    }
+                };
+                Object.observe(object, observer);
+                return {
+                    unobserve: function() {
+                        Object.unobserve(object, observer);
+                    }
+                };
+            }
+            function bindCollection(node, array) {
+                //捕捉自己并且把自己删除
+                function capture(original) {
+                    var before = original.previousSibling;
+                    var parent = original.parentNode;
+                    var node = original.cloneNode(true);
+                    original.parentNode.removeChild(original);
+                    return {
+                        insert: function() {
+                            var newNode = node.cloneNode(true);
+                            parent.insertBefore(newNode, before);
+                            return newNode;
+                        }
+                    };
+                }
+                delete node.dataset.repeat;
+                var parent = node.parentNode;
+                var captured = capture(node);
+                var bindItem = function(element) {
+                    //为每一个repeat元素设置绑定
+                    return bindModel(captured.insert(), element);
+                };
+                //根据array生成bindings
+                var bindings = array.map(bindItem);
+                var observer = function(changes) {
+                    changes.forEach(function(change) {
+                        var index = parseInt(change.name, 10), child;
+                        if (isNaN(index)) return;
+                        if (change.type === "add") {
+                            bindings.push(bindItem(array[index]));
+                        } else if (change.type === "update") {
+                            bindings[index].unobserve();
+                            bindModel(parent.children[index], array[index]);
+                        } else if (change.type === "delete") {
+                            bindings.pop().unobserve();
+                            child = parent.children[index];
+                            child.parentNode.removeChild(child);
+                        }
+                    });
+                };
+                //observe array
+                Object.observe(array, observer);
+                return {
+                    unobserve: function() {
+                        Object.unobserve(array, observer);
+                    }
+                };
+            }
+            //是不是被repeat包裹的元素，是,返回false
+            function isDirectNested(node) {
+                node = node.parentElement;
+                while (node) {
+                    if (node.dataset.repeat) {
+                        return false;
+                    }
+                    node = node.parentElement;
+                }
+                return true;
+            }
+            //返回没有被repeat包裹的元素
+            function onlyDirectNested(selector) {
+                var collection = container.querySelectorAll(selector);
+                return Array.prototype.filter.call(collection, isDirectNested);
+            }
+            var bindings = onlyDirectNested(selectors).map(function(node) {
+                var bindType = [], propertyName = [], attributeName;
+                if (node.getAttribute("bind-value")) {
+                    bindType.push("value");
+                    propertyName.push({
+                        prop: node.getAttribute("bind-value")
+                    });
+                }
+                if (node.getAttribute("bind-content")) {
+                    bindType.push("content");
+                    propertyName.push({
+                        prop: node.getAttribute("bind-content")
+                    });
+                }
+                if (node.getAttribute("bind-attr")) {
+                    var keyvalArray = node.getAttribute("bind-attr").split(",");
+                    for (var i = 0; i < keyvalArray.length; i++) {
+                        var keyval = keyvalArray[i].split("=");
+                        bindType.push("attribute");
+                        propertyName.push({
+                            prop: keyval[1],
+                            attr: keyval[0]
+                        });
+                    }
+                }
+                return bindObject(node, bindType, object, propertyName);
+            }).concat(onlyDirectNested("[data-repeat]").map(function(node) {
+                return bindCollection(node, object[node.dataset.repeat]);
+            }));
+            return {
+                unobserve: function() {
+                    bindings.forEach(function(binding) {
+                        binding.unobserve();
+                    });
+                }
+            };
+        }
+    };
+    module.exports = bindEngine;
 });;
 "use strict";
 
@@ -574,230 +795,6 @@ define("/spm_modules/spaseed/1.1.14/lib/cookie", function(require, exports, modu
     };
     module.exports = cookie;
 });;
-"use strict";
-
-/**
- * @dialog 模块
- * dialog.show(template,{
-		header:true,
-		buttons:[{
-			name:'确定',
-			dataEvent:'closeDialog'
-		}]
- * });
- * 一个带通用头部和底部确定按钮的对话框
- * dialog.show(template)
- * 一个完全自定义的对话框
- * dialog.alert('文本');
- * 一个标准的提示对话框
- *
- * 目前只支持两个按钮
- */
-define("/spm_modules/spaseed/1.1.14/lib/dialog", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
-    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanagerwithpageswitcher");
-    var evt = require("spm_modules/spaseed/1.1.14/lib/event");
-    var template = require("dest/view/apptemplate");
-    var env = require("spm_modules/spaseed/1.1.14/lib/env");
-    var dialog = {
-        status: 0,
-        height: 0
-    };
-    dialog.alert = function(text, option) {
-        option = option || {};
-        option.zIndex = option.zIndex || 5;
-        option.header = option.header === true ? true : false;
-        option.buttons = option.buttons || [ {
-            name: "确定"
-        } ];
-        this._setTemplate(template("common/dialog/dialog", {
-            text: text,
-            option: option
-        }), option);
-        if (option.buttons) {
-            this._addButton(option);
-        }
-        this.showMask();
-        this.status = 1;
-    };
-    dialog.show = function(html, option) {
-        option = option || {};
-        option.zIndex = option.zIndex || 5;
-        if (html) {
-            //更新模板，显示对话框
-            this._setTemplate(template("common/dialog/dialog", {
-                html: html,
-                option: option
-            }), option);
-        } else {
-            //直接系那是对话框
-            this._showTemplate();
-        }
-        //底部按钮
-        if (option.buttons) {
-            //删除之前的按钮
-            pageManager.dialog.find(".bottom-button").remove();
-            this._addButton(option);
-        }
-        this.showMask();
-        var inputs = $(pageManager.dialog).find("input");
-        if (inputs.length) {
-            if (!inputs.prop("readonly") && !inputs.prop("disabled")) {
-                if (env.isAndroid) {
-                    setTimeout(function() {
-                        inputs[0].focus();
-                    }, 200);
-                } else {
-                    inputs[0].focus();
-                }
-            }
-        }
-        //监听resize事件做处理
-        window.onresize = function() {
-            if ($(window).height() < dialog.height) {
-                pageManager.dialog.css("height", "100%");
-            } else {
-                pageManager.dialog.css("height", "auto");
-            }
-        };
-        this.status = 1;
-    };
-    dialog._addButton = function(option) {
-        //底部按钮
-        if (option.buttons) {
-            var buttonPanel = document.createElement("div");
-            $(buttonPanel).html(template("common/buttombutton/buttons", {
-                buttons: option.buttons
-            }));
-            this.bottomButtons = $(buttonPanel).children();
-            this.bottomButtons.css("z-index", option.zIndex + 1);
-            pageManager.dialog.append(this.bottomButtons);
-        }
-    };
-    dialog._removeButton = function() {
-        //底部按钮
-        if (this.bottomButtons) {
-            this.bottomButtons.remove();
-        }
-    };
-    dialog._setTemplate = function(html) {
-        var height = pageManager.dialog.html(html).show().height();
-        pageManager.dialog.css("bottom", -height + "px");
-        pageManager.dialog[0].clientHeight = pageManager.dialog[0].clientHeight;
-        pageManager.dialog.css("bottom", 0);
-        this.height = height;
-    };
-    dialog._showTemplate = function() {
-        pageManager.dialog.show().css("bottom", -pageManager.dialog.height() + "px");
-        pageManager.dialog[0].clientHeight = pageManager.dialog[0].clientHeight;
-        pageManager.dialog.css("bottom", 0);
-    };
-    dialog.hide = function() {
-        this.hideMask();
-        pageManager.dialog.css("bottom", -pageManager.dialog.height() + "px");
-        //底部按钮的样式
-        //pageManager.dialog.find('.bottom-button').css('position','absolute');
-        setTimeout(function() {
-            pageManager.dialog.hide();
-        }, 200);
-        //this._removeButton();
-        this.status = 0;
-        document.activeElement.blur();
-    };
-    dialog.showError = function(msg) {
-        var container = document;
-        if (this.status) {
-            container = pageManager.dialog;
-        }
-        var errorEl = $(container).find("div[data-error]");
-        errorEl.html(msg).removeClass("fade-out").show();
-        setTimeout(function() {
-            errorEl.addClass("fade-out");
-            setTimeout(function() {
-                errorEl.hide();
-            }, 200);
-        }, 2e3);
-    };
-    dialog.wxshare = function() {
-        var helper = $('<div class="popup-wxshare"><span class="share-wx">点击右上角，分享到朋友圈</span><a class="icon-close"> 点击关闭</a></div>');
-        this.showMask();
-        helper.appendTo("body");
-        var close = function() {
-            dialog.hideMask();
-            helper.remove();
-            helper = undefined;
-        };
-        helper.on("touchstart", close);
-        setTimeout(function() {
-            if (helper) {
-                close();
-            }
-        }, 5e3);
-    };
-    dialog.wxopeninbrowser = function() {
-        var helper = $('<div class="popup-wxshare"><span class="pay-wx">点击右上角，用浏览器打开再支付</span><a class="icon-close"> 点击关闭</a></div>');
-        this.showMask();
-        helper.appendTo("body");
-        var close = function() {
-            dialog.hideMask();
-            helper.remove();
-            helper = undefined;
-        };
-        helper.on("touchstart", close);
-        setTimeout(function() {
-            if (helper) {
-                close();
-            }
-        }, 5e3);
-    };
-    dialog.getParams = function() {
-        var params = {};
-        $(pageManager.dialog).find("input").each(function() {
-            params[this.name] = this.value;
-        });
-        return params;
-    };
-    dialog.msgbox = function(msg, ms) {
-        pageManager.msgbox.removeClass("fade-out").html("<p>" + msg + "</p>").show();
-        setTimeout(function() {
-            pageManager.msgbox.addClass("fade-out");
-            setTimeout(function() {
-                pageManager.msgbox.hide();
-            }, 500);
-        }, ms || 2e3);
-    };
-    dialog.showMask = function() {
-        pageManager.mask.css("height", env.resolution.y).show();
-    };
-    dialog.hideMask = function() {
-        pageManager.mask.hide();
-    };
-    evt.bindCommonEvent("click", {
-        "dialog-hide": function() {
-            dialog.hide();
-        }
-    });
-    module.exports = dialog;
-});;
-"use strict";
-
-define("/spm_modules/spaseed/1.1.14/lib/env", function(require, exports, module) {
-    var util = require("spm_modules/spaseed/1.1.14/lib/util");
-    var env = {}, ua = navigator.userAgent;
-    env.defaultTitle = "spaseed";
-    env.cdn = window.cdn;
-    env.isIOS = util.isIOS();
-    env.isAndroid = util.isAndroid();
-    env.isWX = /micromessenger/i.test(ua);
-    env.isMQQB = /mqqbrowser/i.test(ua);
-    //env.appid = 'wx';
-    var doc = document.documentElement;
-    var bod = document.body;
-    env.resolution = {};
-    env.resolution.x = Math.max(doc.clientWidth, bod.clientWidth);
-    env.resolution.y = Math.max(doc.clientHeight, bod.clientHeight);
-    module.exports = env;
-});;
 /**
  * 事件管理
  * @class event
@@ -818,8 +815,10 @@ define("/spm_modules/spaseed/1.1.14/lib/event", function(require, exports, modul
     };
     //添加事件监听
     var addEvent = function(elem, event, fn) {
-        if (elem.addEventListener) // W3C
-        elem.addEventListener(event, fn, true); else if (elem.attachEvent) {
+        if (elem.addEventListener) {
+            // W3C
+            elem.addEventListener(event, fn, true);
+        } else if (elem.attachEvent) {
             // IE
             elem.attachEvent("on" + event, fn);
         } else {
@@ -853,14 +852,14 @@ define("/spm_modules/spaseed/1.1.14/lib/event", function(require, exports, modul
         ctor: function(mpNode) {},
         /**
 		 * 通用的绑定事件处理
-		 * @method bindCommonEvent
+		 * @method bindEvent
 		 * @param {Object} obj 调用事件绑定的页面对象
 		 * @param {Element} topElem 要绑定事件的元素
 		 * @param {String} type 绑定的事件类型
 		 * @param {Object} handlerMap 事件处理的函数映射
 		 * @param {Function} getEventkeyFn 取得事件对应的key的函数
 		 */
-        bindCommonEvent: function(obj, topElem, type, handlerMap, getEventkeyFn) {
+        bindEvent: function(obj, topElem, type, handlerMap, getEventkeyFn) {
             handlerMap = handlerMap || _handlers[type];
             var orginType = type, returnVal = null;
             if (type === "click" && util.isMobile()) {
@@ -937,11 +936,11 @@ define("/spm_modules/spaseed/1.1.14/lib/event", function(require, exports, modul
         },
         /**
 		 * 为topElem解绑元素
-		 * @method unbindCommonEvent
+		 * @method unbindEvent
 		 * @param {type} 事件类型
 		 * @param {dealFn} 事件处理的函数
 		 */
-        unbindCommonEvent: function(topElem, type, handler) {
+        unbindEvent: function(topElem, type, handler) {
             if (hander) {
                 if (type === "click" && util.isMobile()) {
                     //解绑touch事件
@@ -959,7 +958,7 @@ define("/spm_modules/spaseed/1.1.14/lib/event", function(require, exports, modul
 		 * @param {string} type 事件类型
 		 */
         bindBodyEvent: function(obj, type) {
-            return this.bindCommonEvent(obj, document.body, type);
+            return this.bindEvent(obj, document.body, type);
         },
         /**
 		 * 为body添加事件代理
@@ -969,7 +968,7 @@ define("/spm_modules/spaseed/1.1.14/lib/event", function(require, exports, modul
 		 */
         unbindBodyEvent: function(type, bodyHandler) {
             if (bodyHandler) {
-                this.unbindCommonEvent(document.body, type, bodyHandler);
+                this.unbindEvent(document.body, type, bodyHandler);
             }
         },
         /**
@@ -1000,78 +999,8 @@ define("/spm_modules/spaseed/1.1.14/lib/event", function(require, exports, modul
     };
     module.exports = Event;
 });;
-"use strict";
-
-define("/spm_modules/spaseed/1.1.14/lib/model", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
-    var net = require("spm_modules/spaseed/1.1.14/lib/net");
-    var dialog = require("spm_modules/spaseed/1.1.14/lib/dialog");
-    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanagerwithpageswitcher");
-    var stats = require("spm_modules/spaseed/1.1.14/lib/stats");
-    var config = require("app/script/config");
-    //数据管理
-    var manager = {
-        isBusy: false,
-        //所有正常cgi调用都通过这个门面方法进行调用
-        cgiFacade: function(cgi, data, cb, fail, option) {
-            var eventName = "";
-            var startTime = new Date();
-            var _cb = function(ret) {
-                var _code = ret.code;
-                manager.isBusy = false;
-                if (config.defaultStats) {
-                    //cgi返回码统计
-                    stats.trackEvent("cgi", cgi.url.split("?")[0], ret.code, new Date() - startTime);
-                }
-                //恢复按钮
-                if (option.button) {
-                    $(option.button).removeClass("disabled").data("event", eventName);
-                }
-                if (_code === 0) {
-                    if (cb) {
-                        cb(ret.data);
-                    }
-                } else if (_code === 403) {
-                    dialog.hide();
-                    pageManager.redirect("account", "login", null, {
-                        pathname: encodeURIComponent(location.pathname)
-                    });
-                } else {
-                    if (fail) {
-                        fail(ret.msg, _code, ret.data);
-                    } else {
-                        var str = config.defaultReqErr;
-                        if (config.showDetailError) {
-                            str = ret.msg || config.defaultReqErr;
-                        }
-                        if (pageManager.isEmpty()) {
-                            pageManager.renderError(str);
-                        } else {
-                            dialog.msgbox(str);
-                        }
-                    }
-                }
-            };
-            this.isBusy = true;
-            //获取服务端数据
-            net.send(cgi, {
-                data: data,
-                cb: _cb,
-                url: cgi
-            });
-            option = option || {};
-            //禁用按钮
-            if (option.button) {
-                eventName = $(option.button).addClass("disabled").data("event");
-                $(option.button).removeAttr("data-click-event");
-            }
-        }
-    };
-    module.exports = manager;
-});;
 define("/spm_modules/spaseed/1.1.14/lib/net", function(require, exports, module) {
-    var mp = require("spm_modules/spaseed/1.1.14/main/mp");
-    spaseedConfig = require("app/script/config");
+    var mp = require("spm_modules/spaseed/1.1.14/main/mp"), $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
     var objectToParams = function(obj, decodeUri) {
         var param = $.param(obj);
         if (decodeUri) {
@@ -1086,7 +1015,9 @@ define("/spm_modules/spaseed/1.1.14/lib/net", function(require, exports, module)
      * @static
      */
     var Net = mp.Class.extend({
-        ctor: function(mpNode) {},
+        ctor: function(mpNode) {
+            this.app = mpNode;
+        },
         _progressBar: [],
         /**
          * 发起请求
@@ -1095,7 +1026,7 @@ define("/spm_modules/spaseed/1.1.14/lib/net", function(require, exports, module)
          * @param  {Object} opt       选参
          */
         send: function(cgiConfig, opt) {
-            var _self = this, _cgiConfig = cgiConfig, _data = opt.data || {}, _url = "", _cb = null, _global = opt.global;
+            var _self = this, _cgiConfig = cgiConfig, _data = opt.data || {}, _url = "", _cb = null;
             if (!_cgiConfig) {
                 _cgiConfig = {
                     url: opt.url,
@@ -1105,26 +1036,16 @@ define("/spm_modules/spaseed/1.1.14/lib/net", function(require, exports, module)
             if (_cgiConfig) {
                 // 成功回调
                 _cb = function(ret) {
-                    // 使用友好的提示消息
-                    // if (ret && ret['uiMsg']) {
-                    //     // 如果有内部错误消息，则输出log
-                    //     console && console.warn && (ret['code'] !== 0 && console.warn('错误 code=' + ret['code'] + ',msg=' + ret['msg']));
-                    //     ret['msg'] = ret['uiMsg'] + '[#' + ret['code'] + ']';
-                    //     delete ret['uiMsg'];
-                    // }
                     opt.cb && opt.cb(ret);
                 };
                 var urlParams = {
                     t: new Date().getTime()
                 };
-                if (spaseedConfig.additionalUrlParam) {
-                    $.extend(urlParams, spaseedConfig.additionalUrlParam());
-                }
                 _url = this._addParam(_cgiConfig.url, urlParams);
                 if (_cgiConfig.method && _cgiConfig.method.toLowerCase() === "post") {
-                    return this.post(_url, _data, _cb, _global);
+                    return this.post(_url, _data, _cb);
                 } else {
-                    return this.get(_url, _data, _cb, _global);
+                    return this.get(_url, _data, _cb);
                 }
             }
         },
@@ -1134,10 +1055,9 @@ define("/spm_modules/spaseed/1.1.14/lib/net", function(require, exports, module)
          * @param  {String}   url    URL
          * @param  {Object}   data   参数
          * @param  {Function} cb     回调函数
-         * @param  {Boolean}  global 是否触发全局 AJAX 事件
          */
-        get: function(url, data, cb, global) {
-            return this._ajax(url, data, "GET", cb, global);
+        get: function(url, data, cb) {
+            return this._ajax(url, data, "GET", cb);
         },
         /**
          * POST请求
@@ -1145,28 +1065,46 @@ define("/spm_modules/spaseed/1.1.14/lib/net", function(require, exports, module)
          * @param  {String}   url    URL
          * @param  {Object}   data   参数
          * @param  {Function} cb     回调函数
-         * @param  {Boolean}  global 是否触发全局 AJAX 事件
          */
-        post: function(url, data, cb, global) {
-            return this._ajax(url, data, "POST", cb, global);
+        post: function(url, data, cb) {
+            return this._ajax(url, data, "POST", cb);
         },
-        _ajax: function(url, data, method, cb, global) {
+        /**
+         * POST请求
+         * @method post
+         * @param  {String}   url    URL
+         * @param  {Object}   data   参数
+         * @param  {Function} cb     回调函数
+         */
+        request: function(request, data, cb) {
+            if (request.fakecallback) {
+                request.fakecallback(data, cb);
+            } else {
+                this[request.method](request.url, data, cb);
+            }
+        },
+        _ajax: function(url, data, method, cb) {
             var self = this;
-            global == undefined && (global = true);
             var returnVal = null;
             var progressBar = null;
-            if (spaseedConfig.xhrProgress) {
+            if (this.app.config.xhrProgress) {
                 progressBar = self._showProgress();
             }
+            var starttime = +new Date();
             (function(pbar) {
                 returnVal = $.ajax({
                     type: method,
                     url: url,
                     data: data,
-                    global: global,
                     success: function(data) {
                         self._hideProgress(pbar);
-                        cb(data);
+                        //全局的netback，可以对特殊的返回码做特殊处理
+                        if (self.app.config.netback) {
+                            self.app.config.netback.call(self.app, url, data, cb);
+                        }
+                        cb(data, {
+                            starttime: starttime
+                        });
                     },
                     error: function(jqXHR) {
                         self._hideProgress(pbar);
@@ -1181,7 +1119,9 @@ define("/spm_modules/spaseed/1.1.14/lib/net", function(require, exports, module)
                                 data.msg = jqXHR.statusText;
                                 data.data = {};
                             }
-                            cb(data);
+                            cb(data, {
+                                starttime: starttime
+                            });
                         }
                     }
                 });
@@ -1214,7 +1154,7 @@ define("/spm_modules/spaseed/1.1.14/lib/net", function(require, exports, module)
     Net.create = function(mpNode) {
         return new Net(mpNode);
     };
-    module.exports = net;
+    module.exports = Net;
 });;
 define("/spm_modules/spaseed/1.1.14/lib/pageswitcher", function(require, exports, module) {
     var spaseedConfig = require("app/script/config");
@@ -1308,110 +1248,6 @@ define("/spm_modules/spaseed/1.1.14/lib/pageswitcher", function(require, exports
         }
     };
     module.exports = pageswitcher;
-});;
-"use strict";
-
-define("/spm_modules/spaseed/1.1.14/lib/requestconstructor", function(require, exports, module) {
-    var util = require("spm_modules/spaseed/1.1.14/lib/util");
-    var requestconstructor = {
-        create: function(option) {
-            var cgi = option.url;
-            var params = [];
-            var tk = util.gettk("skey");
-            if (tk) {
-                params.push("tk=" + tk);
-            }
-            // if(window.userinfo.userId){
-            // 	params.push('uin='+window.userinfo.userId);
-            // }
-            if (params.length) {
-                cgi += /\?/.test(cgi) ? "&" : "?";
-                cgi += params.join("&");
-            }
-            return {
-                url: cgi,
-                method: option.method
-            };
-        }
-    };
-    module.exports = requestconstructor;
-});;
-"use strict";
-
-define("/spm_modules/spaseed/1.1.14/lib/requestmanager", function(require, exports, module) {
-    var model = require("spm_modules/spaseed/1.1.14/lib/model");
-    var requestConstructor = require("spm_modules/spaseed/1.1.14/lib/requestconstructor");
-    var requestmanager = {
-        add: function(name, url, method, fakecallback) {
-            this[name] = function(data, cb, fail, option) {
-                if (fakecallback) {
-                    fakecallback(data, cb, fail, option);
-                } else {
-                    model.cgiFacade(requestConstructor.create({
-                        url: url,
-                        method: method || "GET"
-                    }), data, cb, fail, option);
-                }
-            };
-        }
-    };
-    module.exports = requestmanager;
-});;
-/**
- * stats
- * @class stats
- * @static
- */
-define("/spm_modules/spaseed/1.1.14/lib/stats", function(require, exports, module) {
-    var config = require("app/script/config");
-    var stats = {
-        requestUrl: location.protocol + "//log.hm.baidu.com/hm.gif",
-        fixedData: [ "cc=1", "ck=" + (navigator.cookieEnabled ? 1 : 0), "cl=" + window.screen.colorDepth + "-bit", "ds=" + window.screen.width + "x" + window.screen.height, "fl=17.0", "ja=" + (navigator.javaEnabled() ? 1 : 0), "ln=" + navigator.language || navigator.browserLanguage || navigator.systemLanguage || navigator.userLanguage || "", "lo=0", "nv=1", "si=" + config.statsId, "st=1", "v=1.0.94", "lv=2" ],
-        _send: function(params) {
-            var src = this.requestUrl + "?" + params.concat(this.fixedData).join("&");
-            var img = new Image();
-            img.onload = img.onerror = img.onabort = function() {
-                img.onload = img.onerror = img.onabort = null;
-                img = null;
-            };
-            setTimeout(function() {
-                img.src = src;
-            }, 500);
-        },
-        /**
-		  * pv,uv
-		  * @method pv
-		  * 统计页面pv，在页面底部调用即可
-		  * @param {number} domReadyTime 
-		  * @param {number} loadEventTime 
-		  */
-        pv: function(domReadyTime, loadEventTime) {
-            //请求一
-            var params = [ "et=0", "rnd=" + Math.round(Math.random() * 2147483647), "tt=" + encodeURIComponent(document.title) ];
-            this._send(params.concat(this.fixedData));
-            var self = this;
-            setTimeout(function() {
-                //请求二
-                params = [ "et=87", 'ep={"netAll":1,"netDns":0,"netTcp":0,"srv":39,"dom":' + (domReadyTime ? domReadyTime : 0) + ',"loadEvent":' + (loadEventTime ? loadEventTime : 0) + ',"qid":"","bdDom":0,"bdRun":0,"bdDef":0}', "rnd=" + Math.round(Math.random() * 2147483647), "tt=" + encodeURIComponent(document.title) ];
-                self._send(params);
-            }, 100);
-        },
-        /**
-		  * 自定义事件
-		  * @method trackEvent
-		  * 自定义统计事件
-		  * @param {string} category 
-		  * @param {string} action 
-		  * @param {string} label 
-		  * @param {string} value 
-		  */
-        trackEvent: function(category, action, label, value) {
-            var str = [ category, action, label, value ];
-            var params = [ "et=4", "rnd=" + Math.round(Math.random() * 2147483647), "ep=" + encodeURIComponent(str.join("*")) ];
-            this._send(params);
-        }
-    };
-    module.exports = stats;
 });;
 define("/spm_modules/spaseed/1.1.14/lib/util", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
@@ -3153,6 +2989,45 @@ define("/spm_modules/spaseed/1.1.14/main/mp", function(require, exports, module)
     };
     module.exports = mp;
 });;
+"use strict";
+
+define("/spm_modules/spaseed/1.1.14/main/node", function(require, exports, module) {
+    var mp = require("spm_modules/spaseed/1.1.14/main/mp"), Event = require("spm_modules/spaseed/1.1.14/lib/event"), $ = require("spm_modules/spaseed/1.1.14/lib/zepto"), Net = require("spm_modules/spaseed/1.1.14/lib/net");
+    var Node = mp.Class.extend({
+        $elem: null,
+        $event: null,
+        nodeName: "div",
+        ctor: function(data) {
+            if (!data) {
+                data = {};
+            }
+            this.nodeName = data.nodeName || "div";
+            this.$elem = data.$elem || this.$elem || $(document.createElement(this.nodeName));
+            //其他属性
+            this.attribute = data.attribute || {};
+            //网络
+            this.$net = Net.create(this);
+            //事件
+            this.$event = Event.create(this);
+            this.$on = this.$event.on;
+            this.$off = this.$event.off;
+            this.$emit = this.$event.emit;
+            //属性
+            for (var p in this.attribute) {
+                this.$elem[p] = this.attribute[p];
+            }
+        },
+        addChild: function(child) {
+            this.$elem.append(child.$elem);
+            child.parent = this;
+        },
+        removeChild: function(child) {
+            child.parent = null;
+            child.$elem.remove();
+        }
+    });
+    module.exports = Node;
+});;
 define("/spm_modules/spaseed/1.1.14/main/pagemanager", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
     var router = require("spm_modules/spaseed/1.1.14/main/router");
@@ -3918,4 +3793,51 @@ define("/spm_modules/spaseed/1.1.14/main/router", function(require, exports, mod
         }
     };
     module.exports = router;
+});;
+"use strict";
+
+define("/spm_modules/spaseed/1.1.14/main/view", function(require, exports, module) {
+    var Node = require("spm_modules/spaseed/1.1.14/main/node");
+    var View = Node.extend({
+        /*id*/
+        _: "",
+        /*标题*/
+        title: "",
+        /*内部元素*/
+        elements: {},
+        ctor: function(data) {
+            this.$super(data);
+            //绑定events
+            if (this.events) {
+                //事件初始化
+                if (this.events) {
+                    this.__bodyhandler = this.__bodyhandler || {};
+                    for (var p in this.events) {
+                        for (var q in this.events[p]) {
+                            this.$event.on(p, q, this.events[p][q]);
+                        }
+                        //绑定事件
+                        if (!this.__bodyhandler[p]) {
+                            this.__bodyhandler[p] = this.$event.bindBodyEvent(this, p);
+                        }
+                    }
+                }
+            }
+        },
+        /*重载*/
+        render: function() {},
+        /*重载*/
+        reload: function() {},
+        /*重载*/
+        destroy: function() {
+            this.off();
+            //移除上一个页面的bodyEvents
+            if (this.events) {
+                for (var p in this.events) {
+                    this.$event.off(p);
+                }
+            }
+        }
+    });
+    module.exports = View;
 });

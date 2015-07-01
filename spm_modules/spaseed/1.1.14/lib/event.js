@@ -22,8 +22,9 @@ define(function(require, exports, module) {
 
 	//添加事件监听
 	var addEvent = function (elem, event, fn) {
-		if (elem.addEventListener)  // W3C
+		if (elem.addEventListener){  // W3C
 			elem.addEventListener(event, fn, true);
+		}
 		else if (elem.attachEvent) { // IE
 			elem.attachEvent("on" + event, fn);
 		}
@@ -68,14 +69,14 @@ define(function(require, exports, module) {
         },
         /**
 		 * 通用的绑定事件处理
-		 * @method bindCommonEvent
+		 * @method bindEvent
 		 * @param {Object} obj 调用事件绑定的页面对象
 		 * @param {Element} topElem 要绑定事件的元素
 		 * @param {String} type 绑定的事件类型
 		 * @param {Object} handlerMap 事件处理的函数映射
 		 * @param {Function} getEventkeyFn 取得事件对应的key的函数
 		 */
-		bindCommonEvent:function (obj, topElem, type, handlerMap, getEventkeyFn) {
+		bindEvent:function (obj, topElem, type, handlerMap, getEventkeyFn) {
 			handlerMap = handlerMap || _handlers[type];
 			var orginType = type,
 				returnVal = null;
@@ -169,11 +170,11 @@ define(function(require, exports, module) {
 
 		/**
 		 * 为topElem解绑元素
-		 * @method unbindCommonEvent
+		 * @method unbindEvent
 		 * @param {type} 事件类型
 		 * @param {dealFn} 事件处理的函数
 		 */
-		unbindCommonEvent:function(topElem, type, handler){
+		unbindEvent:function(topElem, type, handler){
 			if(hander){
 				if(type === 'click' && util.isMobile()){
 					//解绑touch事件
@@ -193,7 +194,7 @@ define(function(require, exports, module) {
 		 * @param {string} type 事件类型
 		 */
 		bindBodyEvent:function(obj, type) {
-			return this.bindCommonEvent(obj, document.body, type);		
+			return this.bindEvent(obj, document.body, type);		
 		},
 
 		/**
@@ -204,7 +205,7 @@ define(function(require, exports, module) {
 		 */
 		unbindBodyEvent:function(type, bodyHandler) { 
 			if(bodyHandler){
-				this.unbindCommonEvent(document.body, type, bodyHandler);		
+				this.unbindEvent(document.body, type, bodyHandler);		
 			}
 		},
 
