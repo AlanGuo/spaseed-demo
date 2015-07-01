@@ -3,12 +3,9 @@ define("/app/script/config", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
     var spaseedconfig = require("spm_modules/spaseed/1.1.14/config");
     var config = $.extend(spaseedconfig, {
-        basePath: "/app/script/module/",
-        root: "page1",
+        root: "/page1",
         container: "#container",
-        pageWrapper: "#pageWrapper",
-        switchMode: "fadeIn",
-        switchWrapper: "#switchWrapper"
+        viewfolder: "app/script/module"
     });
     module.exports = config;
 });;
@@ -23,82 +20,37 @@ define("/app/script/model/request", function(require, exports, module) {
     });
     module.exports = requestmanager;
 });;
-define("/app/script/module/page3/page3", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
-    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanagerwithpageswitcher");
-    var request = require("app/script/model/request");
-    var template = require("dest/view/apptemplate");
-    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
-    var page3 = {
-        render: function() {
-            var self = this;
-            asyncRequest.all([ {
-                params: {
-                    title: "page3",
-                    description: "page3 description"
-                },
-                request: request.sample
-            } ], function(values) {
-                pageManager.html({
-                    switchStyle: {
-                        top: "49px",
-                        height: "auto"
-                    },
-                    isRefresh: self.isRefresh,
-                    container: template("page3/page3", {
-                        data: values[0]
-                    })
-                });
-            });
-        },
-        destroy: function() {}
-    };
-    module.exports = page3;
-});;
-define("/app/script/entry", function(require, exports) {
-    var spaseedEntry = require("spm_modules/spaseed/1.1.14/main/entry");
-    //应用入口函数
-    var startup = function() {
-        //spaseed初始化
-        spaseedEntry.init();
-    };
-    exports.startup = startup;
-});;
 "use strict";
 
 define("/app/script/module/page1/page1", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
-    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanagerwithpageswitcher");
-    var template = require("dest/view/apptemplate");
-    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
-    var binder = require("spm_modules/spaseed/1.1.14/lib/binder");
+    var mp = require("spm_modules/spaseed/1.1.14/main/mp");
+    //var template = require('template');
+    //var asyncRequest = require('asyncrequest');
+    //var binder = require('binder');
     var request = require("app/script/model/request");
-    var page1 = {
+    var page1 = mp.Class.extend({
+        ctor: function(data) {
+            this.$super(data);
+        },
+        render: function() {
+            //var self = this;
+            // asyncRequest.all([{
+            //     params:{title:'page1',description:'page1 description'},
+            //     request:request.sample
+            // }],function(values){
+            //     pageManager.html({
+            //         switchStyle:{top:'49px',height:'auto'},
+            //         isRefresh:self.isRefresh,
+            //         container:template('page1/page1',{data: values[0]})
+            //     });
+            //     //绑定数据
+            //     //binder.bind(pageManager.container[0],self);
+            // });
+            this.$.innerHTML = template("page1/page1", {});
+        },
         title: "page1",
         detail: 0,
-        render: function() {
-            var self = this;
-            asyncRequest.all([ {
-                params: {
-                    title: "page1",
-                    description: "page1 description"
-                },
-                request: request.sample
-            } ], function(values) {
-                pageManager.html({
-                    switchStyle: {
-                        top: "49px",
-                        height: "auto"
-                    },
-                    isRefresh: self.isRefresh,
-                    container: template("page1/page1", {
-                        data: values[0]
-                    })
-                });
-                //绑定数据
-                binder.bind(pageManager.container[0], self);
-            });
-        },
         events: {
             click: {
                 tt_click: function() {
@@ -108,7 +60,7 @@ define("/app/script/module/page1/page1", function(require, exports, module) {
             }
         },
         destroy: function() {}
-    };
+    });
     module.exports = page1;
 });;
 define("/app/script/module/page2/page2", function(require, exports, module) {
@@ -179,6 +131,38 @@ define("/app/script/module/page3/other/other", function(require, exports, module
         destroy: function() {}
     };
     module.exports = page3Other;
+});;
+define("/app/script/module/page3/page3", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
+    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanagerwithpageswitcher");
+    var request = require("app/script/model/request");
+    var template = require("dest/view/apptemplate");
+    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
+    var page3 = {
+        render: function() {
+            var self = this;
+            asyncRequest.all([ {
+                params: {
+                    title: "page3",
+                    description: "page3 description"
+                },
+                request: request.sample
+            } ], function(values) {
+                pageManager.html({
+                    switchStyle: {
+                        top: "49px",
+                        height: "auto"
+                    },
+                    isRefresh: self.isRefresh,
+                    container: template("page3/page3", {
+                        data: values[0]
+                    })
+                });
+            });
+        },
+        destroy: function() {}
+    };
+    module.exports = page3;
 });;
 define("/app/script/module/page3/page3", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
@@ -298,22 +282,22 @@ define("/app/script/module/page3/page3", function(require, exports, module) {
         }
         global.template = template;
     }
-    /*v:2*/
+    /*v:9*/
     template("page1/page1", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
         return $out += '<h1 data-click-event="tt_click">', $out += $escape(data.title), 
         $out += "</h1> <div>", $out += $escape(data.description), $out += '</div> <div bind-content="detail"></div> ', 
         new String($out);
-    }), /*v:1*/
+    }), /*v:2*/
     template("page2/page2", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
         return $out += "<h1>", $out += $escape(data.title), $out += "</h1> <div>", $out += $escape(data.description), 
         $out += "</div> ", new String($out);
-    }), /*v:1*/
-    template("page3/index/index", "<div> This is '/page3/index' content </div>"), /*v:1*/
-    template("page3/other/other", "<div> This is 'other' page content </div> "), /*v:1*/
+    }), /*v:2*/
+    template("page3/index/index", "<div> This is '/page3/index' content </div>"), /*v:2*/
+    template("page3/other/other", "<div> This is 'other' page content </div> "), /*v:2*/
     template("page3/page3", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
@@ -561,224 +545,6 @@ define("/spm_modules/spaseed/1.1.14/lib/asyncrequest", function(require, exports
         }
     };
     module.exports = asyncRequest;
-});;
-/**
- * @module binder
- * 绑定模块，提供双向绑定功能
- */
-"use strict";
-
-define("/spm_modules/spaseed/1.1.14/lib/binder", function(require, exports, module) {
-    var selectors = "[bind-content],[bind-value],[bind-attr]";
-    var binders = {
-        value: function(node, onchange) {
-            node.addEventListener("keyup", function() {
-                onchange(node.value);
-            });
-            return {
-                updateProperty: function(value) {
-                    if (value !== node.value) {
-                        node.value = value;
-                    }
-                }
-            };
-        },
-        content: function(node) {
-            return {
-                updateProperty: function(value) {
-                    node.textContent = value;
-                }
-            };
-        },
-        click: function(node, onchange, object) {
-            var previous;
-            return {
-                updateProperty: function(fn) {
-                    var listener = function(e) {
-                        fn.apply(object, arguments);
-                        e.preventDefault();
-                    };
-                    if (previous) {
-                        node.removeEventListener(previous);
-                        previous = listener;
-                    }
-                    node.addEventListener("click", listener);
-                }
-            };
-        },
-        attribute: function(node, onchange, object, attrname) {
-            return {
-                updateProperty: function(value, attrname) {
-                    node.setAttribute(attrname, value);
-                }
-            };
-        }
-    };
-    var bindEngine = {
-        bind: function(container, object) {
-            function getDirectObject(object, propertyName) {
-                var val = object;
-                if (/\./.test(propertyName)) {
-                    var pnamearray = propertyName.split(".");
-                    for (var i = 0; i < pnamearray.length - 1; i++) {
-                        if (val) {
-                            val = val[pnamearray[i]];
-                        } else {
-                            break;
-                        }
-                    }
-                    return val;
-                } else {
-                    return object;
-                }
-            }
-            function bindObject(node, binderName, object, propertyName) {
-                //绑定属性
-                var observer = null;
-                var bindProperty = function(bnName, propObj) {
-                    var prop = propObj.prop, attr = propObj.attr;
-                    var dobject = getDirectObject(object, prop), dproperty = prop.split(".").slice(-1)[0];
-                    var updateValue = function(newValue) {
-                        dobject[dproperty] = newValue;
-                    };
-                    var binder = binders[bnName](node, updateValue, object, attr);
-                    binder.updateProperty(dobject[dproperty], attr);
-                    return {
-                        dobject: dobject,
-                        dproperty: dproperty,
-                        binder: binder,
-                        attribute: attr
-                    };
-                };
-                var objArray = [];
-                for (var i = 0; i < binderName.length; i++) {
-                    objArray.push(bindProperty(binderName[i], propertyName[i]));
-                }
-                observer = function(changes) {
-                    var index = null;
-                    var changed = changes.some(function(change) {
-                        return objArray.filter(function(item, i) {
-                            if (change.name === item.dproperty && change.object === item.dobject) {
-                                index = i;
-                                return item;
-                            }
-                        }).length;
-                    });
-                    if (changed && objArray != null) {
-                        var obj = objArray[index];
-                        obj.binder.updateProperty(obj.dobject[obj.dproperty], obj.attribute);
-                    }
-                };
-                Object.observe(object, observer);
-                return {
-                    unobserve: function() {
-                        Object.unobserve(object, observer);
-                    }
-                };
-            }
-            function bindCollection(node, array) {
-                //捕捉自己并且把自己删除
-                function capture(original) {
-                    var before = original.previousSibling;
-                    var parent = original.parentNode;
-                    var node = original.cloneNode(true);
-                    original.parentNode.removeChild(original);
-                    return {
-                        insert: function() {
-                            var newNode = node.cloneNode(true);
-                            parent.insertBefore(newNode, before);
-                            return newNode;
-                        }
-                    };
-                }
-                delete node.dataset.repeat;
-                var parent = node.parentNode;
-                var captured = capture(node);
-                var bindItem = function(element) {
-                    //为每一个repeat元素设置绑定
-                    return bindModel(captured.insert(), element);
-                };
-                //根据array生成bindings
-                var bindings = array.map(bindItem);
-                var observer = function(changes) {
-                    changes.forEach(function(change) {
-                        var index = parseInt(change.name, 10), child;
-                        if (isNaN(index)) return;
-                        if (change.type === "add") {
-                            bindings.push(bindItem(array[index]));
-                        } else if (change.type === "update") {
-                            bindings[index].unobserve();
-                            bindModel(parent.children[index], array[index]);
-                        } else if (change.type === "delete") {
-                            bindings.pop().unobserve();
-                            child = parent.children[index];
-                            child.parentNode.removeChild(child);
-                        }
-                    });
-                };
-                //observe array
-                Object.observe(array, observer);
-                return {
-                    unobserve: function() {
-                        Object.unobserve(array, observer);
-                    }
-                };
-            }
-            //是不是被repeat包裹的元素，是,返回false
-            function isDirectNested(node) {
-                node = node.parentElement;
-                while (node) {
-                    if (node.dataset.repeat) {
-                        return false;
-                    }
-                    node = node.parentElement;
-                }
-                return true;
-            }
-            //返回没有被repeat包裹的元素
-            function onlyDirectNested(selector) {
-                var collection = container.querySelectorAll(selector);
-                return Array.prototype.filter.call(collection, isDirectNested);
-            }
-            var bindings = onlyDirectNested(selectors).map(function(node) {
-                var bindType = [], propertyName = [], attributeName;
-                if (node.getAttribute("bind-value")) {
-                    bindType.push("value");
-                    propertyName.push({
-                        prop: node.getAttribute("bind-value")
-                    });
-                }
-                if (node.getAttribute("bind-content")) {
-                    bindType.push("content");
-                    propertyName.push({
-                        prop: node.getAttribute("bind-content")
-                    });
-                }
-                if (node.getAttribute("bind-attr")) {
-                    var keyvalArray = node.getAttribute("bind-attr").split(",");
-                    for (var i = 0; i < keyvalArray.length; i++) {
-                        var keyval = keyvalArray[i].split("=");
-                        bindType.push("attribute");
-                        propertyName.push({
-                            prop: keyval[1],
-                            attr: keyval[0]
-                        });
-                    }
-                }
-                return bindObject(node, bindType, object, propertyName);
-            }).concat(onlyDirectNested("[data-repeat]").map(function(node) {
-                return bindCollection(node, object[node.dataset.repeat]);
-            }));
-            return {
-                unobserve: function() {
-                    bindings.forEach(function(binding) {
-                        binding.unobserve();
-                    });
-                }
-            };
-        }
-    };
-    module.exports = bindEngine;
 });;
 "use strict";
 
@@ -1039,6 +805,7 @@ define("/spm_modules/spaseed/1.1.14/lib/env", function(require, exports, module)
  */
 define("/spm_modules/spaseed/1.1.14/lib/event", function(require, exports, module) {
     var util = require("spm_modules/spaseed/1.1.14/lib/util");
+    var mp = require("spm_modules/spaseed/1.1.14/main/mp");
     //事件处理方法
     var _handlers = {};
     //默认判断是否有事件的函数
@@ -1082,156 +849,156 @@ define("/spm_modules/spaseed/1.1.14/lib/event", function(require, exports, modul
         }
         return null;
     };
-    /**
-	 * 通用的绑定事件处理
-	 * @method bindCommonEvent
-	 * @param {Object} obj 调用事件绑定的页面对象
-	 * @param {Element} topElem 要绑定事件的元素
-	 * @param {String} type 绑定的事件类型
-	 * @param {Object} handlerMap 事件处理的函数映射
-	 * @param {Function} getEventkeyFn 取得事件对应的key的函数
-	 */
-    var bindCommonEvent = function(obj, topElem, type, handlerMap, getEventkeyFn) {
-        handlerMap = handlerMap || _handlers[type];
-        var orginType = type, returnVal = null;
-        if (type === "click" && util.isMobile()) {
-            type = "tap";
-        }
-        getEventkeyFn = getEventkeyFn || _defaultGetEventkeyFn;
-        var judgeFn = function(elem, type) {
-            return !!getEventkeyFn(elem, type);
-        };
-        var hdl = function(e) {
-            /**
-			 * 支持直接绑定方法
-			 */
-            var _target = getWantTarget(e, topElem, orginType, judgeFn), _hit = false;
-            if (_target) {
-                var _event = getEventkeyFn(_target, orginType);
-                var _returnValue;
-                if (/Function/i.test(Object.prototype.toString.call(handlerMap))) {
-                    _returnValue = handlerMap.call(obj, _target, e, _event);
-                    _hit = true;
-                } else {
-                    if (handlerMap[_event]) {
-                        _returnValue = handlerMap[_event].call(obj, _target, e, _event);
-                        _hit = true;
-                    }
-                }
-                if (_hit) {
-                    if (!_returnValue) {
-                        if (e.preventDefault) {
-                            e.preventDefault();
-                        } else e.returnValue = false;
-                    }
-                }
+    var Event = mp.Class.extend({
+        ctor: function(mpNode) {},
+        /**
+		 * 通用的绑定事件处理
+		 * @method bindCommonEvent
+		 * @param {Object} obj 调用事件绑定的页面对象
+		 * @param {Element} topElem 要绑定事件的元素
+		 * @param {String} type 绑定的事件类型
+		 * @param {Object} handlerMap 事件处理的函数映射
+		 * @param {Function} getEventkeyFn 取得事件对应的key的函数
+		 */
+        bindCommonEvent: function(obj, topElem, type, handlerMap, getEventkeyFn) {
+            handlerMap = handlerMap || _handlers[type];
+            var orginType = type, returnVal = null;
+            if (type === "click" && util.isMobile()) {
+                type = "tap";
             }
-        };
-        if (type === "tap") {
-            var x1 = 0, y1 = 0, x2 = 0, y2 = 0, flag = false;
-            var tstart = function(e) {
-                var touch = e.touches[0];
-                x1 = touch.pageX;
-                y1 = touch.pageY;
-                flag = false;
+            getEventkeyFn = getEventkeyFn || _defaultGetEventkeyFn;
+            var judgeFn = function(elem, type) {
+                return !!getEventkeyFn(elem, type);
             };
-            var tmove = function(e) {
-                var touch = e.touches[0];
-                x2 = touch.pageX;
-                y2 = touch.pageY;
-                flag = true;
+            var hdl = function(e) {
+                /**
+				 * 支持直接绑定方法
+				 */
+                var _target = getWantTarget(e, topElem, orginType, judgeFn), _hit = false;
+                if (_target) {
+                    var _event = getEventkeyFn(_target, orginType);
+                    var _returnValue;
+                    if (/Function/i.test(Object.prototype.toString.call(handlerMap))) {
+                        _returnValue = handlerMap.call(obj, _target, e, _event);
+                        _hit = true;
+                    } else {
+                        if (handlerMap[_event]) {
+                            _returnValue = handlerMap[_event].call(obj, _target, e, _event);
+                            _hit = true;
+                        }
+                    }
+                    if (_hit) {
+                        if (!_returnValue) {
+                            if (e.preventDefault) {
+                                e.preventDefault();
+                            } else e.returnValue = false;
+                        }
+                    }
+                }
             };
-            var tend = function(e) {
-                if (flag) {
-                    var offset = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-                    if (offset < 5) {
+            if (type === "tap") {
+                var x1 = 0, y1 = 0, x2 = 0, y2 = 0, flag = false;
+                var tstart = function(e) {
+                    var touch = e.touches[0];
+                    x1 = touch.pageX;
+                    y1 = touch.pageY;
+                    flag = false;
+                };
+                var tmove = function(e) {
+                    var touch = e.touches[0];
+                    x2 = touch.pageX;
+                    y2 = touch.pageY;
+                    flag = true;
+                };
+                var tend = function(e) {
+                    if (flag) {
+                        var offset = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                        if (offset < 5) {
+                            hdl(e);
+                        }
+                    } else {
                         hdl(e);
                     }
+                };
+                addEvent(topElem, "touchstart", tstart);
+                addEvent(topElem, "touchmove", tmove);
+                addEvent(topElem, "touchend", tend);
+                returnVal = {
+                    touchstart: tstart,
+                    touchmove: tmove,
+                    touchend: tend
+                };
+            } else {
+                addEvent(topElem, type, hdl);
+                returnVal = hdl;
+            }
+            //返回hdl用来解绑
+            return returnVal;
+        },
+        /**
+		 * 为topElem解绑元素
+		 * @method unbindCommonEvent
+		 * @param {type} 事件类型
+		 * @param {dealFn} 事件处理的函数
+		 */
+        unbindCommonEvent: function(topElem, type, handler) {
+            if (hander) {
+                if (type === "click" && util.isMobile()) {
+                    //解绑touch事件
+                    for (p in handler) {
+                        removeEvent(topElem, p, handler[p]);
+                    }
                 } else {
-                    hdl(e);
+                    removeEvent(topElem, type, handler);
                 }
-            };
-            addEvent(topElem, "touchstart", tstart);
-            addEvent(topElem, "touchmove", tmove);
-            addEvent(topElem, "touchend", tend);
-            returnVal = {
-                touchstart: tstart,
-                touchmove: tmove,
-                touchend: tend
-            };
-        } else {
-            addEvent(topElem, type, hdl);
-            returnVal = hdl;
-        }
-        //返回hdl用来解绑
-        return returnVal;
-    };
-    /**
-	 * 为topElem解绑元素
-	 * @method unbindCommonEvent
-	 * @param {type} 事件类型
-	 * @param {dealFn} 事件处理的函数
-	 */
-    var unbindCommonEvent = function(topElem, type, handler) {
-        if (hander) {
-            if (type === "click" && util.isMobile()) {
-                //解绑touch事件
-                for (p in handler) {
-                    removeEvent(topElem, p, handler[p]);
+            }
+        },
+        /**
+		 * 为body添加事件代理
+		 * @method bindBodyEvent
+		 * @param {string} type 事件类型
+		 */
+        bindBodyEvent: function(obj, type) {
+            return this.bindCommonEvent(obj, document.body, type);
+        },
+        /**
+		 * 为body添加事件代理
+		 * @method unbindBodyEvent
+		 * @param {string} type 事件类型
+		 * @param {function} bodyHandler 事件处理的函数
+		 */
+        unbindBodyEvent: function(type, bodyHandler) {
+            if (bodyHandler) {
+                this.unbindCommonEvent(document.body, type, bodyHandler);
+            }
+        },
+        /**
+		 * 为body添加事件代理
+		 * @method bindBodyEvent
+		 * @param {string} eventName 事件类型
+		 * @param {function} handler 事件处理的函数
+		 */
+        on: function(eventName, handlerName, handler) {
+            _handlers[eventName] = _handlers[eventName] || {};
+            _handlers[eventName][handlerName] = handler;
+        },
+        off: function(eventName, handler) {
+            if (!handler) {
+                if (_handlers[eventName]) {
+                    _handlers[eventName] = {};
                 }
             } else {
-                removeEvent(topElem, type, handler);
+                if (_handlers[eventName]) {
+                    handlers[eventName][handlerName] = null;
+                }
             }
-        }
+        },
+        emit: function(elem, eventName, handlerName, data) {}
+    });
+    Event.create = function(mpNode) {
+        return new Event(mpNode);
     };
-    /**
-	 * 为body添加事件代理
-	 * @method bindBodyEvent
-	 * @param {string} type 事件类型
-	 */
-    var bindBodyEvent = function(obj, type) {
-        return bindCommonEvent(obj, document.body, type);
-    };
-    /**
-	 * 为body添加事件代理
-	 * @method unbindBodyEvent
-	 * @param {string} type 事件类型
-	 * @param {function} bodyHandler 事件处理的函数
-	 */
-    var unbindBodyEvent = function(type, bodyHandler) {
-        if (bodyHandler) {
-            unbindCommonEvent(document.body, type, bodyHandler);
-        }
-    };
-    /**
-	 * 为body添加事件代理
-	 * @method bindBodyEvent
-	 * @param {string} eventName 事件类型
-	 * @param {function} handler 事件处理的函数
-	 */
-    var on = function(eventName, handlerName, handler) {
-        _handlers[eventName] = _handlers[eventName] || {};
-        _handlers[eventName][handlerName] = handler;
-    };
-    var off = function(eventName, handler) {
-        if (!handler) {
-            if (_handlers[eventName]) {
-                _handlers[eventName] = {};
-            }
-        } else {
-            if (_handlers[eventName]) {
-                handlers[eventName][handlerName] = null;
-            }
-        }
-    };
-    //绑定代理事件，自定义代理对象
-    exports.bindCommonEvent = bindCommonEvent;
-    exports.unbindCommonEvent = unbindCommonEvent;
-    //统一绑定body代理事件
-    exports.bindBodyEvent = bindBodyEvent;
-    exports.unbindBodyEvent = unbindBodyEvent;
-    exports.on = on;
-    exports.off = off;
+    module.exports = Event;
 });;
 "use strict";
 
@@ -1303,7 +1070,8 @@ define("/spm_modules/spaseed/1.1.14/lib/model", function(require, exports, modul
     module.exports = manager;
 });;
 define("/spm_modules/spaseed/1.1.14/lib/net", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.14/lib/zepto"), spaseedConfig = require("app/script/config");
+    var mp = require("spm_modules/spaseed/1.1.14/main/mp");
+    spaseedConfig = require("app/script/config");
     var objectToParams = function(obj, decodeUri) {
         var param = $.param(obj);
         if (decodeUri) {
@@ -1317,7 +1085,8 @@ define("/spm_modules/spaseed/1.1.14/lib/net", function(require, exports, module)
      * @class net
      * @static
      */
-    var net = {
+    var Net = mp.Class.extend({
+        ctor: function(mpNode) {},
         _progressBar: [],
         /**
          * 发起请求
@@ -1441,6 +1210,9 @@ define("/spm_modules/spaseed/1.1.14/lib/net", function(require, exports, module)
             url += s + objectToParams(p);
             return url;
         }
+    });
+    Net.create = function(mpNode) {
+        return new Net(mpNode);
     };
     module.exports = net;
 });;
@@ -3320,63 +3092,66 @@ define("/spm_modules/spaseed/1.1.14/lib/zepto", function(require) {
     })(window);
     return Zepto;
 });;
-define("/spm_modules/spaseed/1.1.14/main/entry", function(require, exports, module) {
-    var evt = require("spm_modules/spaseed/1.1.14/lib/event");
-    var router = require("spm_modules/spaseed/1.1.14/main/router");
-    var pageManager = require("spm_modules/spaseed/1.1.14/main/pagemanagerwithpageswitcher");
-    var spaseedConfig = require("app/script/config");
-    //spaseed初始化
-    var init = function() {
-        //初始化页面管理
-        pageManager.init();
-        //初始化路由
-        router.init({
-            html5Mode: spaseedConfig.html5Mode,
-            pageManager: pageManager,
-            routes: {
-                "/": "loadRoot",
-                "/*controller(/*action)(/*p1)(/*p2)(/*p3)(/*p4)": "loadCommon"
-            },
-            extendRoutes: spaseedConfig.extendRoutes
-        });
-        //全局点击
-        evt.bindCommonEvent(null, document.body, "click", {
-            router: function(target) {
-                var url = target.getAttribute("data-href");
-                pageManager.redirect(url);
-            },
-            back: function(target) {
-                pageManager.back(target.getAttribute("data-href"));
-            },
-            reload: function() {
-                pageManager.reload();
+"use strict";
+
+define("/spm_modules/spaseed/1.1.14/main/mp", function(require, exports, module) {
+    var $id = 0 | Math.random() * 998;
+    var mp = {};
+    /**
+	 *@clas mm.Class
+	 */
+    mp.Class = function() {};
+    /**
+	 *@method mm.Class.extend
+	 *@param prop {Object} 原型
+	 *@static
+	 *@example
+	 	var app = mm.Class.extend(prop)
+	 */
+    mp.Class.extend = function(prop) {
+        function Class() {
+            var index = 0;
+            this.$id = ++$id;
+            //执行构造方法
+            if (this.ctor) {
+                this.ctor.apply(this, arguments);
             }
-        });
-        //记录所有请求完毕
-        var win = window;
-        win.onload = function() {
-            win.isOnload = true;
-            //onload
-            if (onload) {
-                onload();
-            }
-        };
-    };
-    var onload = function() {
-        //禁止container以外的touchmove事件
-        if (spaseedConfig.disableTouchOutsideContainer) {
-            window.addEventListener("touchmove", function(event) {
-                if (!pageManager.container[0].contains(event.target)) {
-                    event.preventDefault();
-                }
-            }, false);
-            window.addEventListener("touchstart", function() {});
         }
+        var $super = this.prototype;
+        var prototype = Object.create($super);
+        var $superTest = /\.\$super\b/;
+        Class.prototype = prototype;
+        var description = {
+            writable: true,
+            enumerable: false,
+            configurable: true
+        };
+        for (var name in prop) {
+            var isFunc = typeof prop[name] === "function";
+            var override = typeof $super[name] === "function";
+            var hasSuperCall = $superTest.test(prop[name]);
+            if (isFunc && override && hasSuperCall) {
+                description.value = function(name, fn) {
+                    return function() {
+                        var tmp = this.$super;
+                        this.$super = $super[name];
+                        var result = fn.apply(this, arguments);
+                        this.$super = tmp;
+                        return result;
+                    };
+                }(name, prop[name]);
+                Object.defineProperty(prototype, name, description);
+            } else if (isFunc) {
+                description.value = prop[name];
+                Object.defineProperty(prototype, name, description);
+            } else {
+                prototype[name] = prop[name];
+            }
+        }
+        Class.extend = mp.Class.extend;
+        return Class;
     };
-    module.exports = {
-        init: init,
-        onload: onload
-    };
+    module.exports = mp;
 });;
 define("/spm_modules/spaseed/1.1.14/main/pagemanager", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");

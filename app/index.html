@@ -48,9 +48,13 @@
             base:'/',
             alias:{
                 '$':'spm_modules/spaseed/1.1.14/lib/zepto',
+                'mp':'spm_modules/spaseed/1.1.14/main/mp',
+                'app':'spm_modules/spaseed/1.1.14/main/app',
+                'node':'spm_modules/spaseed/1.1.14/main/node',
+                'view':'spm_modules/spaseed/1.1.14/main/view',
+
                 'binder':'spm_modules/spaseed/1.1.14/lib/binder',
                 'cookie':'spm_modules/spaseed/1.1.14/lib/cookie',
-                'entry':'spm_modules/spaseed/1.1.14/main/entry',
                 'pagemanager':'spm_modules/spaseed/1.1.14/main/pagemanagerwithpageswitcher',
                 'pageswitcher':'spm_modules/spaseed/1.1.14/lib/pageswitcher',
                 'util':'spm_modules/spaseed/1.1.14/lib/util',
@@ -71,8 +75,8 @@
                 'request':'app/script/model/request'
             }
         });
-        seajs.use('app/script/entry',function(entry){
-            entry.startup();
+        seajs.use('app/script/startup',function(startup){
+            startup();
         });
     </script>
 </body>

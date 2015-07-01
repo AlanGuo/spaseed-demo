@@ -3,12 +3,12 @@ define(function(require,exports,module){
 	var spaseedconfig = require('spm_modules/spaseed/1.1.14/config');
 
 	var config = $.extend(spaseedconfig,{
-		basePath:'/app/script/module/',
-		root : 'page1',
+		root : '/page1',
 		container:'#container',
-		pageWrapper:'#pageWrapper',
-		switchMode:'fadeIn',
-		switchWrapper:'#switchWrapper'
+		viewfolder:'app/script/module'
+		// pageWrapper:'#pageWrapper',
+		// switchMode:'fadeIn',
+		// switchWrapper:'#switchWrapper'
 	});
 	
 	module.exports = config;
