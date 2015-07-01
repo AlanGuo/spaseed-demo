@@ -25,7 +25,10 @@ define(function(require, exports, module){
 						}
 						//绑定事件
 						if(!this.__bodyhandler[p]){
-							this.__bodyhandler[p] = this.$event.bindBodyEvent(this, p);
+							//绑定过的事件不再绑定
+							if(!this.__bodyhandler[p]){
+								this.__bodyhandler[p] = this.$event.bindBodyEvent(this, p);
+							}
 						}
 					}
 				}

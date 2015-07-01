@@ -1,28 +1,24 @@
 
 define(function (require, exports, module) {
     var $ = require('$');
-    var page3 = require('../page3');
     var template = require('template');
+    var asyncRequest = require('asyncrequest');
+    var request = require('request');
+    var View = require('../page3');
 
-    var page3Index = {
+    var page3Index = View.extend({
 
         title: 'page3 index',
 
         render: function () {
-            var $subcontainer = $('#subcontainer');
-
-            if(!$subcontainer.length){
-                page3.render();
-                $subcontainer = $('#subcontainer');
-            }
-
-            $('#subcontainer').html(template('page3/index/index')());
-        },
-
-        destroy: function () {
-
+            var self = this;
+            this.$super(function(){
+                self.$elem = $('#subcontainer');
+                self.$elem.html(template('page3/index/index')());
+            });
+            
         }
-    };
+    });
         
     module.exports = page3Index;
 });

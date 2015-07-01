@@ -5,16 +5,21 @@
  */
 define(function(require, exports, module) {
 	var asyncRequest = {
-		all:function(requestArray, success, fail){
+		all:function(net, requestArray, success, fail){
 			if(window.Promise){
 				var promiseFunctionArray = [];
 				for(var i=0;i<requestArray.length;i++){
 					(function(item,index){
 						promiseFunctionArray.push(new Promise(function(resolve, reject){
-							item.net.request(item.request,item.params,function(data){
-								resolve(data);
-							},function(err){
-								reject(err);
+							net.request({
+								request:item.request,
+								data:item.params,
+								success:function(data){
+									resolve(data);
+								},
+								error:function(err){
+									reject(err);
+								}
 							});
 						}));
 					})(requestArray[i],i);
@@ -36,18 +41,23 @@ define(function(require, exports, module) {
 				//不支持Promise的情况
 				for(var i=0;i<count;i++){
 					(function(item,index){
-						item.net.request(item.request,item.params,function(data){
-							resultsArray[index] = data;
-							if(!--count){
-								if(success){
-									success(resultsArray);
+						net.request({
+							request:item.request,
+							data:item.params,
+							success:function(data){
+								resultsArray[index] = data;
+								if(!--count){
+									if(success){
+										success(resultsArray);
+									}
 								}
-							}
-						},function(err){
-							resultsArray[index] = err;
-							if(!--count){
-								if(fail){
-									fail(resultsArray);
+							},
+							error:function(err){
+								resultsArray[index] = err;
+								if(!--count){
+									if(fail){
+										fail(resultsArray);
+									}
 								}
 							}
 						});

@@ -20,6 +20,8 @@ define(function(require, exports, module){
 			else{
 				elemarray[0].appendChild(elem);
 			}
+
+			return elemarray;
 		};
 		elemarray.remove = function(){
 			for(var i=0;i<elemarray.length;i++){
@@ -27,6 +29,7 @@ define(function(require, exports, module){
 					elemarray[i].parentNode.removeChild(elemarray[i]);
 				}
 			}
+			return elemarray;
 		};
 		elemarray.html = function(content){
 			if(content){
@@ -37,6 +40,34 @@ define(function(require, exports, module){
 			else{
 				return elemarray[0].innerHTML;
 			}
+		};
+		elemarray.addClass = function(className){
+			for(var i=0;i<elemarray.length;i++){
+				if(elemarray[i].className.indexOf(className) === -1){
+					elemarray[i].className += ' '+className;
+				}
+			}
+			return elemarray;
+		};
+		elemarray.removeClass = function(className){
+			for(var i=0;i<elemarray.length;i++){
+				if(elemarray[i].className.indexOf(className) > -1){
+					elemarray[i].className = elemarray[i].className.replace(new RegExp('\\s*?'+className),'');
+				}
+			}
+			return elemarray;
+		};
+		elemarray.data = function(name, val){
+			if(val){
+				for(var i=0;i<elemarray.length;i++){
+					elemarray[i].setAttribute('data-'+name,val);
+				}
+			}
+			else{
+				elemarray[0].getAttribute('data-'+name);
+			}
+
+			return elemarray;
 		};
 
 		return elemarray;

@@ -14,10 +14,9 @@ define(function (require, exports, module) {
 
         render: function () {
             var self = this;
-            asyncRequest.all([{
-                params:{title:'page2',description:'page2 description'},
-                request:request.sample,
-                net:this.$net
+            asyncRequest.all(this.$net,[{
+                params:{code:0,data:{title:'page2',description:'page2 description'}},
+                request:request.sample
             }],function(values){
                 self.$elem.html(template('page2/page2',{data:values[0]}));
             });

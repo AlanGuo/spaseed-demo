@@ -21,7 +21,11 @@ define(function(require, exports, module){
 			}
 
 			this.nodeName = data.nodeName || 'div';
-			this.$elem = data.$elem || this.$elem || $(document.createElement(this.nodeName));
+			this.$elem = data.$elem || this.$elem;
+			if(!this.$elem){
+				this.isNew = true;
+				this.$elem = $(document.createElement(this.nodeName));
+			}
 
 			//其他属性
 			this.attribute = data.attribute || {};

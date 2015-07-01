@@ -88,19 +88,43 @@ define(function (require, exports, module) {
             return this._ajax(url, data, 'POST', cb);
         },
 
-        /**
-         * POST请求
-         * @method post
-         * @param  {String}   url    URL
-         * @param  {Object}   data   参数
-         * @param  {Function} cb     回调函数
-         */
-        request:function(request,data,cb){
+        request:function(options){
+            var self = this;
+            var request = options.request,
+                data = options.data,
+                success = options.success,
+                error = options.error,
+                button = options.button,
+                eventName = null;
+                //恢复按钮
+                if(button){
+                    var $button =  $(button);
+                    eventName = $button.addClass('disabled').data('event');
+                    $button[0].removeAttribute('data-click-event');
+                }
+
+            var cb = function(ret){
+                if($button){
+                    $button.removeClass('disabled')[0].setAttribute('data-click-event', eventName);
+                }
+                var _code = ret.code;
+
+                if (_code === 0) {
+                    if(success){
+                        success(ret.data);
+                    }
+                } else {
+                    if(error){
+                        error(ret.msg,_code,ret.data);
+                    }
+                }
+            };
+
             if(request.fakecallback){
-                request.fakecallback(data,cb);
+                request.fakecallback(data, cb);
             }
             else{
-                this[request.method](request.url,data,cb);
+                this[request.method](request.url, data, cb);
             }
         },
 
@@ -114,34 +138,35 @@ define(function (require, exports, module) {
             }
 
             var starttime = +new Date();
+            this.isBusy = true;
             (function(pbar){
                 returnVal = $.ajax({
                     type: method,
                     url: url,
                     data: data,
                     success: function (data) {
+                        self.isBusy = false;
                         self._hideProgress(pbar);
-                        //全局的netback，可以对特殊的返回码做特殊处理
+                        //全局的netback，可以对特殊的返回码做特殊处理，以及统计数据等
                         if(self.app.config.netback){
                             self.app.config.netback.call(self.app,url,data,cb);
                         }
                         cb(data, {starttime:starttime});
                     },
                     error: function (jqXHR) {
+                        self.isBusy = false;
                         self._hideProgress(pbar);
-                        if (window.isOnload) {//避免页面刷新时, 出小黄条错误
-                            var data = {};
-                            try{
-                                data = JSON.parse(jqXHR.responseText);
-                            }
-                            catch(e){
-                                console.error('jqXHR.responseText parse error');
-                                data.code = jqXHR.status;
-                                data.msg = jqXHR.statusText;
-                                data.data = {};
-                            }
-                            cb(data, {starttime:starttime});
+                        var data = {};
+                        try{
+                            data = JSON.parse(jqXHR.responseText);
                         }
+                        catch(e){
+                            console.error('jqXHR.responseText parse error');
+                            data.code = jqXHR.status;
+                            data.msg = jqXHR.statusText;
+                            data.data = {};
+                        }
+                        cb(data, {starttime:starttime});
                     }
                 });
                 if(pbar){
@@ -164,6 +189,7 @@ define(function (require, exports, module) {
 
             return progressBar;
         },
+
         _hideProgress: function(elem){
             if(elem){
                 document.body.removeChild(elem);

@@ -52,7 +52,6 @@ define(function(require, exports, module){
 			window.addEventListener('popstate',function(e){
 				if(e.state){
 					if(e.state.url){
-						
 						if(e.state.historyIndex < this.historyIndex){
 							this.backView()
 						}
@@ -70,6 +69,12 @@ define(function(require, exports, module){
 			this.$event.on('click','router',function(target){
 				self.loadUrl(target.getAttribute('data-href'));
 			});
+			this.$event.on('click','back',function(){
+				self.backView();
+			});
+			this.__bodyhandler = {};
+			//绑定click事件
+			this.__bodyhandler.click = this.$event.bindBodyEvent(this, 'click');
 		},
 
 		loadUrl:function(url,option,cacheHtml,effect){
@@ -131,13 +136,16 @@ define(function(require, exports, module){
 
 		addChild:function(view){
 			this.$super(view);
-			this.view = view;
 		},
 
 		loadView:function(view){
-			this.addChild(view);
+			if(this.isNew){
+				this.addChild(view);
+			}
+			this.view = view;
 			this.view.render();
-			document.title = this.view.title;
+			//设置标题
+			document.title = this.view.title || this.config.defaultTitle;
 		},
 
 		backView:function(){

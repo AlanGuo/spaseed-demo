@@ -13,20 +13,15 @@ define(function (require, exports, module) {
 
         $elem:$('#pageWrapper'),
 
-        ctor:function(data){
-            this.$super(data);
-        },
-
         render: function () {
             var self = this;
-            asyncRequest.all([{
-                params:{title:'page1',description:'page1 description'},
+            asyncRequest.all(this.$net,[{
+                params:{code:0,data:{title:'page1',description:'page1 description'}},
                 request:request.sample,
-                net:this.$net
             }],function(values){
                 self.$elem.html(template('page1/page1',{data:values[0]}));
                 //绑定数据
-                binder.bind(self.$elem[0], self);
+                binder.bind(self.$elem, self);
             });
         },
 
