@@ -15,6 +15,36 @@ define("/app/script/model/request", function(require, exports, module) {
     };
     module.exports = request;
 });;
+define("/app/script/module/page3/page3", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
+    var template = require("dest/view/apptemplate");
+    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
+    var request = require("app/script/model/request");
+    var View = require("spm_modules/spaseed/1.1.14/main/View");
+    var page3 = View.extend({
+        $elem: $("#pageWrapper"),
+        title: "page 3",
+        render: function(cb) {
+            var self = this;
+            asyncRequest.all(this.$net, [ {
+                params: {
+                    code: 0,
+                    data: {
+                        title: "page3",
+                        description: "page3 description"
+                    }
+                },
+                request: request.sample
+            } ], function(values) {
+                self.$elem.html(template("page3/page3", {
+                    data: values[0]
+                }));
+                cb && cb();
+            });
+        }
+    });
+    module.exports = page3;
+});;
 "use strict";
 
 define("/app/script/module/page1/page1", function(require, exports, module) {
@@ -154,36 +184,6 @@ define("/app/script/module/page3/page3", function(require, exports, module) {
     });
     module.exports = page3;
 });;
-define("/app/script/module/page3/page3", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
-    var template = require("dest/view/apptemplate");
-    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
-    var request = require("app/script/model/request");
-    var View = require("spm_modules/spaseed/1.1.14/main/View");
-    var page3 = View.extend({
-        $elem: $("#pageWrapper"),
-        title: "page 3",
-        render: function(cb) {
-            var self = this;
-            asyncRequest.all(this.$net, [ {
-                params: {
-                    code: 0,
-                    data: {
-                        title: "page3",
-                        description: "page3 description"
-                    }
-                },
-                request: request.sample
-            } ], function(values) {
-                self.$elem.html(template("page3/page3", {
-                    data: values[0]
-                }));
-                cb && cb();
-            });
-        }
-    });
-    module.exports = page3;
-});;
 /*TMODJS:{"version":"1.0.0"}*/
 !function(require, exports, module) {
     function template(filename, content) {
@@ -270,22 +270,22 @@ define("/app/script/module/page3/page3", function(require, exports, module) {
         }
         global.template = template;
     }
-    /*v:9*/
+    /*v:2*/
     template("page1/page1", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
         return $out += '<h1 data-click-event="tt_click">', $out += $escape(data.title), 
         $out += "</h1> <div>", $out += $escape(data.description), $out += '</div> <div bind-content="detail"></div> ', 
         new String($out);
-    }), /*v:2*/
+    }), /*v:1*/
     template("page2/page2", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
         return $out += "<h1>", $out += $escape(data.title), $out += "</h1> <div>", $out += $escape(data.description), 
         $out += "</div> ", new String($out);
-    }), /*v:2*/
-    template("page3/index/index", "<div> This is '/page3/index' content </div>"), /*v:2*/
-    template("page3/other/other", "<div> This is 'other' page content </div> "), /*v:2*/
+    }), /*v:1*/
+    template("page3/index/index", "<div> This is '/page3/index' content </div>"), /*v:1*/
+    template("page3/other/other", "<div> This is 'other' page content </div> "), /*v:1*/
     template("page3/page3", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
@@ -2177,13 +2177,13 @@ define("/spm_modules/spaseed/1.1.14/main/View", function(require, exports, modul
                 this.__bodyhandler = this.__bodyhandler || {};
                 for (var p in this.events) {
                     for (var q in this.events[p]) {
-                        this.$event.on(p, q, this.events[p][q]);
+                        this.$event.on(this, p, q, this.events[p][q]);
                     }
                     //绑定事件
                     if (!this.__bodyhandler[p]) {
                         //绑定过的事件不再绑定
                         if (!this.__bodyhandler[p]) {
-                            this.__bodyhandler[p] = this.$event.bindBodyEvent(this, p);
+                            this.__bodyhandler[p] = this.$event.bindEvent(this, this.$elem, p);
                         }
                     }
                 }
@@ -2195,28 +2195,21 @@ define("/spm_modules/spaseed/1.1.14/main/View", function(require, exports, modul
         reload: function() {},
         /*重载*/
         destroy: function() {
-            this.off();
-            //移除上一个页面的bodyEvents
-            if (this.events) {
-                for (var p in this.events) {
-                    this.$event.off(p);
-                }
-            }
+            //移除事件
+            this.$event.off(this);
         }
     });
     module.exports = View;
 });;
-"use strict";
-
-define("/spm_modules/spaseed/1.1.14/main/mp", function(require, exports, module) {
+define("mp", function(require, exports, module) {
     var $id = 0 | Math.random() * 998;
     var mp = {};
     /**
-	 *@class mp.Class
+	 *@clas mm.Class
 	 */
     mp.Class = function() {};
     /**
-	 *@method mp.Class.extend
+	 *@method mm.Class.extend
 	 *@param prop {Object} 原型
 	 *@static
 	 *@example
@@ -2226,12 +2219,13 @@ define("/spm_modules/spaseed/1.1.14/main/mp", function(require, exports, module)
         function Class() {
             var index = 0;
             this.$id = ++$id;
-            //执行构造方法
             if (this.ctor) {
                 this.ctor.apply(this, arguments);
             }
         }
+        //父类的原型链
         var $super = this.prototype;
+        //用父类的原型链创建一个新对象(复制)，用于继承
         var prototype = Object.create($super);
         var $superTest = /\.\$super\b/;
         Class.prototype = prototype;
@@ -2242,13 +2236,17 @@ define("/spm_modules/spaseed/1.1.14/main/mp", function(require, exports, module)
         };
         for (var name in prop) {
             var isFunc = typeof prop[name] === "function";
+            //parent也有这个方法
             var override = typeof $super[name] === "function";
+            //并且有呼叫parent的方法
             var hasSuperCall = $superTest.test(prop[name]);
             if (isFunc && override && hasSuperCall) {
                 description.value = function(name, fn) {
                     return function() {
                         var tmp = this.$super;
+                        //父类的方法
                         this.$super = $super[name];
+                        //运行结果
                         var result = fn.apply(this, arguments);
                         this.$super = tmp;
                         return result;
