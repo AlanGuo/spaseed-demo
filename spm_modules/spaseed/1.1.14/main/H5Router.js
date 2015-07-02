@@ -65,9 +65,7 @@ define(function(require, exports, module){
 				require.async(obj.view,function(View){
 					if(View){ 
 						view = new View(self.$app);
-
 						view._ = obj.view;
-
 						view.params = obj.params;
 						self.$app.loadView(view);
 					}
