@@ -3,10 +3,7 @@
 
 define(function(require, exports, module){
 
-	var mp = require('mp'),
-		Event = require('event'),
-		$ = require('$'),
-		Net = require('net');
+	var mp = require('mp');
 
 	var Node = mp.Class.extend({
 
@@ -16,12 +13,10 @@ define(function(require, exports, module){
 		nodeName:'div',
 
 		ctor:function(data){
-			if(!data){
-				data = {};
-			}
+			if(!data){data = {}}
 
 			this.nodeName = data.nodeName || 'div';
-			this.$elem = data.$elem || this.$elem;
+			this.$elem =  this.$elem || data.$elem;
 			if(!this.$elem){
 				this.isNew = true;
 				this.$elem = $(document.createElement(this.nodeName));
@@ -29,15 +24,6 @@ define(function(require, exports, module){
 
 			//其他属性
 			this.attribute = data.attribute || {};
-
-			//网络
-			this.$net = Net.create(this);
-			
-			//事件
-			this.$event = Event.create(this);
-			this.$on = this.$event.on;
-			this.$off = this.$event.off;
-			this.$emit = this.$event.emit;
 
 			//属性
 			for(var p in this.attribute){

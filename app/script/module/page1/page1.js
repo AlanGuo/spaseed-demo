@@ -2,8 +2,7 @@
 
 define(function (require, exports, module) {
     var $ = require('$');
-    var View = require('view');
-    var Net = require('net');
+    var View = require('View');
     var template = require('template');
     var asyncRequest = require('asyncrequest');
     var binder = require('binder');

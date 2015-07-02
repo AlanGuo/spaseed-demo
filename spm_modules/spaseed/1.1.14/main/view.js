@@ -1,7 +1,7 @@
 'use strict';
 
 define(function(require, exports, module){
-	var Node = require('node');
+	var Node = require('Node');
 	
 	var View = Node.extend({
 		/*id*/
@@ -12,23 +12,30 @@ define(function(require, exports, module){
 		/*内部元素*/
 		elements:{},
 
-		ctor:function(data){
-			this.$super(data);
+		ctor:function(app){
+			this.$super(app);
+			
+			this.$app = app;
+			//共享网络和事件
+			this.$net = app.$net;
+			//事件
+			this.$event = app.$event;
+			this.$on = app.$event.on;
+			this.$off = app.$event.off;
+			this.$emit = app.$event.emit;
+			
 			//绑定events
 			if(this.events){
-				//事件初始化
-				if(this.events){
-					this.__bodyhandler = this.__bodyhandler || {};
-					for(var p in this.events){
-						for(var q in this.events[p]){
-							this.$event.on(p,q,this.events[p][q]);
-						}
-						//绑定事件
+				this.__bodyhandler = this.__bodyhandler || {};
+				for(var p in this.events){
+					for(var q in this.events[p]){
+						this.$event.on(p,q,this.events[p][q]);
+					}
+					//绑定事件
+					if(!this.__bodyhandler[p]){
+						//绑定过的事件不再绑定
 						if(!this.__bodyhandler[p]){
-							//绑定过的事件不再绑定
-							if(!this.__bodyhandler[p]){
-								this.__bodyhandler[p] = this.$event.bindBodyEvent(this, p);
-							}
+							this.__bodyhandler[p] = this.$event.bindBodyEvent(this, p);
 						}
 					}
 				}

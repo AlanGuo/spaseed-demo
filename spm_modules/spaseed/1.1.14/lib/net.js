@@ -19,8 +19,8 @@ define(function (require, exports, module) {
      */
     var Net = mp.Class.extend({
 
-        ctor:function(mpNode){
-            this.app = mpNode;
+        ctor:function(app){
+            this.$app = app;
         },
         
         _progressBar:[],
@@ -103,23 +103,28 @@ define(function (require, exports, module) {
                     $button[0].removeAttribute('data-click-event');
                 }
 
-            var cb = function(ret){
+            var cb = function(ret,info){
                 if($button){
                     $button.removeClass('disabled')[0].setAttribute('data-click-event', eventName);
                 }
                 var _code = ret.code;
 
-                if (_code === 0) {
-                    if(success){
-                        success(ret.data);
-                    }
-                } else {
-                    if(error){
-                        error(ret.msg,_code,ret.data);
+                var breakdefault = false;
+                if(self.$app.config.netback){
+                    breakdefault = self.$app.config.netback.call(self.$app,options,ret,info);
+                }
+                if(!breakdefault){
+                    if (_code === 0) {
+                        if(success){
+                            success(ret.data,info);
+                        }
+                    } else {
+                        if(error){
+                            error(ret.msg,_code,ret.data,info);
+                        }
                     }
                 }
-            };
-
+            }
             if(request.fakecallback){
                 request.fakecallback(data, cb);
             }
@@ -133,7 +138,7 @@ define(function (require, exports, module) {
             var returnVal = null;
             var progressBar = null;
 
-            if(this.app.config.xhrProgress){
+            if(this.$app.config.xhrProgress){
                 progressBar = self._showProgress();
             }
 
@@ -147,10 +152,6 @@ define(function (require, exports, module) {
                     success: function (data) {
                         self.isBusy = false;
                         self._hideProgress(pbar);
-                        //全局的netback，可以对特殊的返回码做特殊处理，以及统计数据等
-                        if(self.app.config.netback){
-                            self.app.config.netback.call(self.app,url,data,cb);
-                        }
                         cb(data, {starttime:starttime});
                     },
                     error: function (jqXHR) {

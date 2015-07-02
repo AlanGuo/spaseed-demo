@@ -4,7 +4,7 @@
  * @static
  */
 define(function(require, exports, module) {
-	var util = require('util');
+	var env = require('env');
 	var mp = require('mp');
 
 	//事件处理方法
@@ -22,24 +22,12 @@ define(function(require, exports, module) {
 
 	//添加事件监听
 	var addEvent = function (elem, event, fn) {
-		if (elem.addEventListener){  // W3C
-			elem.addEventListener(event, fn, true);
-		}
-		else if (elem.attachEvent) { // IE
-			elem.attachEvent("on" + event, fn);
-		}
-		else {
-			elem[event] = fn;
-		}
+		elem.addEventListener(event, fn, true);
 	};
 
 	//移除事件监听
 	var removeEvent = function(elem, event, fn){
-		if (elem.removeEventListener)  // W3C
-			elem.removeEventListener(event, fn);
-		else if (elem.attachEvent) { // IE
-			elem.detachEvent("on" + event, fn);
-		}
+		elem.removeEventListener(event, fn);
 	};
 	
 	//获取元素中包含事件的第一个子元素
@@ -81,7 +69,7 @@ define(function(require, exports, module) {
 			var orginType = type,
 				returnVal = null;
 				
-			if (type === 'click' && util.isMobile()) {
+			if (type === 'click' && env.isMobile) {
 				 type = 'tap';
 			}
 			
@@ -101,15 +89,9 @@ define(function(require, exports, module) {
 					var _event = getEventkeyFn(_target, orginType);
 					var _returnValue;
 
-					if(/Function/i.test(Object.prototype.toString.call(handlerMap))){
-						_returnValue = handlerMap.call(obj,_target,e,_event);
+					if(handlerMap[_event]){
+						_returnValue = handlerMap[_event].call(obj, _target, e, _event);
 						_hit = true;
-					}
-					else{
-						if(handlerMap[_event]){
-							_returnValue = handlerMap[_event].call(obj, _target, e, _event);
-							_hit = true;
-						}
 					}
 					if(_hit){
 						if(!_returnValue){

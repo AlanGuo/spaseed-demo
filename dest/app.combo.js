@@ -19,8 +19,7 @@ define("/app/script/model/request", function(require, exports, module) {
 
 define("/app/script/module/page1/page1", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
-    var View = require("spm_modules/spaseed/1.1.14/main/view");
-    var Net = require("spm_modules/spaseed/1.1.14/lib/net");
+    var View = require("spm_modules/spaseed/1.1.14/main/View");
     var template = require("dest/view/apptemplate");
     var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
     var binder = require("spm_modules/spaseed/1.1.14/lib/binder");
@@ -64,7 +63,7 @@ define("/app/script/module/page2/page2", function(require, exports, module) {
     var template = require("dest/view/apptemplate");
     var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
     var request = require("app/script/model/request");
-    var View = require("spm_modules/spaseed/1.1.14/main/view");
+    var View = require("spm_modules/spaseed/1.1.14/main/View");
     var page2 = View.extend({
         title: "page2",
         $elem: $("#pageWrapper"),
@@ -130,7 +129,7 @@ define("/app/script/module/page3/page3", function(require, exports, module) {
     var template = require("dest/view/apptemplate");
     var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
     var request = require("app/script/model/request");
-    var View = require("spm_modules/spaseed/1.1.14/main/view");
+    var View = require("spm_modules/spaseed/1.1.14/main/View");
     var page3 = View.extend({
         $elem: $("#pageWrapper"),
         title: "page 3",
@@ -160,7 +159,7 @@ define("/app/script/module/page3/page3", function(require, exports, module) {
     var template = require("dest/view/apptemplate");
     var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
     var request = require("app/script/model/request");
-    var View = require("spm_modules/spaseed/1.1.14/main/view");
+    var View = require("spm_modules/spaseed/1.1.14/main/View");
     var page3 = View.extend({
         $elem: $("#pageWrapper"),
         title: "page 3",
@@ -583,507 +582,6 @@ define("/spm_modules/spaseed/1.1.14/lib/binder", function(require, exports, modu
         }
     };
     module.exports = bindEngine;
-});;
-"use strict";
-
-define("/spm_modules/spaseed/1.1.14/lib/cookie", function(require, exports, module) {
-    var cookie = {
-        get: function(name) {
-            var cookieStr = document.cookie;
-            var reg = new RegExp(name + "=(.*?)(;|$)");
-            var val = reg.exec(cookieStr);
-            return val && val[1];
-        },
-        set: function(name, value, path, expires) {
-            var expDays = expires * 24 * 60 * 60 * 100;
-            var expDate = new Date();
-            expDate.setTime(expDate.getTime() + expDays);
-            var expString = expires ? "; expires=" + expDate.toGMTString() : "";
-            var pathString = ";path=" + path;
-            document.cookie = name + "=" + escape(value) + expString + pathString;
-        },
-        "delete": function(name) {
-            var exp = new Date(new Date().getTime() - 1);
-            var s = this.read(name);
-            if (s != null) {
-                document.cookie = name + "=" + s + "; expires=" + exp.toGMTString() + ";path=/";
-            }
-        }
-    };
-    module.exports = cookie;
-});;
-/**
- * 事件管理
- * @class event
- * @static
- */
-define("/spm_modules/spaseed/1.1.14/lib/event", function(require, exports, module) {
-    var util = require("spm_modules/spaseed/1.1.14/lib/util");
-    var mp = require("spm_modules/spaseed/1.1.14/main/mp");
-    //事件处理方法
-    var _handlers = {};
-    //默认判断是否有事件的函数
-    var _defalutJudgeFn = function(elem, type) {
-        return !!elem.getAttribute("data-" + type + "-event");
-    };
-    //默认获取事件key的函数
-    var _defaultGetEventkeyFn = function(elem, type) {
-        return elem.getAttribute("data-" + type + "-event");
-    };
-    //添加事件监听
-    var addEvent = function(elem, event, fn) {
-        if (elem.addEventListener) {
-            // W3C
-            elem.addEventListener(event, fn, true);
-        } else if (elem.attachEvent) {
-            // IE
-            elem.attachEvent("on" + event, fn);
-        } else {
-            elem[event] = fn;
-        }
-    };
-    //移除事件监听
-    var removeEvent = function(elem, event, fn) {
-        if (elem.removeEventListener) // W3C
-        elem.removeEventListener(event, fn); else if (elem.attachEvent) {
-            // IE
-            elem.detachEvent("on" + event, fn);
-        }
-    };
-    //获取元素中包含事件的第一个子元素
-    var getWantTarget = function(evt, topElem, type, judgeFn) {
-        judgeFn = judgeFn || this.judgeFn || _defalutJudgeFn;
-        var _targetE = evt.srcElement || evt.target;
-        while (_targetE) {
-            if (judgeFn(_targetE, type)) {
-                return _targetE;
-            }
-            if (topElem == _targetE) {
-                break;
-            }
-            _targetE = _targetE.parentNode;
-        }
-        return null;
-    };
-    var Event = mp.Class.extend({
-        ctor: function(mpNode) {},
-        /**
-		 * 通用的绑定事件处理
-		 * @method bindEvent
-		 * @param {Object} obj 调用事件绑定的页面对象
-		 * @param {Element} topElem 要绑定事件的元素
-		 * @param {String} type 绑定的事件类型
-		 * @param {Object} handlerMap 事件处理的函数映射
-		 * @param {Function} getEventkeyFn 取得事件对应的key的函数
-		 */
-        bindEvent: function(obj, topElem, type, handlerMap, getEventkeyFn) {
-            handlerMap = handlerMap || _handlers[type];
-            var orginType = type, returnVal = null;
-            if (type === "click" && util.isMobile()) {
-                type = "tap";
-            }
-            getEventkeyFn = getEventkeyFn || _defaultGetEventkeyFn;
-            var judgeFn = function(elem, type) {
-                return !!getEventkeyFn(elem, type);
-            };
-            var hdl = function(e) {
-                /**
-				 * 支持直接绑定方法
-				 */
-                var _target = getWantTarget(e, topElem, orginType, judgeFn), _hit = false;
-                if (_target) {
-                    var _event = getEventkeyFn(_target, orginType);
-                    var _returnValue;
-                    if (/Function/i.test(Object.prototype.toString.call(handlerMap))) {
-                        _returnValue = handlerMap.call(obj, _target, e, _event);
-                        _hit = true;
-                    } else {
-                        if (handlerMap[_event]) {
-                            _returnValue = handlerMap[_event].call(obj, _target, e, _event);
-                            _hit = true;
-                        }
-                    }
-                    if (_hit) {
-                        if (!_returnValue) {
-                            if (e.preventDefault) {
-                                e.preventDefault();
-                            } else e.returnValue = false;
-                        }
-                    }
-                }
-            };
-            if (type === "tap") {
-                var x1 = 0, y1 = 0, x2 = 0, y2 = 0, flag = false;
-                var tstart = function(e) {
-                    var touch = e.touches[0];
-                    x1 = touch.pageX;
-                    y1 = touch.pageY;
-                    flag = false;
-                };
-                var tmove = function(e) {
-                    var touch = e.touches[0];
-                    x2 = touch.pageX;
-                    y2 = touch.pageY;
-                    flag = true;
-                };
-                var tend = function(e) {
-                    if (flag) {
-                        var offset = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-                        if (offset < 5) {
-                            hdl(e);
-                        }
-                    } else {
-                        hdl(e);
-                    }
-                };
-                addEvent(topElem, "touchstart", tstart);
-                addEvent(topElem, "touchmove", tmove);
-                addEvent(topElem, "touchend", tend);
-                returnVal = {
-                    touchstart: tstart,
-                    touchmove: tmove,
-                    touchend: tend
-                };
-            } else {
-                addEvent(topElem, type, hdl);
-                returnVal = hdl;
-            }
-            //返回hdl用来解绑
-            return returnVal;
-        },
-        /**
-		 * 为topElem解绑元素
-		 * @method unbindEvent
-		 * @param {type} 事件类型
-		 * @param {dealFn} 事件处理的函数
-		 */
-        unbindEvent: function(topElem, type, handler) {
-            if (hander) {
-                if (type === "click" && util.isMobile()) {
-                    //解绑touch事件
-                    for (p in handler) {
-                        removeEvent(topElem, p, handler[p]);
-                    }
-                } else {
-                    removeEvent(topElem, type, handler);
-                }
-            }
-        },
-        /**
-		 * 为body添加事件代理
-		 * @method bindBodyEvent
-		 * @param {string} type 事件类型
-		 */
-        bindBodyEvent: function(obj, type) {
-            return this.bindEvent(obj, document.body, type);
-        },
-        /**
-		 * 为body添加事件代理
-		 * @method unbindBodyEvent
-		 * @param {string} type 事件类型
-		 * @param {function} bodyHandler 事件处理的函数
-		 */
-        unbindBodyEvent: function(type, bodyHandler) {
-            if (bodyHandler) {
-                this.unbindEvent(document.body, type, bodyHandler);
-            }
-        },
-        /**
-		 * 为body添加事件代理
-		 * @method bindBodyEvent
-		 * @param {string} eventName 事件类型
-		 * @param {function} handler 事件处理的函数
-		 */
-        on: function(eventName, handlerName, handler) {
-            _handlers[eventName] = _handlers[eventName] || {};
-            _handlers[eventName][handlerName] = handler;
-        },
-        off: function(eventName, handler) {
-            if (!handler) {
-                if (_handlers[eventName]) {
-                    _handlers[eventName] = {};
-                }
-            } else {
-                if (_handlers[eventName]) {
-                    handlers[eventName][handlerName] = null;
-                }
-            }
-        },
-        emit: function(elem, eventName, handlerName, data) {}
-    });
-    Event.create = function(mpNode) {
-        return new Event(mpNode);
-    };
-    module.exports = Event;
-});;
-define("/spm_modules/spaseed/1.1.14/lib/net", function(require, exports, module) {
-    var mp = require("spm_modules/spaseed/1.1.14/main/mp"), $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
-    var objectToParams = function(obj, decodeUri) {
-        var param = $.param(obj);
-        if (decodeUri) {
-            param = decodeURIComponent(param);
-        }
-        return param;
-    };
-    var console = window.console;
-    /**
-     * 网络请求
-     * @class net
-     * @static
-     */
-    var Net = mp.Class.extend({
-        ctor: function(mpNode) {
-            this.app = mpNode;
-        },
-        _progressBar: [],
-        /**
-         * 发起请求
-         * @method send
-         * @param  {Object} cgiConfig 配置
-         * @param  {Object} opt       选参
-         */
-        send: function(cgiConfig, opt) {
-            var _self = this, _cgiConfig = cgiConfig, _data = opt.data || {}, _url = "", _cb = null;
-            if (!_cgiConfig) {
-                _cgiConfig = {
-                    url: opt.url,
-                    method: opt.method
-                };
-            }
-            if (_cgiConfig) {
-                // 成功回调
-                _cb = function(ret) {
-                    opt.cb && opt.cb(ret);
-                };
-                var urlParams = {
-                    t: new Date().getTime()
-                };
-                _url = this._addParam(_cgiConfig.url, urlParams);
-                if (_cgiConfig.method && _cgiConfig.method.toLowerCase() === "post") {
-                    return this.post(_url, _data, _cb);
-                } else {
-                    return this.get(_url, _data, _cb);
-                }
-            }
-        },
-        /**
-         * GET请求
-         * @method get
-         * @param  {String}   url    URL
-         * @param  {Object}   data   参数
-         * @param  {Function} cb     回调函数
-         */
-        get: function(url, data, cb) {
-            return this._ajax(url, data, "GET", cb);
-        },
-        /**
-         * POST请求
-         * @method post
-         * @param  {String}   url    URL
-         * @param  {Object}   data   参数
-         * @param  {Function} cb     回调函数
-         */
-        post: function(url, data, cb) {
-            return this._ajax(url, data, "POST", cb);
-        },
-        request: function(options) {
-            var self = this;
-            var request = options.request, data = options.data, success = options.success, error = options.error, button = options.button, eventName = null;
-            //恢复按钮
-            if (button) {
-                var $button = $(button);
-                eventName = $button.addClass("disabled").data("event");
-                $button[0].removeAttribute("data-click-event");
-            }
-            var cb = function(ret) {
-                if ($button) {
-                    $button.removeClass("disabled")[0].setAttribute("data-click-event", eventName);
-                }
-                var _code = ret.code;
-                if (_code === 0) {
-                    if (success) {
-                        success(ret.data);
-                    }
-                } else {
-                    if (error) {
-                        error(ret.msg, _code, ret.data);
-                    }
-                }
-            };
-            if (request.fakecallback) {
-                request.fakecallback(data, cb);
-            } else {
-                this[request.method](request.url, data, cb);
-            }
-        },
-        _ajax: function(url, data, method, cb) {
-            var self = this;
-            var returnVal = null;
-            var progressBar = null;
-            if (this.app.config.xhrProgress) {
-                progressBar = self._showProgress();
-            }
-            var starttime = +new Date();
-            this.isBusy = true;
-            (function(pbar) {
-                returnVal = $.ajax({
-                    type: method,
-                    url: url,
-                    data: data,
-                    success: function(data) {
-                        self.isBusy = false;
-                        self._hideProgress(pbar);
-                        //全局的netback，可以对特殊的返回码做特殊处理，以及统计数据等
-                        if (self.app.config.netback) {
-                            self.app.config.netback.call(self.app, url, data, cb);
-                        }
-                        cb(data, {
-                            starttime: starttime
-                        });
-                    },
-                    error: function(jqXHR) {
-                        self.isBusy = false;
-                        self._hideProgress(pbar);
-                        var data = {};
-                        try {
-                            data = JSON.parse(jqXHR.responseText);
-                        } catch (e) {
-                            console.error("jqXHR.responseText parse error");
-                            data.code = jqXHR.status;
-                            data.msg = jqXHR.statusText;
-                            data.data = {};
-                        }
-                        cb(data, {
-                            starttime: starttime
-                        });
-                    }
-                });
-                if (pbar) {
-                    returnVal.onprogress = function(evt) {
-                        var progressWidth = evt.loaded / (evt.total || (evt.loaded > 1e3 ? evt.loaded : 1e3)) * pbar.clientWidth * .99 | 0;
-                    };
-                }
-            })(progressBar);
-            return returnVal;
-        },
-        _showProgress: function() {
-            var progressBar = document.createElement("div");
-            progressBar.setAttribute("style", "position:fixed;height:3px;top:0;background:green;" + "transition:all .6s ease;width:0;z-index:100");
-            document.body.appendChild(progressBar);
-            progressBar.style.width = document.body.clientWidth + "px";
-            return progressBar;
-        },
-        _hideProgress: function(elem) {
-            if (elem) {
-                document.body.removeChild(elem);
-            }
-        },
-        _addParam: function(url, p) {
-            var s = /\?/.test(url) ? "&" : "?";
-            url += s + objectToParams(p);
-            return url;
-        }
-    });
-    Net.create = function(mpNode) {
-        return new Net(mpNode);
-    };
-    module.exports = Net;
-});;
-"use strict";
-
-define("/spm_modules/spaseed/1.1.14/lib/util", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.14/lib/zepto");
-    var cookie = require("spm_modules/spaseed/1.1.14/lib/cookie");
-    window.console = window.console || {
-        log: function() {}
-    };
-    /**
-	 * 工具类
-	 * @class util
-	 * @static
-	 */
-    var util = {
-        /**
-		 * 是否移动手机
-		 * @method isMobile
-		 * @return {boolean} true|false
-		 */
-        isMobile: function() {
-            return this.isAndroid() || this.isIOS();
-        },
-        /**
-		 * 是否android
-		 * @method isAndroid
-		 * @return {boolean} true|false
-		 */
-        isAndroid: function() {
-            return /android/i.test(window.navigator.userAgent);
-        },
-        /**
-		 * 是否ios
-		 * @method isIOS
-		 * @return {boolean} true|false
-		 */
-        isIOS: function() {
-            return /iPod|iPad|iPhone/i.test(window.navigator.userAgent);
-        },
-        /**
-		 * 获取a标签href相对地址
-		 * @method getHref
-		 * @param  {Object} item dom节点
-		 * @return {String} href
-		 */
-        getHref: function(item) {
-            var href = item.getAttribute("href", 2);
-            href = href.replace("http://" + location.host, "");
-            return href;
-        },
-        /**
-		 * 深度拷贝对象
-		 * @method cloneObject
-		 * @param  {Object} obj 任意对象
-		 * @return {Object} 返回新的拷贝对象
-		 */
-        cloneObject: function(obj) {
-            var o = obj.constructor === Array ? [] : {};
-            for (var i in obj) {
-                if (obj.hasOwnProperty(i)) {
-                    o[i] = typeof obj[i] === "object" ? this.cloneObject(obj[i]) : obj[i];
-                }
-            }
-            return o;
-        },
-        /**
-		 * 插入内部样式
-		 * @method insertStyle
-		 * @param  {string | Array} rules 样式
-		 * @param  {string} id 样式节点Id
-		 */
-        insertStyle: function(rules, id) {
-            var _insertStyle = function() {
-                var doc = document, node = doc.createElement("style");
-                node.type = "text/css";
-                id && (node.id = id);
-                document.getElementsByTagName("head")[0].appendChild(node);
-                if (rules) {
-                    if (typeof rules === "object") {
-                        rules = rules.join("");
-                    }
-                    if (node.styleSheet) {
-                        node.styleSheet.cssText = rules;
-                    } else {
-                        node.appendChild(document.createTextNode(rules));
-                    }
-                }
-            };
-            if (id) {
-                !document.getElementById(id) && _insertStyle();
-            } else {
-                _insertStyle();
-            }
-        }
-    };
-    module.exports = util;
 });;
 /* Zepto v1.1.2 - zepto event ajax form ie - zeptojs.com/license */
 define("/spm_modules/spaseed/1.1.14/lib/zepto", function(require) {
@@ -2619,15 +2117,106 @@ define("/spm_modules/spaseed/1.1.14/lib/zepto", function(require) {
 });;
 "use strict";
 
+define("/spm_modules/spaseed/1.1.14/main/Node", function(require, exports, module) {
+    var mp = require("spm_modules/spaseed/1.1.14/main/mp");
+    var Node = mp.Class.extend({
+        $elem: null,
+        $event: null,
+        nodeName: "div",
+        ctor: function(data) {
+            if (!data) {
+                data = {};
+            }
+            this.nodeName = data.nodeName || "div";
+            this.$elem = this.$elem || data.$elem;
+            if (!this.$elem) {
+                this.isNew = true;
+                this.$elem = $(document.createElement(this.nodeName));
+            }
+            //其他属性
+            this.attribute = data.attribute || {};
+            //属性
+            for (var p in this.attribute) {
+                this.$elem[p] = this.attribute[p];
+            }
+        },
+        addChild: function(child) {
+            this.$elem.append(child.$elem);
+            child.parent = this;
+        },
+        removeChild: function(child) {
+            child.parent = null;
+            child.$elem.remove();
+        }
+    });
+    module.exports = Node;
+});;
+"use strict";
+
+define("/spm_modules/spaseed/1.1.14/main/View", function(require, exports, module) {
+    var Node = require("spm_modules/spaseed/1.1.14/main/Node");
+    var View = Node.extend({
+        /*id*/
+        _: "",
+        /*标题*/
+        title: "",
+        /*内部元素*/
+        elements: {},
+        ctor: function(app) {
+            this.$super(app);
+            this.$app = app;
+            //共享网络和事件
+            this.$net = app.$net;
+            //事件
+            this.$event = app.$event;
+            this.$on = app.$event.on;
+            this.$off = app.$event.off;
+            this.$emit = app.$event.emit;
+            //绑定events
+            if (this.events) {
+                this.__bodyhandler = this.__bodyhandler || {};
+                for (var p in this.events) {
+                    for (var q in this.events[p]) {
+                        this.$event.on(p, q, this.events[p][q]);
+                    }
+                    //绑定事件
+                    if (!this.__bodyhandler[p]) {
+                        //绑定过的事件不再绑定
+                        if (!this.__bodyhandler[p]) {
+                            this.__bodyhandler[p] = this.$event.bindBodyEvent(this, p);
+                        }
+                    }
+                }
+            }
+        },
+        /*重载*/
+        render: function() {},
+        /*重载*/
+        reload: function() {},
+        /*重载*/
+        destroy: function() {
+            this.off();
+            //移除上一个页面的bodyEvents
+            if (this.events) {
+                for (var p in this.events) {
+                    this.$event.off(p);
+                }
+            }
+        }
+    });
+    module.exports = View;
+});;
+"use strict";
+
 define("/spm_modules/spaseed/1.1.14/main/mp", function(require, exports, module) {
     var $id = 0 | Math.random() * 998;
     var mp = {};
     /**
-	 *@clas mm.Class
+	 *@class mp.Class
 	 */
     mp.Class = function() {};
     /**
-	 *@method mm.Class.extend
+	 *@method mp.Class.extend
 	 *@param prop {Object} 原型
 	 *@static
 	 *@example
@@ -2677,97 +2266,4 @@ define("/spm_modules/spaseed/1.1.14/main/mp", function(require, exports, module)
         return Class;
     };
     module.exports = mp;
-});;
-"use strict";
-
-define("/spm_modules/spaseed/1.1.14/main/node", function(require, exports, module) {
-    var mp = require("spm_modules/spaseed/1.1.14/main/mp"), Event = require("spm_modules/spaseed/1.1.14/lib/event"), $ = require("spm_modules/spaseed/1.1.14/lib/zepto"), Net = require("spm_modules/spaseed/1.1.14/lib/net");
-    var Node = mp.Class.extend({
-        $elem: null,
-        $event: null,
-        nodeName: "div",
-        ctor: function(data) {
-            if (!data) {
-                data = {};
-            }
-            this.nodeName = data.nodeName || "div";
-            this.$elem = data.$elem || this.$elem;
-            if (!this.$elem) {
-                this.isNew = true;
-                this.$elem = $(document.createElement(this.nodeName));
-            }
-            //其他属性
-            this.attribute = data.attribute || {};
-            //网络
-            this.$net = Net.create(this);
-            //事件
-            this.$event = Event.create(this);
-            this.$on = this.$event.on;
-            this.$off = this.$event.off;
-            this.$emit = this.$event.emit;
-            //属性
-            for (var p in this.attribute) {
-                this.$elem[p] = this.attribute[p];
-            }
-        },
-        addChild: function(child) {
-            this.$elem.append(child.$elem);
-            child.parent = this;
-        },
-        removeChild: function(child) {
-            child.parent = null;
-            child.$elem.remove();
-        }
-    });
-    module.exports = Node;
-});;
-"use strict";
-
-define("/spm_modules/spaseed/1.1.14/main/view", function(require, exports, module) {
-    var Node = require("spm_modules/spaseed/1.1.14/main/node");
-    var View = Node.extend({
-        /*id*/
-        _: "",
-        /*标题*/
-        title: "",
-        /*内部元素*/
-        elements: {},
-        ctor: function(data) {
-            this.$super(data);
-            //绑定events
-            if (this.events) {
-                //事件初始化
-                if (this.events) {
-                    this.__bodyhandler = this.__bodyhandler || {};
-                    for (var p in this.events) {
-                        for (var q in this.events[p]) {
-                            this.$event.on(p, q, this.events[p][q]);
-                        }
-                        //绑定事件
-                        if (!this.__bodyhandler[p]) {
-                            //绑定过的事件不再绑定
-                            if (!this.__bodyhandler[p]) {
-                                this.__bodyhandler[p] = this.$event.bindBodyEvent(this, p);
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        /*重载*/
-        render: function() {},
-        /*重载*/
-        reload: function() {},
-        /*重载*/
-        destroy: function() {
-            this.off();
-            //移除上一个页面的bodyEvents
-            if (this.events) {
-                for (var p in this.events) {
-                    this.$event.off(p);
-                }
-            }
-        }
-    });
-    module.exports = View;
 });

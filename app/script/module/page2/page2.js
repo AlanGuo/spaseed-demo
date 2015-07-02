@@ -4,7 +4,7 @@ define(function (require, exports, module) {
     var template = require('template');
     var asyncRequest = require('asyncrequest');
     var request = require('request');
-    var View = require('view');
+    var View = require('View');
 
     var page2 = View.extend({
 

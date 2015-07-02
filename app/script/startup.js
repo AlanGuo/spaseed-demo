@@ -1,17 +1,19 @@
 define(function(require, exports, module) {
-	var App = require('app');
+	var App = require('App');
 	var config = require('config');
 	var $ = require('$');
 	//应用入口函数
     var startup = function(container){
 		container = container || $('#switchWrapper');
-		var app = App.create({
+		var app = App.create($.extend(config,{
 			$elem:container,
-			netback:function(url,data,cb){
-				
+			netback:function(options,ret,info){
+				if(ret.code === 403){
+					//跳转到登录
+				}
 			}
-		});
-		app.startup(config);
+		}));
+		app.startup();
 	};
 
     module.exports = startup;
