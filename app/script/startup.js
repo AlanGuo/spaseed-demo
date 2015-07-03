@@ -1,3 +1,5 @@
+'use strict';
+
 define(function(require, exports, module) {
 	var App = require('App');
 	var config = require('config');

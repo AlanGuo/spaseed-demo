@@ -4,7 +4,6 @@ define(function(require,exports,module){
 
 	var config = $.extend(spaseedconfig,{
 		root : '/page1',
-		container:'#container',
 		viewfolder:'app/script/module'
 		// pageWrapper:'#pageWrapper',
 		// switchMode:'fadeIn',

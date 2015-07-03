@@ -64,8 +64,10 @@ define(function(require, exports, module){
 				var self = this;
 				require.async(obj.view,function(View){
 					if(View){ 
-						view = new View(self.$app);
+						view = new View({app:self.$app});
+
 						view._ = obj.view;
+
 						view.params = obj.params;
 						self.$app.loadView(view);
 					}
@@ -104,7 +106,7 @@ define(function(require, exports, module){
 			arr.forEach(function(item){
 				pair = item.split('=')
 				if(pair[0]){
-					params[pair[0]] = pair[1]
+					params[pair[0]] = pair[1];
 				}
 			});
 
