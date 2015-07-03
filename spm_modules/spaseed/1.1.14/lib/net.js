@@ -18,7 +18,7 @@ define(function (require, exports, module) {
      * @static
      */
     var Net = mp.Class.extend({
-
+        $app:null,
         ctor:function(app){
             this.$app = app;
         },

@@ -5,8 +5,12 @@ seajs.config({
         'mp': 'main/mp',
         'Node': 'main/Node',
         'App': 'main/App',
-        'Router': 'main/H5Router',
+        'Router': 'main/Router',
+        'AppRouter': 'main/H5Router',
+        'AppRouter': 'main/HashRouter',
         'View': 'main/View',
+        'SideBarView': 'main/SideBarView',
+        'TopBottomView': 'main/TopBottomView',
 
         '$': 'lib/dom',
         'Net': 'lib/Net',

@@ -11,7 +11,7 @@ module.exports = function(grunt){
 		tmod: {
 	      apptemplate: {
 	        src: ['app/view/**/*.tpl'],
-	        dest: 'dest/view/apptemplate.js',
+	        dest: 'tmp/view/view.js',
 	        options: {
 	            base: 'app/view',
 	            minify: false,
@@ -21,7 +21,30 @@ module.exports = function(grunt){
 	    },
         combo: {
 	        options: {
-	        	alias:'<%=pkg.spm.alias%>',
+	        	alias:{
+	        		'$':'spm_modules/spaseed/1.1.14/lib/dom',
+	                'mp':'spm_modules/spaseed/1.1.14/main/mp',
+	                'App':'spm_modules/spaseed/1.1.14/main/App',
+	                'Router':'spm_modules/spaseed/1.1.14/main/Router',
+	                'AppRouter':'spm_modules/spaseed/1.1.14/main/H5Router',
+	                'Node':'spm_modules/spaseed/1.1.14/main/Node',
+	                'View':'spm_modules/spaseed/1.1.14/main/View',
+	                'Event':'spm_modules/spaseed/1.1.14/lib/Event',
+	                'Net':'spm_modules/spaseed/1.1.14/lib/Net',
+
+	                'binder':'spm_modules/spaseed/1.1.14/lib/binder',
+	                'cookie':'spm_modules/spaseed/1.1.14/lib/cookie',
+	                'env':'spm_modules/spaseed/1.1.14/lib/env',
+	                'dialog':'spm_modules/spaseed/1.1.14/lib/dialog',
+	                'asyncrequest':'spm_modules/spaseed/1.1.14/lib/asyncrequest',
+	                'stats':'spm_modules/spaseed/1.1.14/lib/stats',
+	                'template':'spm_modules/spaseed/1.1.14/lib/template',
+
+	                'config':'spm_modules/spaseed/1.1.14/config',
+	                
+	                'apptemplate':'tmp/view/view',
+	                'request':'app/script/model/request'
+	        	},
 	        	base:'/',
       			destPath:'/',
 	        	dest:'dest/app.combo.js'

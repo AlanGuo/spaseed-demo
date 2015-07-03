@@ -31,6 +31,9 @@ define(function(require, exports, module){
 			}
 			return elemarray;
 		};
+		elemarray.children = function(){
+			return Array.prototype.slice.call(elemarray[0].children());
+		};
 		elemarray.html = function(content){
 			if(content){
 				for(var i=0;i<elemarray.length;i++){
@@ -89,6 +92,16 @@ define(function(require, exports, module){
 			}
 
 			return elemarray;
+		};
+		elemarray.show = function(){
+			for(var i=0;i<elemarray.length;i++){
+				elemarray[i].style.display = '';
+			}
+		};
+		elemarray.hide = function(){
+			for(var i=0;i<elemarray.length;i++){
+				elemarray[i].style.display = 'none';
+			}
 		};
 
 		return elemarray;

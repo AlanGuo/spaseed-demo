@@ -22,8 +22,11 @@ define(function (require, exports, module) {
             });
         },
 
-        destroy: function () {
-
+        events:{
+            'click':{
+                'tt_click':function(){
+                }
+            }
         }
     });
         

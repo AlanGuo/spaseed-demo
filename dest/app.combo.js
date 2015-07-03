@@ -15,12 +15,42 @@ define("/app/script/model/request", function(require, exports, module) {
     };
     module.exports = request;
 });;
+define("/app/script/module/page3/page3", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.1.14/lib/dom");
+    var template = require("spm_modules/spaseed/1.1.14/lib/template");
+    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
+    var request = require("app/script/model/request");
+    var View = require("spm_modules/spaseed/1.1.14/main/View");
+    var page3 = View.extend({
+        $elem: $("#pageWrapper"),
+        title: "page 3",
+        render: function(cb) {
+            var self = this;
+            asyncRequest.all(this.$net, [ {
+                params: {
+                    code: 0,
+                    data: {
+                        title: "page3",
+                        description: "page3 description"
+                    }
+                },
+                request: request.sample
+            } ], function(values) {
+                self.$elem.html(template("page3/page3", {
+                    data: values[0]
+                }));
+                cb && cb();
+            });
+        }
+    });
+    module.exports = page3;
+});;
 "use strict";
 
 define("/app/script/module/page1/page1", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.14/lib/dom");
     var View = require("spm_modules/spaseed/1.1.14/main/View");
-    var template = require("dest/view/apptemplate");
+    var template = require("spm_modules/spaseed/1.1.14/lib/template");
     var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
     var binder = require("spm_modules/spaseed/1.1.14/lib/binder");
     var request = require("app/script/model/request");
@@ -60,7 +90,7 @@ define("/app/script/module/page1/page1", function(require, exports, module) {
 });;
 define("/app/script/module/page2/page2", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.14/lib/dom");
-    var template = require("dest/view/apptemplate");
+    var template = require("spm_modules/spaseed/1.1.14/lib/template");
     var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
     var request = require("app/script/model/request");
     var View = require("spm_modules/spaseed/1.1.14/main/View");
@@ -84,13 +114,17 @@ define("/app/script/module/page2/page2", function(require, exports, module) {
                 }));
             });
         },
-        destroy: function() {}
+        events: {
+            click: {
+                tt_click: function() {}
+            }
+        }
     });
     module.exports = page2;
 });;
 define("/app/script/module/page3/index/index", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.14/lib/dom");
-    var template = require("dest/view/apptemplate");
+    var template = require("spm_modules/spaseed/1.1.14/lib/template");
     var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
     var request = require("app/script/model/request");
     var View = require("app/script/module/page3/page3");
@@ -108,7 +142,7 @@ define("/app/script/module/page3/index/index", function(require, exports, module
 });;
 define("/app/script/module/page3/other/other", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.14/lib/dom");
-    var template = require("dest/view/apptemplate");
+    var template = require("spm_modules/spaseed/1.1.14/lib/template");
     var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
     var request = require("app/script/model/request");
     var View = require("app/script/module/page3/page3");
@@ -126,7 +160,7 @@ define("/app/script/module/page3/other/other", function(require, exports, module
 });;
 define("/app/script/module/page3/page3", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.14/lib/dom");
-    var template = require("dest/view/apptemplate");
+    var template = require("spm_modules/spaseed/1.1.14/lib/template");
     var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
     var request = require("app/script/model/request");
     var View = require("spm_modules/spaseed/1.1.14/main/View");
@@ -154,146 +188,6 @@ define("/app/script/module/page3/page3", function(require, exports, module) {
     });
     module.exports = page3;
 });;
-define("/app/script/module/page3/page3", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.14/lib/dom");
-    var template = require("dest/view/apptemplate");
-    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
-    var request = require("app/script/model/request");
-    var View = require("spm_modules/spaseed/1.1.14/main/View");
-    var page3 = View.extend({
-        $elem: $("#pageWrapper"),
-        title: "page 3",
-        render: function(cb) {
-            var self = this;
-            asyncRequest.all(this.$net, [ {
-                params: {
-                    code: 0,
-                    data: {
-                        title: "page3",
-                        description: "page3 description"
-                    }
-                },
-                request: request.sample
-            } ], function(values) {
-                self.$elem.html(template("page3/page3", {
-                    data: values[0]
-                }));
-                cb && cb();
-            });
-        }
-    });
-    module.exports = page3;
-});;
-/*TMODJS:{"version":"1.0.0"}*/
-!function(require, exports, module) {
-    function template(filename, content) {
-        return (/string|function/.test(typeof content) ? compile : renderFile)(filename, content);
-    }
-    function toString(value, type) {
-        return "string" != typeof value && (type = typeof value, "number" === type ? value += "" : value = "function" === type ? toString(value.call(value)) : ""), 
-        value;
-    }
-    function escapeFn(s) {
-        return escapeMap[s];
-    }
-    function escapeHTML(content) {
-        return toString(content).replace(/&(?![\w#]+;)|[<>"']/g, escapeFn);
-    }
-    function each(data, callback) {
-        if (isArray(data)) for (var i = 0, len = data.length; len > i; i++) callback.call(data, data[i], i, data); else for (i in data) callback.call(data, data[i], i);
-    }
-    function resolve(from, to) {
-        var DOUBLE_DOT_RE = /(\/)[^/]+\1\.\.\1/, dirname = ("./" + from).replace(/[^/]+$/, ""), filename = dirname + to;
-        for (filename = filename.replace(/\/\.\//g, "/"); filename.match(DOUBLE_DOT_RE); ) filename = filename.replace(DOUBLE_DOT_RE, "/");
-        return filename;
-    }
-    function renderFile(filename, data) {
-        var fn = template.get(filename) || showDebugInfo({
-            filename: filename,
-            name: "Render Error",
-            message: "Template not found"
-        });
-        return data ? fn(data) : fn;
-    }
-    function compile(filename, fn) {
-        if ("string" == typeof fn) {
-            var string = fn;
-            fn = function() {
-                return new String(string);
-            };
-        }
-        var render = cache[filename] = function(data) {
-            try {
-                return new fn(data, filename) + "";
-            } catch (e) {
-                return showDebugInfo(e)();
-            }
-        };
-        return render.prototype = fn.prototype = utils, render.toString = function() {
-            return fn + "";
-        }, render;
-    }
-    function showDebugInfo(e) {
-        var type = "{Template Error}", message = e.stack || "";
-        if (message) message = message.split("\n").slice(0, 2).join("\n"); else for (var name in e) message += "<" + name + ">\n" + e[name] + "\n\n";
-        return function() {
-            return "object" == typeof console && console.error(type + "\n\n" + message), type;
-        };
-    }
-    var cache = template.cache = {}, String = window.String, escapeMap = {
-        "<": "&#60;",
-        ">": "&#62;",
-        '"': "&#34;",
-        "'": "&#39;",
-        "&": "&#38;"
-    }, isArray = Array.isArray || function(obj) {
-        return "[object Array]" === {}.toString.call(obj);
-    }, utils = template.utils = {
-        $helpers: {},
-        $include: function(filename, data, from) {
-            return filename = resolve(from, filename), renderFile(filename, data);
-        },
-        $string: toString,
-        $escape: escapeHTML,
-        $each: each
-    }, helpers = template.helpers = utils.$helpers;
-    if (template.get = function(filename) {
-        return cache[filename.replace(/^\.\//, "")];
-    }, template.helper = function(name, helper) {
-        helpers[name] = helper;
-    }, "function" == typeof define) define("/dest/view/apptemplate", function() {
-        return template;
-    }); else if ("undefined" != typeof exports) module.exports = template; else {
-        for (var namespaceArray = "apptemplate".split("."), global = window, i = 0; i < namespaceArray.length; i++) {
-            var item = namespaceArray[i];
-            global[item] = global[item] || {}, global = global[item];
-        }
-        global.template = template;
-    }
-    /*v:9*/
-    template("page1/page1", function($data) {
-        "use strict";
-        var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
-        return $out += '<h1 data-click-event="tt_click">', $out += $escape(data.title), 
-        $out += "</h1> <div>", $out += $escape(data.description), $out += '</div> <div bind-content="detail"></div> ', 
-        new String($out);
-    }), /*v:2*/
-    template("page2/page2", function($data) {
-        "use strict";
-        var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
-        return $out += "<h1>", $out += $escape(data.title), $out += "</h1> <div>", $out += $escape(data.description), 
-        $out += "</div> ", new String($out);
-    }), /*v:2*/
-    template("page3/index/index", "<div> This is '/page3/index' content </div>"), /*v:2*/
-    template("page3/other/other", "<div> This is 'other' page content </div> "), /*v:2*/
-    template("page3/page3", function($data) {
-        "use strict";
-        var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
-        return $out += "<h1>", $out += $escape(data.title), $out += "</h1> <div>", $out += $escape(data.description), 
-        $out += '</div> <ul class="menu submenu"> <li><a data-href="/page3/index" data-click-event="router">/page3/index</a></li> <li><a data-href="/page3/other" data-click-event="router">/page3/other</a></li> </ul> <div id="subcontainer" class="subcontainer"></div> ', 
-        new String($out);
-    }), module && (module.exports = template);
-}();;
 /**
  * promise
  * @class promise
@@ -612,6 +506,9 @@ define("/spm_modules/spaseed/1.1.14/lib/dom", function(require, exports, module)
             }
             return elemarray;
         };
+        elemarray.children = function() {
+            return Array.prototype.slice.call(elemarray[0].children());
+        };
         elemarray.html = function(content) {
             if (content) {
                 for (var i = 0; i < elemarray.length; i++) {
@@ -622,18 +519,38 @@ define("/spm_modules/spaseed/1.1.14/lib/dom", function(require, exports, module)
             }
         };
         elemarray.addClass = function(className) {
-            for (var i = 0; i < elemarray.length; i++) {
-                if (elemarray[i].className.indexOf(className) === -1) {
-                    elemarray[i].className += " " + className;
+            if (className) {
+                for (var i = 0; i < elemarray.length; i++) {
+                    if (elemarray[i].className.indexOf(className) === -1) {
+                        elemarray[i].className += " " + className;
+                    }
                 }
             }
             return elemarray;
         };
         elemarray.removeClass = function(className) {
-            for (var i = 0; i < elemarray.length; i++) {
-                if (elemarray[i].className.indexOf(className) > -1) {
-                    elemarray[i].className = elemarray[i].className.replace(new RegExp("\\s*?" + className), "");
+            if (className) {
+                for (var i = 0; i < elemarray.length; i++) {
+                    if (elemarray[i].className.indexOf(className) > -1) {
+                        elemarray[i].className = elemarray[i].className.replace(new RegExp("\\s*?" + className), "");
+                    }
                 }
+            }
+            return elemarray;
+        };
+        elemarray.attr = function(name, val) {
+            if (val) {
+                for (var i = 0; i < elemarray.length; i++) {
+                    elemarray[i].setAttribute(name, val);
+                }
+                return elemarray;
+            } else {
+                return elemarray[0].getAttribute(name);
+            }
+        };
+        elemarray.removeAttr = function(name) {
+            for (var i = 0; i < elemarray.length; i++) {
+                elemarray[i].removeAttribute(name);
             }
             return elemarray;
         };
@@ -646,6 +563,16 @@ define("/spm_modules/spaseed/1.1.14/lib/dom", function(require, exports, module)
                 elemarray[0].getAttribute("data-" + name);
             }
             return elemarray;
+        };
+        elemarray.show = function() {
+            for (var i = 0; i < elemarray.length; i++) {
+                elemarray[i].style.display = "";
+            }
+        };
+        elemarray.hide = function() {
+            for (var i = 0; i < elemarray.length; i++) {
+                elemarray[i].style.display = "none";
+            }
         };
         return elemarray;
     };
@@ -686,6 +613,39 @@ define("/spm_modules/spaseed/1.1.14/lib/dom", function(require, exports, module)
 });;
 "use strict";
 
+define("/spm_modules/spaseed/1.1.14/lib/env", function(require, exports, module) {
+    var env = {}, ua = navigator.userAgent;
+    env.title = "spaseed";
+    env.isAndroid = /android/i.test(ua);
+    env.isIOS = /iPod|iPad|iPhone/i.test(ua);
+    env.isMobile = env.isAndroid || env.isIOS;
+    env.isWX = /micromessenger/i.test(ua);
+    env.isMQQB = /mqqbrowser/i.test(ua);
+    //env.appid = 'wx';
+    var doc = document.documentElement;
+    var bod = document.body;
+    env.resolution = {};
+    env.resolution.x = Math.max(doc.clientWidth, bod.clientWidth);
+    env.resolution.y = Math.max(doc.clientHeight, bod.clientHeight);
+    module.exports = env;
+});;
+"use strict";
+
+define("/spm_modules/spaseed/1.1.14/lib/template", function(require, exports, module) {
+    var template = require("tmp/view/view");
+    var env = require("spm_modules/spaseed/1.1.14/lib/env");
+    module.exports = function(id, data) {
+        var obj = {
+            $env: env
+        };
+        for (var p in data) {
+            obj[p] = data[p];
+        }
+        return template(id, obj);
+    };
+});;
+"use strict";
+
 define("/spm_modules/spaseed/1.1.14/main/Node", function(require, exports, module) {
     var mp = require("spm_modules/spaseed/1.1.14/main/mp");
     var Node = mp.Class.extend({
@@ -702,11 +662,15 @@ define("/spm_modules/spaseed/1.1.14/main/Node", function(require, exports, modul
                 this.isNew = true;
                 this.$elem = $(document.createElement(this.nodeName));
             }
+            this.className = data.className;
+            if (this.className) {
+                this.$elem.addClass(this.className);
+            }
             //其他属性
             this.attribute = data.attribute || {};
             //属性
             for (var p in this.attribute) {
-                this.$elem[p] = this.attribute[p];
+                this.$elem.attr(p, this.attribute[p]);
             }
         },
         addChild: function(child) {
@@ -723,24 +687,25 @@ define("/spm_modules/spaseed/1.1.14/main/Node", function(require, exports, modul
 "use strict";
 
 define("/spm_modules/spaseed/1.1.14/main/View", function(require, exports, module) {
-    var Node = require("spm_modules/spaseed/1.1.14/main/Node");
+    var $ = require("spm_modules/spaseed/1.1.14/lib/dom"), Node = require("spm_modules/spaseed/1.1.14/main/Node");
     var View = Node.extend({
-        /*id*/
         _: "",
         /*标题*/
         title: "",
         /*内部元素*/
         elements: {},
-        ctor: function(app) {
-            this.$super(app);
-            this.$app = app;
+        $elem: $("#container"),
+        ctor: function(data) {
+            this.$super(data);
+            this.$app = data.app;
             //共享网络和事件
-            this.$net = app.$net;
+            this.$net = this.$app.$net;
             //事件
-            this.$event = app.$event;
-            this.$on = app.$event.on;
-            this.$off = app.$event.off;
-            this.$emit = app.$event.emit;
+            this.$event = this.$app.$event;
+            this.$on = this.$app.$event.on;
+            this.$off = this.$app.$event.off;
+            this.$emit = this.$app.$event.emit;
+            this.$router = this.$app.$router;
             //绑定events
             if (this.events) {
                 this.__bodyhandler = this.__bodyhandler || {};
@@ -749,12 +714,7 @@ define("/spm_modules/spaseed/1.1.14/main/View", function(require, exports, modul
                         this.$event.on(this, p, q, this.events[p][q]);
                     }
                     //绑定事件
-                    if (!this.__bodyhandler[p]) {
-                        //绑定过的事件不再绑定
-                        if (!this.__bodyhandler[p]) {
-                            this.__bodyhandler[p] = this.$event.bindEvent(this, this.$elem, p);
-                        }
-                    }
+                    this.__bodyhandler[p] = this.$event.bindEvent(this, this.$elem, p);
                 }
             }
         },
@@ -766,6 +726,9 @@ define("/spm_modules/spaseed/1.1.14/main/View", function(require, exports, modul
         destroy: function() {
             //移除事件
             this.$event.off(this);
+            for (var p in this.events) {
+                this.$event.unbindEvent(this.$elem, p, this.__bodyhandler[p]);
+            }
         }
     });
     module.exports = View;
@@ -833,4 +796,114 @@ define("mp", function(require, exports, module) {
         return Class;
     };
     module.exports = mp;
-});
+});;
+/*TMODJS:{"version":"1.0.0"}*/
+!function(require, exports, module) {
+    function template(filename, content) {
+        return (/string|function/.test(typeof content) ? compile : renderFile)(filename, content);
+    }
+    function toString(value, type) {
+        return "string" != typeof value && (type = typeof value, "number" === type ? value += "" : value = "function" === type ? toString(value.call(value)) : ""), 
+        value;
+    }
+    function escapeFn(s) {
+        return escapeMap[s];
+    }
+    function escapeHTML(content) {
+        return toString(content).replace(/&(?![\w#]+;)|[<>"']/g, escapeFn);
+    }
+    function each(data, callback) {
+        if (isArray(data)) for (var i = 0, len = data.length; len > i; i++) callback.call(data, data[i], i, data); else for (i in data) callback.call(data, data[i], i);
+    }
+    function resolve(from, to) {
+        var DOUBLE_DOT_RE = /(\/)[^/]+\1\.\.\1/, dirname = ("./" + from).replace(/[^/]+$/, ""), filename = dirname + to;
+        for (filename = filename.replace(/\/\.\//g, "/"); filename.match(DOUBLE_DOT_RE); ) filename = filename.replace(DOUBLE_DOT_RE, "/");
+        return filename;
+    }
+    function renderFile(filename, data) {
+        var fn = template.get(filename) || showDebugInfo({
+            filename: filename,
+            name: "Render Error",
+            message: "Template not found"
+        });
+        return data ? fn(data) : fn;
+    }
+    function compile(filename, fn) {
+        if ("string" == typeof fn) {
+            var string = fn;
+            fn = function() {
+                return new String(string);
+            };
+        }
+        var render = cache[filename] = function(data) {
+            try {
+                return new fn(data, filename) + "";
+            } catch (e) {
+                return showDebugInfo(e)();
+            }
+        };
+        return render.prototype = fn.prototype = utils, render.toString = function() {
+            return fn + "";
+        }, render;
+    }
+    function showDebugInfo(e) {
+        var type = "{Template Error}", message = e.stack || "";
+        if (message) message = message.split("\n").slice(0, 2).join("\n"); else for (var name in e) message += "<" + name + ">\n" + e[name] + "\n\n";
+        return function() {
+            return "object" == typeof console && console.error(type + "\n\n" + message), type;
+        };
+    }
+    var cache = template.cache = {}, String = window.String, escapeMap = {
+        "<": "&#60;",
+        ">": "&#62;",
+        '"': "&#34;",
+        "'": "&#39;",
+        "&": "&#38;"
+    }, isArray = Array.isArray || function(obj) {
+        return "[object Array]" === {}.toString.call(obj);
+    }, utils = template.utils = {
+        $helpers: {},
+        $include: function(filename, data, from) {
+            return filename = resolve(from, filename), renderFile(filename, data);
+        },
+        $string: toString,
+        $escape: escapeHTML,
+        $each: each
+    }, helpers = template.helpers = utils.$helpers;
+    if (template.get = function(filename) {
+        return cache[filename.replace(/^\.\//, "")];
+    }, template.helper = function(name, helper) {
+        helpers[name] = helper;
+    }, "function" == typeof define) define("/tmp/view/view", function() {
+        return template;
+    }); else if ("undefined" != typeof exports) module.exports = template; else {
+        for (var namespaceArray = "apptemplate".split("."), global = window, i = 0; i < namespaceArray.length; i++) {
+            var item = namespaceArray[i];
+            global[item] = global[item] || {}, global = global[item];
+        }
+        global.template = template;
+    }
+    /*v:1*/
+    template("page1/page1", function($data) {
+        "use strict";
+        var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
+        return $out += '<h1 data-click-event="tt_click">', $out += $escape(data.title), 
+        $out += "</h1> <div>", $out += $escape(data.description), $out += '</div> <div bind-content="detail"></div> ', 
+        new String($out);
+    }), /*v:1*/
+    template("page2/page2", function($data) {
+        "use strict";
+        var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
+        return $out += "<h1>", $out += $escape(data.title), $out += "</h1> <div>", $out += $escape(data.description), 
+        $out += "</div> ", new String($out);
+    }), /*v:1*/
+    template("page3/index/index", "<div> This is '/page3/index' content </div>"), /*v:1*/
+    template("page3/other/other", "<div> This is 'other' page content </div> "), /*v:1*/
+    template("page3/page3", function($data) {
+        "use strict";
+        var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
+        return $out += "<h1>", $out += $escape(data.title), $out += "</h1> <div>", $out += $escape(data.description), 
+        $out += '</div> <ul class="menu submenu"> <li><a data-href="/page3/index" data-click-event="router">/page3/index</a></li> <li><a data-href="/page3/other" data-click-event="router">/page3/other</a></li> </ul> <div id="subcontainer" class="subcontainer"></div> ', 
+        new String($out);
+    }), module && (module.exports = template);
+}();

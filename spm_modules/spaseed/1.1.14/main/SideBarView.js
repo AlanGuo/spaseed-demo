@@ -12,9 +12,18 @@ define(function(require, exports, module){
 
 		ctor:function(data){
 			this.$super(data);
-			this.$elem.html('<div class="header"></div><div class="body"><div class="side-bar" id="sidebar"></div><div id="container" class="container"></div></div>');
-			this.elements.sidebar = $('#sidebar');
-			this.elements.container = $('#container');
+			var sidebar = $('#sidebar'),
+				container = $('#container');
+
+			if(!sidebar.length || !container.length){
+				this.$elem.html('<div class="header"></div><div class="body"><div class="side-bar" id="sidebar"></div><div id="container" class="container"></div></div>');
+				this.elements.sidebar = $('#sidebar');
+				this.elements.container = $('#container');
+			}
+			else{
+				this.elements.sidebar = sidebar;
+				this.elements.container = container;
+			}
 		},
 
 		renderContent:function(option){

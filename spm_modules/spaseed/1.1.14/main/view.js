@@ -11,7 +11,7 @@ define(function(require, exports, module){
 		/*内部元素*/
 		elements:{},
 
-		$elem:$('#body-container'),
+		$elem:$('#container'),
 
 		ctor:function(data){
 			this.$super(data);
@@ -34,12 +34,7 @@ define(function(require, exports, module){
 						this.$event.on(this,p,q,this.events[p][q]);
 					}
 					//绑定事件
-					if(!this.__bodyhandler[p]){
-						//绑定过的事件不再绑定
-						if(!this.__bodyhandler[p]){
-							this.__bodyhandler[p] = this.$event.bindEvent(this, this.$elem, p);
-						}
-					}
+					this.__bodyhandler[p] = this.$event.bindEvent(this, this.$elem, p);
 				}
 			}
 		},
@@ -53,6 +48,10 @@ define(function(require, exports, module){
 		destroy:function(){
 			//移除事件
 			this.$event.off(this);
+
+			for(var p in this.events){
+				this.$event.unbindEvent(this.$elem, p, this.__bodyhandler[p]);
+			}
 		}
 	})
 

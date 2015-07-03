@@ -8,6 +8,7 @@ define(function(require, exports, module) {
     var startup = function(container){
 		container = container || $('#switchWrapper');
 		var app = App.create($.extend(config,{
+			root:'/page1',
 			$elem:container,
 			netback:function(options,ret,info){
 				if(ret.code === 403){
