@@ -15,36 +15,6 @@ define("/app/script/model/request", function(require, exports, module) {
     };
     module.exports = request;
 });;
-define("/app/script/module/page3/page3", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.14/lib/dom");
-    var template = require("spm_modules/spaseed/1.1.14/lib/template");
-    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
-    var request = require("app/script/model/request");
-    var View = require("spm_modules/spaseed/1.1.14/main/View");
-    var page3 = View.extend({
-        $elem: $("#pageWrapper"),
-        title: "page 3",
-        render: function(cb) {
-            var self = this;
-            asyncRequest.all(this.$net, [ {
-                params: {
-                    code: 0,
-                    data: {
-                        title: "page3",
-                        description: "page3 description"
-                    }
-                },
-                request: request.sample
-            } ], function(values) {
-                self.$elem.html(template("page3/page3", {
-                    data: values[0]
-                }));
-                cb && cb();
-            });
-        }
-    });
-    module.exports = page3;
-});;
 "use strict";
 
 define("/app/script/module/page1/page1", function(require, exports, module) {
@@ -157,6 +127,36 @@ define("/app/script/module/page3/other/other", function(require, exports, module
         }
     });
     module.exports = page3Index;
+});;
+define("/app/script/module/page3/page3", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.1.14/lib/dom");
+    var template = require("spm_modules/spaseed/1.1.14/lib/template");
+    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
+    var request = require("app/script/model/request");
+    var View = require("spm_modules/spaseed/1.1.14/main/View");
+    var page3 = View.extend({
+        $elem: $("#pageWrapper"),
+        title: "page 3",
+        render: function(cb) {
+            var self = this;
+            asyncRequest.all(this.$net, [ {
+                params: {
+                    code: 0,
+                    data: {
+                        title: "page3",
+                        description: "page3 description"
+                    }
+                },
+                request: request.sample
+            } ], function(values) {
+                self.$elem.html(template("page3/page3", {
+                    data: values[0]
+                }));
+                cb && cb();
+            });
+        }
+    });
+    module.exports = page3;
 });;
 define("/app/script/module/page3/page3", function(require, exports, module) {
     var $ = require("spm_modules/spaseed/1.1.14/lib/dom");
@@ -632,7 +632,7 @@ define("/spm_modules/spaseed/1.1.14/lib/env", function(require, exports, module)
 "use strict";
 
 define("/spm_modules/spaseed/1.1.14/lib/template", function(require, exports, module) {
-    var template = require("tmp/view/view");
+    var template = require("tmp/app/view/view");
     var env = require("spm_modules/spaseed/1.1.14/lib/env");
     module.exports = function(id, data) {
         var obj = {
@@ -874,7 +874,7 @@ define("mp", function(require, exports, module) {
         return cache[filename.replace(/^\.\//, "")];
     }, template.helper = function(name, helper) {
         helpers[name] = helper;
-    }, "function" == typeof define) define("/tmp/view/view", function() {
+    }, "function" == typeof define) define("/tmp/app/view/view", function() {
         return template;
     }); else if ("undefined" != typeof exports) module.exports = template; else {
         for (var namespaceArray = "apptemplate".split("."), global = window, i = 0; i < namespaceArray.length; i++) {
@@ -883,6 +883,21 @@ define("mp", function(require, exports, module) {
         }
         global.template = template;
     }
+    /*v:1*/
+    template("dialog/buttonpannel", function($data) {
+        "use strict";
+        var $utils = this, buttons = ($utils.$helpers, $data.buttons), $each = $utils.$each, $escape = ($data.item, 
+        $data.index, $data.$index, $utils.$escape), $out = "";
+        return 2 == buttons.length ? ($out += " ", $each(buttons, function(item, index) {
+            $out += ' <a data-click-event="', $out += $escape(item.event), $out += '" class="btn btn-', 
+            $out += $escape(index), $out += '">', $out += $escape(item.text), $out += "</a> ";
+        }), $out += " ") : ($out += ' <a data-click-event="', $out += $escape(buttons[0].event), 
+        $out += '" class="btn btn-1">', $out += $escape(buttons[0].text || "确定"), $out += "</a> "), 
+        new String($out);
+    }), /*v:2*/
+    template("dialog/dialog", '<div class="cont-title"> </div> <div class="cont-wrapper"> <div class="text-content"> 确定删除收货地址，此操作不可逆！ </div> </div> <div class="buttonpannel"> </div> '), 
+    /*v:1*/
+    template("errortips", '<div class="layout-err-tips" style="display:none"></div>'), 
     /*v:1*/
     template("page1/page1", function($data) {
         "use strict";

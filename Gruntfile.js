@@ -9,9 +9,18 @@ module.exports = function(grunt){
 			tasks:['tmod','combo']
 		},
 		tmod: {
+	      spaseedtemplate: {
+	        src: ['spm_modules/spaseed/1.1.14/view/**/*.html'],
+	        dest: 'tmp/spaseed/view/view.js',
+	        options: {
+	            base: 'spm_modules/spaseed/1.1.14/view',
+	            minify: false,
+	            namespace:'spaseedtemplate'
+	        }
+	      },
 	      apptemplate: {
 	        src: ['app/view/**/*.tpl'],
-	        dest: 'tmp/view/view.js',
+	        dest: 'tmp/app/view/view.js',
 	        options: {
 	            base: 'app/view',
 	            minify: false,
@@ -42,7 +51,8 @@ module.exports = function(grunt){
 
 	                'config':'spm_modules/spaseed/1.1.14/config',
 	                
-	                'apptemplate':'tmp/view/view',
+	                'apptemplate':'tmp/app/view/view',
+
 	                'request':'app/script/model/request'
 	        	},
 	        	base:'/',

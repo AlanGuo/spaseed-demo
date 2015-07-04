@@ -38,7 +38,7 @@
 		</ul>
 		<div id="pageWrapper" class="padding"></div>
 	</div>
-    <div id="mask" class="mask" style="display:none"></div>
+    
 	<!--seajs-->
 	<script type="text/javascript" src="/spm_modules/seajs/2.3.0/dist/sea-debug.js"></script>
     <!--合并之后的文件
@@ -68,7 +68,9 @@
 
                 'config':'spm_modules/spaseed/1.1.14/config',
                 
-                'apptemplate':'tmp/view/view',
+                'apptemplate':'tmp/app/view/view',
+                'spaseedtemplate':'tmp/spaseed/view/view',
+
                 'request':'app/script/model/request'
             }
         });
