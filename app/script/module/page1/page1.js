@@ -6,6 +6,7 @@ define(function (require, exports, module) {
         View = require('View'),
         Dialog = require('Dialog'),
         ErrorTips = require('ErrorTips'),
+        Loading = require('Loading'),
         template = require('template'),
         asyncRequest = require('asyncrequest'),
         binder = require('binder'),
@@ -14,7 +15,6 @@ define(function (require, exports, module) {
     var Page1 = View.extend({
 
         $elem:$('#pageWrapper'),
-
 
         render: function () {
             var self = this;
@@ -27,6 +27,7 @@ define(function (require, exports, module) {
                 self.$elem.html(template('page1/page1',{data:values[0]}));
                 self.$dialog = Dialog.create({$app:self.$app,$parent:self.$elem});
                 self.$errortips = ErrorTips.create({$parent:self.$elem});
+                self.$loading = Loading.create({$parent:self.$elem});
 
                 //绑定数据
                 binder.bind(self.$elem, self);
@@ -48,6 +49,9 @@ define(function (require, exports, module) {
                 },
                 'openerrortips':function(){
                     this.$errortips.show('error tips');
+                },
+                'showloading':function(){
+                    this.$loading.show();
                 }
             }
         },

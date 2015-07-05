@@ -42,7 +42,8 @@ module.exports = function(grunt){
 	                'Net':'spm_modules/spaseed/1.1.14/lib/Net',
 	                'Dialog':'spm_modules/spaseed/1.1.14/lib/Dialog',
 	                'Mask':'spm_modules/spaseed/1.1.14/lib/Mask',
-	               	'ErrorTips':'spm_modules/spaseed/1.1.14/lib/ErrorTips',
+	                'ErrorTips':'spm_modules/spaseed/1.1.14/lib/ErrorTips',
+	                'Loading':'spm_modules/spaseed/1.1.14/lib/Loading',
 
 	                'binder':'spm_modules/spaseed/1.1.14/lib/binder',
 	                'cookie':'spm_modules/spaseed/1.1.14/lib/cookie',

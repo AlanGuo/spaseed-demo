@@ -126,6 +126,12 @@ define(function(require, exports, module){
 				}
 			}
 		};
+		elemarray.width = function(){
+			return elemarray[0].clientWidth;
+		};
+		elemarray.height = function(){
+			return elemarray[0].clientHeight;
+		};
 
 		return elemarray;
 	};
@@ -148,12 +154,13 @@ define(function(require, exports, module){
 		options.url = options.url || '';
 		options.async = options.async || true;
 		options.data = options.data || '';
+		options.header = options.header || {};
 
 		var xhr = new XMLHttpRequest();
 		xhr.onload = function(){
 			var ret = JSON.parse(xhr.responseText);
 			if(options.success){
-				options.success.call(mpNode,ret);
+				options.success(ret);
 			}
 		}
 		xhr.onerror = function(){
@@ -162,8 +169,18 @@ define(function(require, exports, module){
 			}
 		};
 	    xhr.open(options.method,options.url,options.async);
-	    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	    xhr.send(options.data);
+	    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	    for(var p in options.header){
+	    	xhr.setRequestHeader(p, options.header[p]);
+	    }
+
+	    var str = '';
+	    for(var p in options.data){
+	    	str+=encodeURIComponent(p)+'='+encodeURIComponent(options.data[p])+'&';
+	    }
+	    xhr.send(str.substring(0,str.length-1));
+
+	    return xhr;
 	};
 
 	module.exports = $;

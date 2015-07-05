@@ -24,8 +24,9 @@ define(function(require, exports,module) {
 
 	var Dialog = Node.extend({
 		ctor:function(data){
-			this.$super(data);
 			data = data || {};
+			data.className = '';
+			this.$super(data);
 
 			this.$parent = data.$parent;
 			this.$mask = data.$mask || Mask.create(data);
@@ -38,10 +39,12 @@ define(function(require, exports,module) {
 			this.$elem.html(template('dialog/dialog'));
 			this.$elem.hide();
 
-			//对话框元素
-			var elem = this.$elem.length?this.$elem[0]:this.$elem;
-			if(this.$parent.children().indexOf(elem)===-1){
-				this.$parent.append(this.$elem);
+			if(this.$parent){
+				//对话框元素
+				var elem = this.$elem.length?this.$elem[0]:this.$elem;
+				if(this.$parent.children().indexOf(elem)===-1){
+					this.$parent.append(this.$elem);
+				}
 			}
 
 			var self = this;

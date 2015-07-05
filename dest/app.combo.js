@@ -18,7 +18,7 @@ define("/app/script/model/request", function(require, exports, module) {
 "use strict";
 
 define("/app/script/module/page1/page1", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.14/lib/dom"), View = require("spm_modules/spaseed/1.1.14/main/View"), Dialog = require("spm_modules/spaseed/1.1.14/lib/Dialog"), ErrorTips = require("spm_modules/spaseed/1.1.14/lib/ErrorTips"), template = require("spm_modules/spaseed/1.1.14/lib/template"), asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest"), binder = require("spm_modules/spaseed/1.1.14/lib/binder"), request = require("app/script/model/request");
+    var $ = require("spm_modules/spaseed/1.1.14/lib/dom"), View = require("spm_modules/spaseed/1.1.14/main/View"), Dialog = require("spm_modules/spaseed/1.1.14/lib/Dialog"), ErrorTips = require("spm_modules/spaseed/1.1.14/lib/ErrorTips"), Loading = require("spm_modules/spaseed/1.1.14/lib/Loading"), template = require("spm_modules/spaseed/1.1.14/lib/template"), asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest"), binder = require("spm_modules/spaseed/1.1.14/lib/binder"), request = require("app/script/model/request");
     var Page1 = View.extend({
         $elem: $("#pageWrapper"),
         render: function() {
@@ -43,6 +43,9 @@ define("/app/script/module/page1/page1", function(require, exports, module) {
                 self.$errortips = ErrorTips.create({
                     $parent: self.$elem
                 });
+                self.$loading = Loading.create({
+                    $parent: self.$elem
+                });
                 //绑定数据
                 binder.bind(self.$elem, self);
             });
@@ -60,6 +63,9 @@ define("/app/script/module/page1/page1", function(require, exports, module) {
                 },
                 openerrortips: function() {
                     this.$errortips.show("error tips");
+                },
+                showloading: function() {
+                    this.$loading.show();
                 }
             }
         },
@@ -335,6 +341,37 @@ define("/spm_modules/spaseed/1.1.14/lib/ErrorTips", function(require, exports, m
         return new ErrorTips(data);
     };
     module.exports = ErrorTips;
+});;
+"use strict";
+
+define("/spm_modules/spaseed/1.1.14/lib/Loading", function(require, exports, module) {
+    var Node = require("spm_modules/spaseed/1.1.14/main/Node"), template = require("spm_modules/spaseed/1.1.14/lib/template");
+    var Mask = Node.extend({
+        ctor: function(data) {
+            this.$super(data);
+            data = data || {};
+            this.$parent = data.$parent;
+            //默认class
+            this.$elem.addClass("wrap-loading");
+            this.$elem.html(template("loading"));
+            this.$elem.hide();
+            //遮罩元素
+            var elem = this.$elem.length ? this.$elem[0] : this.$elem;
+            if (this.$parent.children().indexOf(elem) === -1) {
+                this.$parent.append(this.$elem);
+            }
+        },
+        show: function(html, options) {
+            this.$elem.show();
+        },
+        hide: function() {
+            this.$elem.hide();
+        }
+    });
+    Mask.create = function(data) {
+        return new Mask(data);
+    };
+    module.exports = Mask;
 });;
 "use strict";
 
@@ -1095,12 +1132,14 @@ define("mp", function(require, exports, module) {
         new String($out);
     }), /*v:3*/
     template("dialog/dialog", '<div class="cont-title"> </div> <div class="cont-wrapper"> <div class="text-content"> </div> </div> <div class="buttonpannel"> </div> '), 
-    /*v:9*/
+    /*v:1*/
+    template("loading", '<p> <span class="load-1"></span> <span class="load-2"></span> <span class="load-3"></span> <span class="load-4"></span> </p>'), 
+    /*v:10*/
     template("page1/page1", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
         return $out += "<h1>", $out += $escape(data.title), $out += "</h1> <div>", $out += $escape(data.description), 
-        $out += '</div> <br> <div data-click-event="tt_click">点我+1: <span bind-content="detail"></span></div> <br> <div data-click-event="opendialog">弹出对话框</div> <br> <div data-click-event="openerrortips">弹出轻量错误提示</div> <br> ', 
+        $out += '</div> <br> <div data-click-event="tt_click">点我+1: <span bind-content="detail"></span></div> <br> <div data-click-event="opendialog">弹出对话框</div> <br> <div data-click-event="openerrortips">弹出轻量错误提示</div> <br> <div data-click-event="showloading">显示loading</div> <br> ', 
         new String($out);
     }), /*v:1*/
     template("page2/page2", function($data) {

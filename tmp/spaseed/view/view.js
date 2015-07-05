@@ -97,5 +97,7 @@
         new String($out);
     }), /*v:3*/
     template("dialog/dialog", '<div class="cont-title"> </div> <div class="cont-wrapper"> <div class="text-content"> </div> </div> <div class="buttonpannel"> </div> '), 
+    /*v:1*/
+    template("loading", '<p> <span class="load-1"></span> <span class="load-2"></span> <span class="load-3"></span> <span class="load-4"></span> </p>'), 
     module && (module.exports = template);
 }();

@@ -19,7 +19,7 @@ define(function(require, exports,module){
 		 * @type String
 		 * @default 'home'
 		 */
-		'root': 'index',
+		'root': '/index',
 
 		/**
 		 * 视图目录

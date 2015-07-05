@@ -6,8 +6,9 @@ define(function(require, exports,module) {
 
 	var ErrorTips = Node.extend({
 		ctor:function(data){
-			this.$super(data);
 			data = data || {};
+			data.className = '';
+			this.$super(data);
 
 			this.$parent = data.$parent;
 			this.duration = data.duration;
@@ -16,10 +17,12 @@ define(function(require, exports,module) {
 			this.$elem.addClass('layout-err-tips');
 			this.$elem.hide();
 
-			//对话框元素
-			var elem = this.$elem.length?this.$elem[0]:this.$elem;
-			if(this.$parent.children().indexOf(elem)===-1){
-				this.$parent.append(this.$elem);
+			if(this.$parent){
+				//加入元素节点
+				var elem = this.$elem.length?this.$elem[0]:this.$elem;
+				if(this.$parent.children().indexOf(elem)===-1){
+					this.$parent.append(this.$elem);
+				}
 			}
 		},
 		show:function(content, options){
@@ -28,7 +31,11 @@ define(function(require, exports,module) {
 			setTimeout(function(){
 				self.$elem.addClass('fade-out');
 			},this.duration || 3000);
+
 			this.$elem.text(content);
+			this.hide();
+			this.$elem.removeClass('fade-out');
+			this.$elem.width();
 			this.$elem.show();
 		},
 		hide:function(){

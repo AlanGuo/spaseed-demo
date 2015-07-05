@@ -1,7 +1,8 @@
 'use strict';
  
 define(function(require, exports,module) {
-	var Node = require('Node')
+	var Node = require('Node'),
+		template = require('template');
 
 	var Mask = Node.extend({
 		ctor:function(data){
@@ -12,11 +13,11 @@ define(function(require, exports,module) {
 			this.$parent = data.$parent;
 
 			//默认class
-			this.$elem.addClass('mask');
+			this.$elem.addClass('wrap-loading');
+			this.$elem.html(template('loading'));
 			this.$elem.hide();
 
 			if(this.$parent){
-				//遮罩元素
 				var elem = this.$elem.length?this.$elem[0]:this.$elem;
 				if(this.$parent.children().indexOf(elem)===-1){
 					this.$parent.append(this.$elem);

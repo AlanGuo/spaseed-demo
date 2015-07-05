@@ -36,5 +36,5 @@ define(function(require, exports,module) {
 				}
 			},5000);
 		}
-	}
+	};
 });
