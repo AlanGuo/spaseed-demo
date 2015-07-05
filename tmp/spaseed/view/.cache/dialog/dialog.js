@@ -1,2 +1,2 @@
-/*TMODJS:{"version":2,"md5":"bf0080ef421f296eebb6d3f41ed672a6"}*/
-template('dialog/dialog','<div class="cont-title"> </div> <div class="cont-wrapper"> <div class="text-content"> 确定删除收货地址，此操作不可逆！ </div> </div> <div class="buttonpannel"> </div> ');
+/*TMODJS:{"version":3,"md5":"1e180240ef4f7fb74b6c44200371dd4d"}*/
+template('dialog/dialog','<div class="cont-title"> </div> <div class="cont-wrapper"> <div class="text-content"> </div> </div> <div class="buttonpannel"> </div> ');

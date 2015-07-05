@@ -6,6 +6,9 @@ define(function(require, exports, module){
 		if(/element/i.test(Object.prototype.toString.call(selector))){
 			elemarray = [selector];
 		}
+		else if(/array|nodelist/i.test(Object.prototype.toString.call(selector))){
+			elemarray = selector;
+		}
 		else{
 			elemarray = Array.prototype.slice.call((doc||document).querySelectorAll(selector));
 		}
@@ -32,12 +35,22 @@ define(function(require, exports, module){
 			return elemarray;
 		};
 		elemarray.children = function(){
-			return Array.prototype.slice.call(elemarray[0].children());
+			return Array.prototype.slice.call(elemarray[0].children);
 		};
 		elemarray.html = function(content){
 			if(content){
 				for(var i=0;i<elemarray.length;i++){
 					elemarray[i].innerHTML = content;
+				}
+			}
+			else{
+				return elemarray[0].innerHTML;
+			}
+		};
+		elemarray.text = function(content){
+			if(content){
+				for(var i=0;i<elemarray.length;i++){
+					elemarray[i].innerText = content;
 				}
 			}
 			else{
@@ -101,6 +114,16 @@ define(function(require, exports, module){
 		elemarray.hide = function(){
 			for(var i=0;i<elemarray.length;i++){
 				elemarray[i].style.display = 'none';
+			}
+		};
+		elemarray.find = function(selector){
+			return $(elemarray[0].querySelectorAll(selector));
+		};
+		elemarray.css = function(obj){
+			for(var i=0;i<elemarray.length;i++){
+				for(var p in obj){
+					elemarray[i].style[p] = obj[p];
+				}
 			}
 		};
 

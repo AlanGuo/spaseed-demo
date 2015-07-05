@@ -4,7 +4,7 @@ module.exports = function(grunt){
 		watch:{
 			files:[
 				'spm_modules/~.js',
-                'app/~.js','app/~.tpl','app/~.ejs'
+                'app/~.js','app/~.html'
             ],
 			tasks:['tmod','combo']
 		},
@@ -19,7 +19,7 @@ module.exports = function(grunt){
 	        }
 	      },
 	      apptemplate: {
-	        src: ['app/view/**/*.tpl'],
+	        src: ['app/view/**/*.html'],
 	        dest: 'tmp/app/view/view.js',
 	        options: {
 	            base: 'app/view',
@@ -40,11 +40,13 @@ module.exports = function(grunt){
 	                'View':'spm_modules/spaseed/1.1.14/main/View',
 	                'Event':'spm_modules/spaseed/1.1.14/lib/Event',
 	                'Net':'spm_modules/spaseed/1.1.14/lib/Net',
+	                'Dialog':'spm_modules/spaseed/1.1.14/lib/Dialog',
+	                'Mask':'spm_modules/spaseed/1.1.14/lib/Mask',
+	               	'ErrorTips':'spm_modules/spaseed/1.1.14/lib/ErrorTips',
 
 	                'binder':'spm_modules/spaseed/1.1.14/lib/binder',
 	                'cookie':'spm_modules/spaseed/1.1.14/lib/cookie',
 	                'env':'spm_modules/spaseed/1.1.14/lib/env',
-	                'dialog':'spm_modules/spaseed/1.1.14/lib/dialog',
 	                'asyncrequest':'spm_modules/spaseed/1.1.14/lib/asyncrequest',
 	                'stats':'spm_modules/spaseed/1.1.14/lib/stats',
 	                'template':'spm_modules/spaseed/1.1.14/lib/template',

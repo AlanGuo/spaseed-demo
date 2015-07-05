@@ -84,27 +84,25 @@
         }
         global.template = template;
     }
-    /*v:1*/
+    /*v:2*/
     template("dialog/buttonpannel", function($data) {
         "use strict";
         var $utils = this, buttons = ($utils.$helpers, $data.buttons), $each = $utils.$each, $escape = ($data.item, 
         $data.index, $data.$index, $utils.$escape), $out = "";
         return 2 == buttons.length ? ($out += " ", $each(buttons, function(item, index) {
-            $out += ' <a data-click-event="', $out += $escape(item.event), $out += '" class="btn btn-', 
+            $out += ' <a data-click-event="', $out += $escape(item.event || "hide"), $out += '" class="btn btn-', 
             $out += $escape(index), $out += '">', $out += $escape(item.text), $out += "</a> ";
-        }), $out += " ") : ($out += ' <a data-click-event="', $out += $escape(buttons[0].event), 
+        }), $out += " ") : ($out += ' <a data-click-event="', $out += $escape(buttons[0].event || "hide"), 
         $out += '" class="btn btn-1">', $out += $escape(buttons[0].text || "确定"), $out += "</a> "), 
         new String($out);
-    }), /*v:2*/
-    template("dialog/dialog", '<div class="cont-title"> </div> <div class="cont-wrapper"> <div class="text-content"> 确定删除收货地址，此操作不可逆！ </div> </div> <div class="buttonpannel"> </div> '), 
-    /*v:1*/
-    template("errortips", '<div class="layout-err-tips" style="display:none"></div>'), 
-    /*v:1*/
+    }), /*v:3*/
+    template("dialog/dialog", '<div class="cont-title"> </div> <div class="cont-wrapper"> <div class="text-content"> </div> </div> <div class="buttonpannel"> </div> '), 
+    /*v:9*/
     template("page1/page1", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
-        return $out += '<h1 data-click-event="tt_click">', $out += $escape(data.title), 
-        $out += "</h1> <div>", $out += $escape(data.description), $out += '</div> <div bind-content="detail"></div> ', 
+        return $out += "<h1>", $out += $escape(data.title), $out += "</h1> <div>", $out += $escape(data.description), 
+        $out += '</div> <br> <div data-click-event="tt_click">点我+1: <span bind-content="detail"></span></div> <br> <div data-click-event="opendialog">弹出对话框</div> <br> <div data-click-event="openerrortips">弹出轻量错误提示</div> <br> ', 
         new String($out);
     }), /*v:1*/
     template("page2/page2", function($data) {

@@ -5,7 +5,7 @@
  * dialog.show(content,{
 		buttons:[{
 			text:'确定',
-			dataEvent:'closeDialog'
+			event:'closeDialog'
 		}]
  * });
  * 一个带通用头部和底部确定按钮的对话框
@@ -29,6 +29,9 @@ define(function(require, exports,module) {
 
 			this.$parent = data.$parent;
 			this.$mask = data.$mask || Mask.create(data);
+			this.$app = data.$app;
+			this.$event = this.$app.$event;
+			this.hideoptions = data.hideoptions;
 
 			//默认class
 			this.$elem.addClass('dialog');
@@ -40,20 +43,28 @@ define(function(require, exports,module) {
 			if(this.$parent.children().indexOf(elem)===-1){
 				this.$parent.append(this.$elem);
 			}
+
+			var self = this;
+			this.$event.on(this,'click','hide',function(){
+				self.hide(self.hideoptions);
+			});
+
+			this.__bodyhandler = {};
+			this.__bodyhandler.click = this.$event.bindEvent(this, this.$elem, 'click');
 		},
 		show:function(content, options){
 			options = options || {};
 
-			this.$elem[0].querySelector('.cont-title').innerText = options.title || '';
+			this.$elem.find('.cont-title').text(options.title || '');
 
-			var prop = options.encode === false ?'innerHtml':'innerText';
-			this.$elem[0].querySelector('.text-content')[prop] = content;
+			var prop = options.encode === false ?'html':'text';
+			this.$elem.find('.text-content')[prop](content);
 
 			if(options.buttons){
-				this.$elem.querySelector('.buttonpannel').innerHtml = template('dialog/buttonpannel',options);
+				this.$elem.find('.buttonpannel').html(template('dialog/buttonpannel',options));
 			}
 			else{
-				this.$elem.querySelector('.buttonpannel').style.display = 'none';
+				this.$elem.find('.buttonpannel').hide();
 			}
 
 			//有动画
@@ -66,15 +77,35 @@ define(function(require, exports,module) {
 				this.$elem.addClass(options.animate);
 			}
 		},
+		alert:function(content){
+			this.show(content,{
+				buttons:[{
+					name:'确定',
+				}]
+			});
+		},
 		hide:function(options){
 			var self = this;
+			options = options || {};
 			if(options.animate){
-
 				this.$elem.addClass(options.animate);
 				setTimeout(function(){
 					self.$elem.hide();
 					self.$mask.hide();
 				},options.animateduration || 400);
+			}
+			else{
+				self.$elem.hide();
+				self.$mask.hide();
+			}
+		},
+		//手动调用
+		destroy:function(){
+			//移除事件
+			this.$event.off(this);
+
+			for(var p in this.__bodyhandler){
+				this.$event.unbindEvent(this.$elem, p, this.__bodyhandler[p]);
 			}
 		}
 	});

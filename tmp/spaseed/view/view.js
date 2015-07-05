@@ -84,20 +84,18 @@
         }
         global.template = template;
     }
-    /*v:1*/
+    /*v:2*/
     template("dialog/buttonpannel", function($data) {
         "use strict";
         var $utils = this, buttons = ($utils.$helpers, $data.buttons), $each = $utils.$each, $escape = ($data.item, 
         $data.index, $data.$index, $utils.$escape), $out = "";
         return 2 == buttons.length ? ($out += " ", $each(buttons, function(item, index) {
-            $out += ' <a data-click-event="', $out += $escape(item.event), $out += '" class="btn btn-', 
+            $out += ' <a data-click-event="', $out += $escape(item.event || "hide"), $out += '" class="btn btn-', 
             $out += $escape(index), $out += '">', $out += $escape(item.text), $out += "</a> ";
-        }), $out += " ") : ($out += ' <a data-click-event="', $out += $escape(buttons[0].event), 
+        }), $out += " ") : ($out += ' <a data-click-event="', $out += $escape(buttons[0].event || "hide"), 
         $out += '" class="btn btn-1">', $out += $escape(buttons[0].text || "确定"), $out += "</a> "), 
         new String($out);
-    }), /*v:2*/
-    template("dialog/dialog", '<div class="cont-title"> </div> <div class="cont-wrapper"> <div class="text-content"> 确定删除收货地址，此操作不可逆！ </div> </div> <div class="buttonpannel"> </div> '), 
-    /*v:1*/
-    template("errortips", '<div class="layout-err-tips" style="display:none"></div>'), 
+    }), /*v:3*/
+    template("dialog/dialog", '<div class="cont-title"> </div> <div class="cont-wrapper"> <div class="text-content"> </div> </div> <div class="buttonpannel"> </div> '), 
     module && (module.exports = template);
 }();
