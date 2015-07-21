@@ -16,7 +16,7 @@ define(function(require, exports, module) {
 				}
 			}
 		}));
-		app.startup();
+		app.launch();
 	};
 
     module.exports = startup;

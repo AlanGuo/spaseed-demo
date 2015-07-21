@@ -39,36 +39,53 @@
   color:#ACACAC;
 }
 
-/* --------------- popup --------------- */
+/* --------------- dialog --------------- */
 .mask{
-  background-color: #000;
-  opacity: .7;
+  width: 100%;
+  height: 100%;
+  opacity: .5;
+  background:black;
+  z-index: 9;
   position: absolute;
   top:0;
   left:0;
-  width:100%;
-  height:100%;
-  z-index: 10;
 }
-.box-popup{
-  width:21.67rem;
+.dialog{
   position: absolute;
-  top:150px;
-  left:50%;
-  margin-left:-10.84rem;
-  background-color: #fff;
-  color:#323333;
-  z-index: 19;
+  z-index: 10;
+  width: 90%;
+  left:5%;
+  top:30%;
+  background:white;
+  box-shadow: #555 0 0 3px;
 }
-.box-popup .content{
-  padding:2.67rem;
+.dialog .cont-title{
+  padding: .4rem;
 }
-.box-popup .content p{
+.dialog .cont-wrapper{
+  padding:1rem;
+}
+.dialog .cont-wrapper .text-content{
   text-align: center;
 }
-.box-popup .btn-popup{
-  line-height: 4.17rem;
-  height:4.17rem;
+.dialog .buttonpannel{
+  margin-top: 1rem;
+  background: #ff8500;
+}
+.dialog .buttonpannel .btn{
+  text-decoration: none;
+  color: white;
+  text-align: center;
+  padding: .5rem;
+  display: block;
+}
+.dialog .buttonpannel .btn-0{
+  border-right: 1px solid white;
+  width: 50%;
+  float: left;
+}
+.dialog .buttonpannel .btn-1{
+  overflow: hidden;
 }
 
 /* ------------ 弹窗提示 ------------ */

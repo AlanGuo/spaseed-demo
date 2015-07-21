@@ -11,11 +11,16 @@ seajs.config({
         'View': 'main/View',
         'SideBarView': 'main/SideBarView',
         'TopBottomView': 'main/TopBottomView',
+        'MenuView':'main/MenuView'
 
         '$': 'lib/dom',
         'Net': 'lib/Net',
         'Event': 'lib/Event',
         'Console': 'lib/Console',
+        'Dialog':'lib/Dialog',
+        'Mask':'lib/Mask',
+        'ErrorTips':'lib/ErrorTips',
+        'Loading':'lib/Loading',
         'env': 'lib/env',
         'cookie': 'lib/cookie',
         'querystring':'lib/querystring',

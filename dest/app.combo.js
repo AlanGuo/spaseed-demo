@@ -260,15 +260,21 @@ define("/spm_modules/spaseed/1.1.14/lib/asyncrequest", function(require, exports
  * @module binder
  * 绑定模块，提供双向绑定功能
  */
-"use strict";
-
 define("/spm_modules/spaseed/1.1.14/lib/binder", function(require, exports, module) {
-    var selectors = "[bind-content],[bind-value],[bind-attr]";
+    var selectors = "[bind-content],[bind-value],[bind-file],[bind-attr]";
     var binders = {
         value: function(node, onchange) {
-            node.addEventListener("keyup", function() {
-                onchange(node.value);
-            });
+            if (onchange) {
+                if (/input/i.test(node.tagName)) {
+                    node.addEventListener("keyup", function() {
+                        onchange(node.value);
+                    });
+                } else if (/select/i.test(node.tagName)) {
+                    node.addEventListener("change", function() {
+                        onchange(node.value);
+                    });
+                }
+            }
             return {
                 updateProperty: function(value) {
                     if (value !== node.value) {
@@ -277,10 +283,24 @@ define("/spm_modules/spaseed/1.1.14/lib/binder", function(require, exports, modu
                 }
             };
         },
+        file: function(node, onchange) {
+            if (onchange) {
+                node.addEventListener("change", function() {
+                    onchange(node.files);
+                });
+            }
+            return {
+                updateProperty: function(value) {
+                    if (value !== node.files) {
+                        node.files = value;
+                    }
+                }
+            };
+        },
         content: function(node) {
             return {
                 updateProperty: function(value) {
-                    node.textContent = value;
+                    node.innerText = value;
                 }
             };
         },
@@ -302,99 +322,147 @@ define("/spm_modules/spaseed/1.1.14/lib/binder", function(require, exports, modu
         },
         attribute: function(node, onchange, object, attrname) {
             return {
-                updateProperty: function(value, attrname) {
-                    node.setAttribute(attrname, value);
+                updateProperty: function(expr, attrname) {
+                    node.setAttribute(attrname, expr);
                 }
             };
         }
     };
     var bindEngine = {
         bind: function(container, object) {
-            function getDirectObject(object, propertyName) {
-                var val = object;
-                if (/\./.test(propertyName)) {
-                    var pnamearray = propertyName.split(".");
-                    for (var i = 0; i < pnamearray.length - 1; i++) {
-                        if (val) {
-                            val = val[pnamearray[i]];
+            function getDirectObject(object, property) {
+                var getdo = function(object, propertyName) {
+                    var val = object;
+                    //properties是对象
+                    if (/\./.test(propertyName)) {
+                        var pnamearray = propertyName.split(".");
+                        for (var i = 0; i < pnamearray.length - 1; i++) {
+                            if (val) {
+                                val = val[pnamearray[i]];
+                            } else {
+                                break;
+                            }
+                        }
+                        return val;
+                    } else {
+                        return object;
+                    }
+                };
+                return getdo(object, property);
+            }
+            function parseExpr(expr, object) {
+                var props = expr.match(/\{.*?\}/), isexpr = false, dobjects = [], dproperties = [];
+                if (props) {
+                    for (var i = 0; i < props.length; i++) {
+                        props[i] = props[i].replace(/\{|\}/g, "");
+                        expr = expr.replace(new RegExp("\\{" + props[i] + "\\}", "g"), props[i]);
+                        dobjects.push(getDirectObject(object, props[i]));
+                        dproperties.push(props[i].split(".").slice(-1)[0]);
+                    }
+                    isexpr = true;
+                }
+                if (!isexpr) {
+                    dobjects.push(getDirectObject(object, expr));
+                    dproperties.push(expr.split(".").slice(-1)[0]);
+                }
+                return {
+                    dobjects: dobjects,
+                    dproperties: dproperties,
+                    isexpr: isexpr,
+                    getValue: function() {
+                        if (isexpr) {
+                            with (object) {
+                                return eval(expr);
+                            }
                         } else {
-                            break;
+                            return dobjects[0][dproperties[0]];
                         }
                     }
-                    return val;
-                } else {
-                    return object;
-                }
+                };
             }
             function bindObject(node, binderName, object, propertyName) {
+                var objArray = [], unobserveArray = [];
                 //绑定属性
-                var observer = null;
                 var bindProperty = function(bnName, propObj) {
-                    var prop = propObj.prop, attr = propObj.attr;
-                    var dobject = getDirectObject(object, prop), dproperty = prop.split(".").slice(-1)[0];
-                    var updateValue = function(newValue) {
-                        dobject[dproperty] = newValue;
+                    var expr = propObj.expr, attr = propObj.attr;
+                    //从表达式中抓去属性值
+                    var parsedObj = parseExpr(expr, object);
+                    //控件值改变了更新对象
+                    var updateValue = parsedObj.isexpr ? null : function(newValue) {
+                        parsedObj.dobjects[0][parsedObj.dproperties[0]] = newValue;
                     };
                     var binder = binders[bnName](node, updateValue, object, attr);
-                    binder.updateProperty(dobject[dproperty], attr);
+                    binder.updateProperty(parsedObj.getValue(), attr);
                     return {
-                        dobject: dobject,
-                        dproperty: dproperty,
+                        parsedObj: parsedObj,
                         binder: binder,
                         attribute: attr
                     };
                 };
-                var objArray = [];
                 for (var i = 0; i < binderName.length; i++) {
                     objArray.push(bindProperty(binderName[i], propertyName[i]));
                 }
-                observer = function(changes) {
-                    var index = null;
+                var observer = function(changes, dobject, dproperty, binder, val, attr) {
                     var changed = changes.some(function(change) {
-                        return objArray.filter(function(item, i) {
-                            if (change.name === item.dproperty && change.object === item.dobject) {
-                                index = i;
-                                return item;
-                            }
-                        }).length;
+                        if (dproperty == change.name && change.object == dobject) {
+                            return true;
+                        }
                     });
-                    if (changed && objArray != null) {
-                        var obj = objArray[index];
-                        obj.binder.updateProperty(obj.dobject[obj.dproperty], obj.attribute);
+                    if (changed) {
+                        binder.updateProperty(val, attr);
                     }
                 };
-                Object.observe(object, observer);
+                //数组observer
+                objArray.map(function(item, index) {
+                    item.parsedObj.dobjects.map(function(dobjitem, dobjindex) {
+                        var func = function(changes) {
+                            observer(changes, dobjitem, item.parsedObj.dproperties[dobjindex], item.binder, item.parsedObj.getValue(), item.attribute);
+                        };
+                        unobserveArray.push({
+                            object: dobjitem,
+                            func: func
+                        });
+                        Object.observe(dobjitem, func);
+                    });
+                });
                 return {
                     unobserve: function() {
-                        Object.unobserve(object, observer);
+                        unobserveArray.map(function(item) {
+                            Object.unobserve(item.object, item.func);
+                        });
                     }
                 };
             }
-            function bindCollection(node, array) {
+            function bindCollection(node, array, object, parent) {
+                array = array || [];
+                var newNodeCollection = [];
                 //捕捉自己并且把自己删除
                 function capture(original) {
-                    var before = original.previousSibling;
-                    var parent = original.parentNode;
                     var node = original.cloneNode(true);
-                    original.parentNode.removeChild(original);
+                    if (Array.prototype.slice.call(parent.children).indexOf(original) > -1) {
+                        parent.removeChild(original);
+                    }
                     return {
                         insert: function() {
                             var newNode = node.cloneNode(true);
-                            parent.insertBefore(newNode, before);
+                            newNodeCollection.push(newNode);
+                            parent.appendChild(newNode);
                             return newNode;
                         }
                     };
                 }
-                delete node.dataset.repeat;
-                var parent = node.parentNode;
+                node.removeAttribute("bind-repeat");
+                parent = parent || node.parentNode;
                 var captured = capture(node);
-                var bindItem = function(element) {
+                var bindItem = function(obj) {
                     //为每一个repeat元素设置绑定
-                    return bindModel(captured.insert(), element);
+                    var elem = captured.insert();
+                    elem.style.display = "";
+                    return bindEngine.bind(elem, obj);
                 };
                 //根据array生成bindings
                 var bindings = array.map(bindItem);
-                var observer = function(changes) {
+                var arrObserver = function(changes) {
                     changes.forEach(function(change) {
                         var index = parseInt(change.name, 10), child;
                         if (isNaN(index)) return;
@@ -402,7 +470,7 @@ define("/spm_modules/spaseed/1.1.14/lib/binder", function(require, exports, modu
                             bindings.push(bindItem(array[index]));
                         } else if (change.type === "update") {
                             bindings[index].unobserve();
-                            bindModel(parent.children[index], array[index]);
+                            bindEngine.bind(parent.children[index], array[index]);
                         } else if (change.type === "delete") {
                             bindings.pop().unobserve();
                             child = parent.children[index];
@@ -411,18 +479,19 @@ define("/spm_modules/spaseed/1.1.14/lib/binder", function(require, exports, modu
                     });
                 };
                 //observe array
-                Object.observe(array, observer);
+                Object.observe(array, arrObserver);
                 return {
                     unobserve: function() {
-                        Object.unobserve(array, observer);
-                    }
+                        Object.unobserve(array, arrObserver);
+                    },
+                    newNodeCollection: newNodeCollection
                 };
             }
             //是不是被repeat包裹的元素，是,返回false
             function isDirectNested(node) {
                 node = node.parentElement;
                 while (node) {
-                    if (node.dataset.repeat) {
+                    if (node.getAttribute("bind-repeat")) {
                         return false;
                     }
                     node = node.parentElement;
@@ -442,29 +511,69 @@ define("/spm_modules/spaseed/1.1.14/lib/binder", function(require, exports, modu
                 if (node.getAttribute("bind-value")) {
                     bindType.push("value");
                     propertyName.push({
-                        prop: node.getAttribute("bind-value")
+                        expr: node.getAttribute("bind-value")
+                    });
+                }
+                if (node.getAttribute("bind-file")) {
+                    bindType.push("file");
+                    propertyName.push({
+                        expr: node.getAttribute("bind-file")
                     });
                 }
                 if (node.getAttribute("bind-content")) {
                     bindType.push("content");
                     propertyName.push({
-                        prop: node.getAttribute("bind-content")
+                        expr: node.getAttribute("bind-content")
                     });
                 }
                 if (node.getAttribute("bind-attr")) {
                     var keyvalArray = node.getAttribute("bind-attr").split(",");
                     for (var i = 0; i < keyvalArray.length; i++) {
-                        var keyval = keyvalArray[i].split("=");
+                        var keyval = /(.*?)=(.*)/.exec(keyvalArray[i]);
                         bindType.push("attribute");
                         propertyName.push({
-                            prop: keyval[1],
-                            attr: keyval[0]
+                            expr: keyval[2],
+                            attr: keyval[1]
                         });
                     }
                 }
                 return bindObject(node, bindType, object, propertyName);
-            }).concat(onlyDirectNested("[data-repeat]").map(function(node) {
-                return bindCollection(node, object[node.dataset.repeat]);
+            }).concat(onlyDirectNested("[bind-repeat]").map(function(node) {
+                var arrayName = node.getAttribute("bind-repeat"), parent = node.parentNode, isexpr = false, collectionBinder, unobserveArray = [];
+                var parsedObj = parseExpr(arrayName, object);
+                //绑定object
+                var objObserver = function(changes, dproperty, dobject) {
+                    var changed = changes.some(function(change) {
+                        if (dproperty == change.name && change.object === dobject) {
+                            return true;
+                        }
+                    });
+                    if (changed) {
+                        collectionBinder.newNodeCollection.map(function(item) {
+                            parent.removeChild(item);
+                        });
+                        collectionBinder = bindCollection(node, parsedObj.getValue(), object, parent);
+                    }
+                };
+                collectionBinder = bindCollection(node, parsedObj.getValue(), object, parent);
+                parsedObj.dobjects.map(function(dobject, index) {
+                    var func = function(changes) {
+                        objObserver(changes, parsedObj.dproperties[index], dobject);
+                    };
+                    unobserveArray.push({
+                        object: dobject,
+                        func: func
+                    });
+                    Object.observe(dobject, func);
+                });
+                return {
+                    unobserve: function() {
+                        unobserveArray.map(function(item) {
+                            Object.unobserve(item.object, item.func);
+                        });
+                        collectionBinder.unobserve();
+                    }
+                };
             }));
             return {
                 unobserve: function() {
@@ -484,6 +593,8 @@ define("/spm_modules/spaseed/1.1.14/lib/dom", function(require, exports, module)
         var elemarray;
         if (/element/i.test(Object.prototype.toString.call(selector))) {
             elemarray = [ selector ];
+        } else if (/array|nodelist/i.test(Object.prototype.toString.call(selector))) {
+            elemarray = selector;
         } else {
             elemarray = Array.prototype.slice.call((doc || document).querySelectorAll(selector));
         }
@@ -507,12 +618,21 @@ define("/spm_modules/spaseed/1.1.14/lib/dom", function(require, exports, module)
             return elemarray;
         };
         elemarray.children = function() {
-            return Array.prototype.slice.call(elemarray[0].children());
+            return Array.prototype.slice.call(elemarray[0].children);
         };
         elemarray.html = function(content) {
-            if (content) {
+            if (content != null) {
                 for (var i = 0; i < elemarray.length; i++) {
                     elemarray[i].innerHTML = content;
+                }
+            } else {
+                return elemarray[0].innerHTML;
+            }
+        };
+        elemarray.text = function(content) {
+            if (content != null) {
+                for (var i = 0; i < elemarray.length; i++) {
+                    elemarray[i].innerText = content;
                 }
             } else {
                 return elemarray[0].innerHTML;
@@ -555,7 +675,7 @@ define("/spm_modules/spaseed/1.1.14/lib/dom", function(require, exports, module)
             return elemarray;
         };
         elemarray.data = function(name, val) {
-            if (val) {
+            if (val != null) {
                 for (var i = 0; i < elemarray.length; i++) {
                     elemarray[i].setAttribute("data-" + name, val);
                 }
@@ -573,6 +693,25 @@ define("/spm_modules/spaseed/1.1.14/lib/dom", function(require, exports, module)
             for (var i = 0; i < elemarray.length; i++) {
                 elemarray[i].style.display = "none";
             }
+        };
+        elemarray.find = function(selector) {
+            return $(elemarray[0].querySelectorAll(selector));
+        };
+        elemarray.css = function(obj) {
+            for (var i = 0; i < elemarray.length; i++) {
+                for (var p in obj) {
+                    elemarray[i].style[p] = obj[p];
+                }
+            }
+        };
+        elemarray.width = function() {
+            return elemarray[0].clientWidth;
+        };
+        elemarray.height = function() {
+            return elemarray[0].clientHeight;
+        };
+        elemarray.click = function() {
+            return elemarray[0].click();
         };
         return elemarray;
     };
@@ -593,11 +732,16 @@ define("/spm_modules/spaseed/1.1.14/lib/dom", function(require, exports, module)
         options.url = options.url || "";
         options.async = options.async || true;
         options.data = options.data || "";
+        options.header = options.header || {};
+        options.contentType = options.contentType === undefined ? "application/x-www-form-urlencoded" : options.contentType;
+        if (/get/i.test(options.method)) {
+            options.contentType = "application/x-www-form-urlencoded";
+        }
         var xhr = new XMLHttpRequest();
         xhr.onload = function() {
             var ret = JSON.parse(xhr.responseText);
             if (options.success) {
-                options.success.call(mpNode, ret);
+                options.success(ret);
             }
         };
         xhr.onerror = function() {
@@ -605,9 +749,27 @@ define("/spm_modules/spaseed/1.1.14/lib/dom", function(require, exports, module)
                 options.error(xhr);
             }
         };
+        var str = options.data;
+        if (options.contentType === "application/x-www-form-urlencoded") {
+            str = "";
+            for (var p in options.data) {
+                str += encodeURIComponent(p) + "=" + encodeURIComponent(options.data[p]) + "&";
+            }
+            str = str.substring(0, str.length - 1);
+            if (/get/i.test(options.method)) {
+                options.url += "?" + str;
+                str = "";
+            }
+        }
         xhr.open(options.method, options.url, options.async);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.send(options.data);
+        if (options.contentType !== false && options.contentType !== null) {
+            xhr.setRequestHeader("Content-Type", options.contentType);
+        }
+        for (var p in options.header) {
+            xhr.setRequestHeader(p, options.header[p]);
+        }
+        xhr.send(str);
+        return xhr;
     };
     module.exports = $;
 });;
@@ -647,7 +809,7 @@ define("/spm_modules/spaseed/1.1.14/lib/template", function(require, exports, mo
 "use strict";
 
 define("/spm_modules/spaseed/1.1.14/main/Node", function(require, exports, module) {
-    var mp = require("spm_modules/spaseed/1.1.14/main/mp");
+    var $ = require("spm_modules/spaseed/1.1.14/lib/dom"), mp = require("spm_modules/spaseed/1.1.14/main/mp");
     var Node = mp.Class.extend({
         $elem: null,
         $event: null,
@@ -697,7 +859,9 @@ define("/spm_modules/spaseed/1.1.14/main/View", function(require, exports, modul
         $elem: $("#container"),
         ctor: function(data) {
             this.$super(data);
-            this.$app = data.app;
+            this.$app = data.$app;
+            //可以动态设定$elem
+            this.$elem = data.$elem || this.$elem;
             //共享网络和事件
             this.$net = this.$app.$net;
             //事件
@@ -710,11 +874,15 @@ define("/spm_modules/spaseed/1.1.14/main/View", function(require, exports, modul
             if (this.events) {
                 this.__bodyhandler = this.__bodyhandler || {};
                 for (var p in this.events) {
+                    var hasq = false;
                     for (var q in this.events[p]) {
+                        hasq = true;
                         this.$event.on(this, p, q, this.events[p][q]);
                     }
-                    //绑定事件
-                    this.__bodyhandler[p] = this.$event.bindEvent(this, this.$elem, p);
+                    if (hasq) {
+                        //绑定事件
+                        this.__bodyhandler[p] = this.$event.bindEvent(this, this.$elem, p);
+                    }
                 }
             }
         },
@@ -733,7 +901,7 @@ define("/spm_modules/spaseed/1.1.14/main/View", function(require, exports, modul
     });
     module.exports = View;
 });;
-define("mp", function(require, exports, module) {
+define("/spm_modules/spaseed/1.1.14/main/mp", function(require, exports, module) {
     var $id = 0 | Math.random() * 998;
     var mp = {};
     /**
