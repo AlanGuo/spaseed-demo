@@ -15,45 +15,10 @@ define("/app/script/model/request", function(require, exports, module) {
     };
     module.exports = request;
 });;
-define("/app/script/module/page3/page3", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.14/lib/dom");
-    var template = require("spm_modules/spaseed/1.1.14/lib/template");
-    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
-    var request = require("app/script/model/request");
-    var View = require("spm_modules/spaseed/1.1.14/main/View");
-    var page3 = View.extend({
-        $elem: $("#pageWrapper"),
-        title: "page 3",
-        render: function(cb) {
-            var self = this;
-            asyncRequest.all(this.$net, [ {
-                params: {
-                    code: 0,
-                    data: {
-                        title: "page3",
-                        description: "page3 description"
-                    }
-                },
-                request: request.sample
-            } ], function(values) {
-                self.$elem.html(template("page3/page3", {
-                    data: values[0]
-                }));
-                cb && cb();
-            });
-        }
-    });
-    module.exports = page3;
-});;
 "use strict";
 
 define("/app/script/module/page1/page1", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.14/lib/dom");
-    var View = require("spm_modules/spaseed/1.1.14/main/View");
-    var template = require("spm_modules/spaseed/1.1.14/lib/template");
-    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
-    var binder = require("spm_modules/spaseed/1.1.14/lib/binder");
-    var request = require("app/script/model/request");
+    var $ = require("spm_modules/spaseed/1.1.14/lib/dom"), View = require("spm_modules/spaseed/1.1.14/main/View"), Dialog = require("spm_modules/spaseed/1.1.14/lib/Dialog"), ErrorTips = require("spm_modules/spaseed/1.1.14/lib/ErrorTips"), Loading = require("spm_modules/spaseed/1.1.14/lib/Loading"), template = require("spm_modules/spaseed/1.1.14/lib/template"), asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest"), binder = require("spm_modules/spaseed/1.1.14/lib/binder"), request = require("app/script/model/request");
     var Page1 = View.extend({
         $elem: $("#pageWrapper"),
         render: function() {
@@ -71,6 +36,16 @@ define("/app/script/module/page1/page1", function(require, exports, module) {
                 self.$elem.html(template("page1/page1", {
                     data: values[0]
                 }));
+                self.$dialog = Dialog.create({
+                    $app: self.$app,
+                    $parent: self.$elem
+                });
+                self.$errortips = ErrorTips.create({
+                    $parent: self.$elem
+                });
+                self.$loading = Loading.create({
+                    $parent: self.$elem
+                });
                 //绑定数据
                 binder.bind(self.$elem, self);
             });
@@ -82,8 +57,21 @@ define("/app/script/module/page1/page1", function(require, exports, module) {
                 tt_click: function() {
                     //alert('tt_click');
                     this.detail++;
+                },
+                opendialog: function() {
+                    this.$dialog.alert("对话框，碉堡了!");
+                },
+                openerrortips: function() {
+                    this.$errortips.show("error tips");
+                },
+                showloading: function() {
+                    this.$loading.show();
                 }
             }
+        },
+        destroy: function() {
+            this.$super();
+            this.$dialog.destroy();
         }
     });
     module.exports = Page1;
@@ -187,6 +175,233 @@ define("/app/script/module/page3/page3", function(require, exports, module) {
         }
     });
     module.exports = page3;
+});;
+define("/app/script/module/page3/page3", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.1.14/lib/dom");
+    var template = require("spm_modules/spaseed/1.1.14/lib/template");
+    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
+    var request = require("app/script/model/request");
+    var View = require("spm_modules/spaseed/1.1.14/main/View");
+    var page3 = View.extend({
+        $elem: $("#pageWrapper"),
+        title: "page 3",
+        render: function(cb) {
+            var self = this;
+            asyncRequest.all(this.$net, [ {
+                params: {
+                    code: 0,
+                    data: {
+                        title: "page3",
+                        description: "page3 description"
+                    }
+                },
+                request: request.sample
+            } ], function(values) {
+                self.$elem.html(template("page3/page3", {
+                    data: values[0]
+                }));
+                cb && cb();
+            });
+        }
+    });
+    module.exports = page3;
+});;
+"use strict";
+
+/**
+ * @dialog 模块
+ * dialog.show(content,{
+		buttons:[{
+			text:'确定',
+			event:'closeDialog'
+		}]
+ * });
+ * 一个带通用头部和底部确定按钮的对话框
+ * dialog.show(template)
+ * 一个完全自定义的对话框
+ * dialog.alert('文本');
+ * 一个标准的提示对话框
+ *
+ * 目前只支持两个按钮
+ */
+define("/spm_modules/spaseed/1.1.14/lib/Dialog", function(require, exports, module) {
+    var Node = require("spm_modules/spaseed/1.1.14/main/Node"), Mask = require("spm_modules/spaseed/1.1.14/lib/Mask"), template = require("spm_modules/spaseed/1.1.14/lib/template");
+    var Dialog = Node.extend({
+        ctor: function(data) {
+            this.$super(data);
+            data = data || {};
+            this.$parent = data.$parent;
+            this.$mask = data.$mask || Mask.create(data);
+            this.$app = data.$app;
+            this.$event = this.$app.$event;
+            this.hideoptions = data.hideoptions;
+            //默认class
+            this.$elem.addClass("dialog");
+            this.$elem.html(template("dialog/dialog"));
+            this.$elem.hide();
+            //对话框元素
+            var elem = this.$elem.length ? this.$elem[0] : this.$elem;
+            if (this.$parent.children().indexOf(elem) === -1) {
+                this.$parent.append(this.$elem);
+            }
+            var self = this;
+            this.$event.on(this, "click", "hide", function() {
+                self.hide(self.hideoptions);
+            });
+            this.__bodyhandler = {};
+            this.__bodyhandler.click = this.$event.bindEvent(this, this.$elem, "click");
+        },
+        show: function(content, options) {
+            options = options || {};
+            this.$elem.find(".cont-title").text(options.title || "");
+            var prop = options.encode === false ? "html" : "text";
+            this.$elem.find(".text-content")[prop](content);
+            if (options.buttons) {
+                this.$elem.find(".buttonpannel").html(template("dialog/buttonpannel", options));
+            } else {
+                this.$elem.find(".buttonpannel").hide();
+            }
+            //有动画
+            this.$elem.show();
+            this.$mask.show();
+            if (options.animate) {
+                this.$elem.show();
+                this.$elem.height();
+                this.$elem.addClass(options.animate);
+            }
+        },
+        alert: function(content) {
+            this.show(content, {
+                buttons: [ {
+                    name: "确定"
+                } ]
+            });
+        },
+        hide: function(options) {
+            var self = this;
+            options = options || {};
+            if (options.animate) {
+                this.$elem.addClass(options.animate);
+                setTimeout(function() {
+                    self.$elem.hide();
+                    self.$mask.hide();
+                }, options.animateduration || 400);
+            } else {
+                self.$elem.hide();
+                self.$mask.hide();
+            }
+        },
+        //手动调用
+        destroy: function() {
+            //移除事件
+            this.$event.off(this);
+            for (var p in this.__bodyhandler) {
+                this.$event.unbindEvent(this.$elem, p, this.__bodyhandler[p]);
+            }
+        }
+    });
+    Dialog.create = function(data) {
+        return new Dialog(data);
+    };
+    module.exports = Dialog;
+});;
+"use strict";
+
+define("/spm_modules/spaseed/1.1.14/lib/ErrorTips", function(require, exports, module) {
+    var Node = require("spm_modules/spaseed/1.1.14/main/Node");
+    var ErrorTips = Node.extend({
+        ctor: function(data) {
+            this.$super(data);
+            data = data || {};
+            this.$parent = data.$parent;
+            this.duration = data.duration;
+            //默认class
+            this.$elem.addClass("layout-err-tips");
+            this.$elem.hide();
+            //对话框元素
+            var elem = this.$elem.length ? this.$elem[0] : this.$elem;
+            if (this.$parent.children().indexOf(elem) === -1) {
+                this.$parent.append(this.$elem);
+            }
+        },
+        show: function(content, options) {
+            var self = this;
+            options = options || {};
+            setTimeout(function() {
+                self.$elem.addClass("fade-out");
+            }, this.duration || 3e3);
+            this.$elem.text(content);
+            this.$elem.show();
+        },
+        hide: function() {
+            this.$elem.hide();
+        }
+    });
+    ErrorTips.create = function(data) {
+        return new ErrorTips(data);
+    };
+    module.exports = ErrorTips;
+});;
+"use strict";
+
+define("/spm_modules/spaseed/1.1.14/lib/Loading", function(require, exports, module) {
+    var Node = require("spm_modules/spaseed/1.1.14/main/Node"), template = require("spm_modules/spaseed/1.1.14/lib/template");
+    var Mask = Node.extend({
+        ctor: function(data) {
+            this.$super(data);
+            data = data || {};
+            this.$parent = data.$parent;
+            //默认class
+            this.$elem.addClass("wrap-loading");
+            this.$elem.html(template("loading"));
+            this.$elem.hide();
+            //遮罩元素
+            var elem = this.$elem.length ? this.$elem[0] : this.$elem;
+            if (this.$parent.children().indexOf(elem) === -1) {
+                this.$parent.append(this.$elem);
+            }
+        },
+        show: function(html, options) {
+            this.$elem.show();
+        },
+        hide: function() {
+            this.$elem.hide();
+        }
+    });
+    Mask.create = function(data) {
+        return new Mask(data);
+    };
+    module.exports = Mask;
+});;
+"use strict";
+
+define("/spm_modules/spaseed/1.1.14/lib/Mask", function(require, exports, module) {
+    var Node = require("spm_modules/spaseed/1.1.14/main/Node");
+    var Mask = Node.extend({
+        ctor: function(data) {
+            this.$super(data);
+            data = data || {};
+            this.$parent = data.$parent;
+            //默认class
+            this.$elem.addClass("mask");
+            this.$elem.hide();
+            //遮罩元素
+            var elem = this.$elem.length ? this.$elem[0] : this.$elem;
+            if (this.$parent.children().indexOf(elem) === -1) {
+                this.$parent.append(this.$elem);
+            }
+        },
+        show: function(html, options) {
+            this.$elem.show();
+        },
+        hide: function() {
+            this.$elem.hide();
+        }
+    });
+    Mask.create = function(data) {
+        return new Mask(data);
+    };
+    module.exports = Mask;
 });;
 /**
  * promise
@@ -630,7 +845,11 @@ define("/spm_modules/spaseed/1.1.14/lib/dom", function(require, exports, module)
             }
         };
         elemarray.text = function(content) {
+<<<<<<< HEAD
             if (content != null) {
+=======
+            if (content) {
+>>>>>>> origin/master
                 for (var i = 0; i < elemarray.length; i++) {
                     elemarray[i].innerText = content;
                 }
@@ -704,6 +923,7 @@ define("/spm_modules/spaseed/1.1.14/lib/dom", function(require, exports, module)
                 }
             }
         };
+<<<<<<< HEAD
         elemarray.width = function() {
             return elemarray[0].clientWidth;
         };
@@ -713,6 +933,8 @@ define("/spm_modules/spaseed/1.1.14/lib/dom", function(require, exports, module)
         elemarray.click = function() {
             return elemarray[0].click();
         };
+=======
+>>>>>>> origin/master
         return elemarray;
     };
     //extend方法
@@ -794,7 +1016,7 @@ define("/spm_modules/spaseed/1.1.14/lib/env", function(require, exports, module)
 "use strict";
 
 define("/spm_modules/spaseed/1.1.14/lib/template", function(require, exports, module) {
-    var template = require("tmp/view/view");
+    var template = require("tmp/app/view/view");
     var env = require("spm_modules/spaseed/1.1.14/lib/env");
     module.exports = function(id, data) {
         var obj = {
@@ -1042,7 +1264,7 @@ define("/spm_modules/spaseed/1.1.14/main/mp", function(require, exports, module)
         return cache[filename.replace(/^\.\//, "")];
     }, template.helper = function(name, helper) {
         helpers[name] = helper;
-    }, "function" == typeof define) define("/tmp/view/view", function() {
+    }, "function" == typeof define) define("/tmp/app/view/view", function() {
         return template;
     }); else if ("undefined" != typeof exports) module.exports = template; else {
         for (var namespaceArray = "apptemplate".split("."), global = window, i = 0; i < namespaceArray.length; i++) {
@@ -1051,12 +1273,27 @@ define("/spm_modules/spaseed/1.1.14/main/mp", function(require, exports, module)
         }
         global.template = template;
     }
+    /*v:2*/
+    template("dialog/buttonpannel", function($data) {
+        "use strict";
+        var $utils = this, buttons = ($utils.$helpers, $data.buttons), $each = $utils.$each, $escape = ($data.item, 
+        $data.index, $data.$index, $utils.$escape), $out = "";
+        return 2 == buttons.length ? ($out += " ", $each(buttons, function(item, index) {
+            $out += ' <a data-click-event="', $out += $escape(item.event || "hide"), $out += '" class="btn btn-', 
+            $out += $escape(index), $out += '">', $out += $escape(item.text), $out += "</a> ";
+        }), $out += " ") : ($out += ' <a data-click-event="', $out += $escape(buttons[0].event || "hide"), 
+        $out += '" class="btn btn-1">', $out += $escape(buttons[0].text || "确定"), $out += "</a> "), 
+        new String($out);
+    }), /*v:3*/
+    template("dialog/dialog", '<div class="cont-title"> </div> <div class="cont-wrapper"> <div class="text-content"> </div> </div> <div class="buttonpannel"> </div> '), 
     /*v:1*/
+    template("loading", '<p> <span class="load-1"></span> <span class="load-2"></span> <span class="load-3"></span> <span class="load-4"></span> </p>'), 
+    /*v:10*/
     template("page1/page1", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
-        return $out += '<h1 data-click-event="tt_click">', $out += $escape(data.title), 
-        $out += "</h1> <div>", $out += $escape(data.description), $out += '</div> <div bind-content="detail"></div> ', 
+        return $out += "<h1>", $out += $escape(data.title), $out += "</h1> <div>", $out += $escape(data.description), 
+        $out += '</div> <br> <div data-click-event="tt_click">点我+1: <span bind-content="detail"></span></div> <br> <div data-click-event="opendialog">弹出对话框</div> <br> <div data-click-event="openerrortips">弹出轻量错误提示</div> <br> <div data-click-event="showloading">显示loading</div> <br> ', 
         new String($out);
     }), /*v:1*/
     template("page2/page2", function($data) {

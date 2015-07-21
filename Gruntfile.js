@@ -4,14 +4,23 @@ module.exports = function(grunt){
 		watch:{
 			files:[
 				'spm_modules/~.js',
-                'app/~.js','app/~.tpl','app/~.ejs'
+                'app/~.js','app/~.html'
             ],
 			tasks:['tmod','combo']
 		},
 		tmod: {
+	      spaseedtemplate: {
+	        src: ['spm_modules/spaseed/1.1.14/view/**/*.html'],
+	        dest: 'tmp/spaseed/view/view.js',
+	        options: {
+	            base: 'spm_modules/spaseed/1.1.14/view',
+	            minify: false,
+	            namespace:'spaseedtemplate'
+	        }
+	      },
 	      apptemplate: {
-	        src: ['app/view/**/*.tpl'],
-	        dest: 'tmp/view/view.js',
+	        src: ['app/view/**/*.html'],
+	        dest: 'tmp/app/view/view.js',
 	        options: {
 	            base: 'app/view',
 	            minify: false,
@@ -31,18 +40,22 @@ module.exports = function(grunt){
 	                'View':'spm_modules/spaseed/1.1.14/main/View',
 	                'Event':'spm_modules/spaseed/1.1.14/lib/Event',
 	                'Net':'spm_modules/spaseed/1.1.14/lib/Net',
+	                'Dialog':'spm_modules/spaseed/1.1.14/lib/Dialog',
+	                'Mask':'spm_modules/spaseed/1.1.14/lib/Mask',
+	                'ErrorTips':'spm_modules/spaseed/1.1.14/lib/ErrorTips',
+	                'Loading':'spm_modules/spaseed/1.1.14/lib/Loading',
 
 	                'binder':'spm_modules/spaseed/1.1.14/lib/binder',
 	                'cookie':'spm_modules/spaseed/1.1.14/lib/cookie',
 	                'env':'spm_modules/spaseed/1.1.14/lib/env',
-	                'dialog':'spm_modules/spaseed/1.1.14/lib/dialog',
 	                'asyncrequest':'spm_modules/spaseed/1.1.14/lib/asyncrequest',
 	                'stats':'spm_modules/spaseed/1.1.14/lib/stats',
 	                'template':'spm_modules/spaseed/1.1.14/lib/template',
 
 	                'config':'spm_modules/spaseed/1.1.14/config',
 	                
-	                'apptemplate':'tmp/view/view',
+	                'apptemplate':'tmp/app/view/view',
+
 	                'request':'app/script/model/request'
 	        	},
 	        	base:'/',

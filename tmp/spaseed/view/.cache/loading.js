@@ -1,0 +1,2 @@
+/*TMODJS:{"version":1,"md5":"a24c9e7bbad22fcfcf49ae0460696ac0"}*/
+template('loading','<p> <span class="load-1"></span> <span class="load-2"></span> <span class="load-3"></span> <span class="load-4"></span> </p>');

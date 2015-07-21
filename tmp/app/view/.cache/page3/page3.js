@@ -1,4 +1,4 @@
-/*TMODJS:{"version":1,"md5":"3e73806e2d3f70e20b8531101f19e679"}*/
+/*TMODJS:{"version":1,"md5":"859f510e7393fcb3c47e762251f633a9"}*/
 template('page3/page3',function($data,$filename) {
 'use strict';var $utils=this,$helpers=$utils.$helpers,$escape=$utils.$escape,data=$data.data,$out='';$out+='<h1>';
 $out+=$escape(data.title);

@@ -78,33 +78,26 @@
     }, "function" == typeof define) define(function() {
         return template;
     }); else if ("undefined" != typeof exports) module.exports = template; else {
-        for (var namespaceArray = "apptemplate".split("."), global = window, i = 0; i < namespaceArray.length; i++) {
+        for (var namespaceArray = "spaseedtemplate".split("."), global = window, i = 0; i < namespaceArray.length; i++) {
             var item = namespaceArray[i];
             global[item] = global[item] || {}, global = global[item];
         }
         global.template = template;
     }
+    /*v:2*/
+    template("dialog/buttonpannel", function($data) {
+        "use strict";
+        var $utils = this, buttons = ($utils.$helpers, $data.buttons), $each = $utils.$each, $escape = ($data.item, 
+        $data.index, $data.$index, $utils.$escape), $out = "";
+        return 2 == buttons.length ? ($out += " ", $each(buttons, function(item, index) {
+            $out += ' <a data-click-event="', $out += $escape(item.event || "hide"), $out += '" class="btn btn-', 
+            $out += $escape(index), $out += '">', $out += $escape(item.text), $out += "</a> ";
+        }), $out += " ") : ($out += ' <a data-click-event="', $out += $escape(buttons[0].event || "hide"), 
+        $out += '" class="btn btn-1">', $out += $escape(buttons[0].text || "确定"), $out += "</a> "), 
+        new String($out);
+    }), /*v:3*/
+    template("dialog/dialog", '<div class="cont-title"> </div> <div class="cont-wrapper"> <div class="text-content"> </div> </div> <div class="buttonpannel"> </div> '), 
     /*v:1*/
-    template("page1/page1", function($data) {
-        "use strict";
-        var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
-        return $out += '<h1 data-click-event="tt_click">', $out += $escape(data.title), 
-        $out += "</h1> <div>", $out += $escape(data.description), $out += '</div> <div bind-content="detail"></div> ', 
-        new String($out);
-    }), /*v:1*/
-    template("page2/page2", function($data) {
-        "use strict";
-        var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
-        return $out += "<h1>", $out += $escape(data.title), $out += "</h1> <div>", $out += $escape(data.description), 
-        $out += "</div> ", new String($out);
-    }), /*v:1*/
-    template("page3/index/index", "<div> This is '/page3/index' content </div>"), /*v:1*/
-    template("page3/other/other", "<div> This is 'other' page content </div> "), /*v:1*/
-    template("page3/page3", function($data) {
-        "use strict";
-        var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
-        return $out += "<h1>", $out += $escape(data.title), $out += "</h1> <div>", $out += $escape(data.description), 
-        $out += '</div> <ul class="menu submenu"> <li><a data-href="/page3/index" data-click-event="router">/page3/index</a></li> <li><a data-href="/page3/other" data-click-event="router">/page3/other</a></li> </ul> <div id="subcontainer" class="subcontainer"></div> ', 
-        new String($out);
-    }), module && (module.exports = template);
+    template("loading", '<p> <span class="load-1"></span> <span class="load-2"></span> <span class="load-3"></span> <span class="load-4"></span> </p>'), 
+    module && (module.exports = template);
 }();
