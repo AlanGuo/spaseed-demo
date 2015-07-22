@@ -10,7 +10,7 @@ module.exports = function(grunt){
 				tasks:['tmod','combo']
 			},
 			jsx:{
-				files:['app/script/reactmodule/**/*.jsx','spm_modules/spm_modules/spaseed/1.1.14/component/**/*.jsx'],
+				files:['app/script/reactmodule/**/*.jsx','spm_modules/spaseed/1.1.14/component/**/*.jsx'],
 				tasks:['react','combo']
 			}
 		},

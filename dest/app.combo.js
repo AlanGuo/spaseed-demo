@@ -15,6 +15,36 @@ define("/app/script/model/request", function(require, exports, module) {
     };
     module.exports = request;
 });;
+define("/app/script/module/page3/page3", function(require, exports, module) {
+    var $ = require("spm_modules/spaseed/1.1.14/lib/dom");
+    var template = require("spm_modules/spaseed/1.1.14/lib/template");
+    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
+    var request = require("app/script/model/request");
+    var View = require("spm_modules/spaseed/1.1.14/main/View");
+    var page3 = View.extend({
+        $elem: $("#pageWrapper"),
+        title: "page 3",
+        render: function(cb) {
+            var self = this;
+            asyncRequest.all(this.$net, [ {
+                params: {
+                    code: 0,
+                    data: {
+                        title: "page3",
+                        description: "page3 description"
+                    }
+                },
+                request: request.sample
+            } ], function(values) {
+                self.$elem.html(template("page3/page3", {
+                    data: values[0]
+                }));
+                cb && cb();
+            });
+        }
+    });
+    module.exports = page3;
+});;
 "use strict";
 
 define("/app/script/module/page1/page1", function(require, exports, module) {
@@ -181,46 +211,23 @@ define("/app/script/module/page3/page3", function(require, exports, module) {
     });
     module.exports = page3;
 });;
-define("/app/script/module/page3/page3", function(require, exports, module) {
-    var $ = require("spm_modules/spaseed/1.1.14/lib/dom");
-    var template = require("spm_modules/spaseed/1.1.14/lib/template");
-    var asyncRequest = require("spm_modules/spaseed/1.1.14/lib/asyncrequest");
-    var request = require("app/script/model/request");
-    var View = require("spm_modules/spaseed/1.1.14/main/View");
-    var page3 = View.extend({
-        $elem: $("#pageWrapper"),
-        title: "page 3",
-        render: function(cb) {
-            var self = this;
-            asyncRequest.all(this.$net, [ {
-                params: {
-                    code: 0,
-                    data: {
-                        title: "page3",
-                        description: "page3 description"
-                    }
-                },
-                request: request.sample
-            } ], function(values) {
-                self.$elem.html(template("page3/page3", {
-                    data: values[0]
-                }));
-                cb && cb();
-            });
-        }
-    });
-    module.exports = page3;
-});;
 "use strict";
 
 define("/dest/view/react/dialog/Dialog", function(require, exports, module) {
     var DialogButton = require("dest/view/react/dialog/DialogButton");
     module.exports = React.createClass({
         displayName: "exports",
-        hide: function(options) {},
+        hide: function() {
+            React.findDOMNode(this.refs.dialog).style.display = "none";
+        },
+        show: function() {
+            React.findDOMNode(this.refs.dialog).style.display = "";
+        },
         render: function() {
             return React.createElement("div", {
-                className: "dialog"
+                className: "dialog",
+                ref: "dialog",
+                onClick: this.hide.bind(this)
             }, React.createElement("div", {
                 className: "cont-title"
             }, this.props.title), React.createElement("div", {
@@ -229,11 +236,18 @@ define("/dest/view/react/dialog/Dialog", function(require, exports, module) {
                 className: "text-content"
             }, this.props.text)), React.createElement("div", {
                 className: "buttonpannel"
-            }, this.props.buttons.map(function(child) {
-                return React.createElement(DialogButton, {
-                    onClick: this.hide
-                }, "child");
-            })));
+            }, this.props.buttons.map(function(child, i) {
+                if (this.props.buttons.length > 1 && i == 0) {
+                    return React.createElement(DialogButton, {
+                        primary: true,
+                        onClick: this.hide
+                    }, child);
+                } else {
+                    return React.createElement(DialogButton, {
+                        onClick: this.hide
+                    }, child);
+                }
+            }.bind(this))));
         }
     });
 });;
@@ -244,7 +258,7 @@ define("/dest/view/react/dialog/DialogButton", function(require, exports, module
         displayName: "exports",
         render: function() {
             return React.createElement("a", {
-                className: this.props.primary ? "btn btn-1" : "btn"
+                className: this.props.primary ? "btn btn-0" : "btn"
             }, this.props.children || "确定");
         }
     });
@@ -19166,7 +19180,7 @@ define("/spm_modules/spaseed/1.1.14/main/mp", function(require, exports, module)
         }
         global.template = template;
     }
-    /*v:2*/
+    /*v:3*/
     template("dialog/buttonpannel", function($data) {
         "use strict";
         var $utils = this, buttons = ($utils.$helpers, $data.buttons), $each = $utils.$each, $escape = ($data.item, 
@@ -19177,30 +19191,30 @@ define("/spm_modules/spaseed/1.1.14/main/mp", function(require, exports, module)
         }), $out += " ") : ($out += ' <a data-click-event="', $out += $escape(buttons[0].event || "hide"), 
         $out += '" class="btn btn-1">', $out += $escape(buttons[0].text || "确定"), $out += "</a> "), 
         new String($out);
-    }), /*v:3*/
+    }), /*v:4*/
     template("dialog/dialog", '<div class="cont-title"> </div> <div class="cont-wrapper"> <div class="text-content"> </div> </div> <div class="buttonpannel"> </div> '), 
-    /*v:1*/
+    /*v:2*/
     template("loading", '<p> <span class="load-1"></span> <span class="load-2"></span> <span class="load-3"></span> <span class="load-4"></span> </p>'), 
-    /*v:1*/
+    /*v:2*/
     template("sidebartemplate", '<div class="header"> </div> <div class="body"> <div class="side-bar" id="sidebar"> </div> <div id="container" class="container"> </div> </div>'), 
-    /*v:1*/
+    /*v:2*/
     template("topbottomtemplate", '<div id="top"></div> <div id="container" class="scroll-content"></div> <div id="bottom"></div>'), 
-    /*v:10*/
+    /*v:11*/
     template("page1/page1", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
         return $out += "<h1>", $out += $escape(data.title), $out += "</h1> <div>", $out += $escape(data.description), 
         $out += '</div> <br> <div data-click-event="tt_click">点我+1: <span bind-content="detail"></span></div> <br> <div data-click-event="opendialog">弹出对话框</div> <br> <div data-click-event="openerrortips">弹出轻量错误提示</div> <br> <div data-click-event="showloading">显示loading</div> <br> ', 
         new String($out);
-    }), /*v:1*/
+    }), /*v:2*/
     template("page2/page2", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
         return $out += "<h1>", $out += $escape(data.title), $out += "</h1> <div>", $out += $escape(data.description), 
         $out += "</div> ", new String($out);
-    }), /*v:1*/
-    template("page3/index/index", "<div> This is '/page3/index' content </div>"), /*v:1*/
-    template("page3/other/other", "<div> This is 'other' page content </div> "), /*v:1*/
+    }), /*v:2*/
+    template("page3/index/index", "<div> This is '/page3/index' content </div>"), /*v:2*/
+    template("page3/other/other", "<div> This is 'other' page content </div> "), /*v:2*/
     template("page3/page3", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";

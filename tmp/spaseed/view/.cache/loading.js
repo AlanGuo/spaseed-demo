@@ -1,2 +1,2 @@
-/*TMODJS:{"version":1,"md5":"a24c9e7bbad22fcfcf49ae0460696ac0"}*/
+/*TMODJS:{"version":2,"md5":"8c1b8d6fa5cf98f6a7c1c4812b5688f2"}*/
 template('loading','<p> <span class="load-1"></span> <span class="load-2"></span> <span class="load-3"></span> <span class="load-4"></span> </p>');
