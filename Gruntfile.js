@@ -10,7 +10,7 @@ module.exports = function(grunt){
 				tasks:['tmod','combo']
 			},
 			jsx:{
-				files:['app/script/reactmodule/**/*.jsx','spm_modules/spaseed/1.1.14/component/**/*.jsx'],
+				files:['app/script/reactmodule/**/*.jsx','spm_modules/spaseed/1.1.14/**/*.jsx'],
 				tasks:['react','combo']
 			}
 		},
@@ -45,9 +45,9 @@ module.exports = function(grunt){
 		      		ext: '.js'
 		    	},{
 		    		expand: true,
-		    		cwd:'spm_modules/spaseed/1.1.14/component',
+		    		cwd:'spm_modules/spaseed/1.1.14',
 		    		src: ['**/*.jsx'],
-		      		dest:'dest/view/react',
+		      		dest:'tmp/spaseed/react',
 		      		ext: '.js'
 		    	}]
 		    }

@@ -11,7 +11,7 @@ define(function (require, exports, module) {
 		},
 	    render: function(){
         	return (
-        		<div className='dialog' ref='dialog' onClick={this.hide.bind(this)}>
+        		<div className='dialog' ref='dialog'>
 		            <div className='cont-title'>
 		            	{this.props.title}
 					</div>
