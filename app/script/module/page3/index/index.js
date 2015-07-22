@@ -14,7 +14,7 @@ define(function (require, exports, module) {
             var self = this;
             this.$super(function(){
                 self.$elem = $('#subcontainer');
-                self.$elem.html(template('page3/index/index')());
+                self.$elem.html(template('page3/index/index'));
             });
             
         }

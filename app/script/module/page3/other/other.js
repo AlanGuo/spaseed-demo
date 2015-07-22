@@ -6,7 +6,7 @@ define(function (require, exports, module) {
     var request = require('request');
     var View = require('../page3');
 
-    var page3Index = View.extend({
+    var page3Other = View.extend({
 
         title: 'page3 index',
 
@@ -14,11 +14,11 @@ define(function (require, exports, module) {
             var self = this;
             this.$super(function(){
                 self.$elem = $('#subcontainer');
-                self.$elem.html(template('page3/other/other')());
+                self.$elem.html(template('page3/other/other'));
             });
             
         }
     });
         
-    module.exports = page3Index;
+    module.exports = page3Other;
 });

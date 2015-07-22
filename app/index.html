@@ -150,8 +150,8 @@
 		<div id="pageWrapper" class="padding"></div>
 	</div>
     
-	<!--seajs-->
-	<script type="text/javascript" src="/spm_modules/seajs/2.3.0/dist/sea-debug.js"></script>
+    <!--seajs-->
+	  <script type="text/javascript" src="/spm_modules/seajs/2.3.0/dist/sea-debug.js"></script>
     <!--合并之后的文件
     <script type="text/javascript" src="/dest/app.combo.js"></script>
     合并之后的文件-->
@@ -168,7 +168,13 @@
                 'View':'spm_modules/spaseed/1.1.14/main/View',
                 'Event':'spm_modules/spaseed/1.1.14/lib/Event',
                 'Net':'spm_modules/spaseed/1.1.14/lib/Net',
-                'Dialog':'spm_modules/spaseed/1.1.14/lib/Dialog',
+
+
+                //'Dialog':'spm_modules/spaseed/1.1.14/lib/Dialog',
+                'Dialog':'dest/view/react/dialog/Dialog',
+                'DialogButton':'dest/view/react/dialog/DialogButton',
+
+
                 'Mask':'spm_modules/spaseed/1.1.14/lib/Mask',
                 'ErrorTips':'spm_modules/spaseed/1.1.14/lib/ErrorTips',
                 'Loading':'spm_modules/spaseed/1.1.14/lib/Loading',
@@ -183,8 +189,9 @@
                 'config':'spm_modules/spaseed/1.1.14/config',
                 
                 'apptemplate':'tmp/app/view/view',
+                'request':'app/script/model/request',
 
-                'request':'app/script/model/request'
+                'react':'spm_modules/spaseed/1.1.14/lib/react'
             }
         });
         seajs.use('app/script/startup',function(startup){

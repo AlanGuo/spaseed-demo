@@ -22,7 +22,7 @@ define(function (require, exports, module) {
                 request:request.sample
             }],function(values){
                 React.render(
-			    	React.createElement(Dialog, {text: "对话框，碉堡了!", buttons: ['确定']}),
+			    	<Dialog text='对话框，碉堡了!' buttons={['确定']}></Dialog>,
 			    	self.$elem[0]
 			    );
             });

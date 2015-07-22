@@ -2,11 +2,17 @@ module.exports = function(grunt){
 	grunt.initConfig({
 		pkg:grunt.file.readJSON('package.json'),
 		watch:{
-			files:[
-				'spm_modules/~.js',
-                'app/~.js','app/~.html'
-            ],
-			tasks:['tmod','combo']
+			tmod:{
+				files:[
+					'spm_modules/~.js',
+	                'app/~.js','app/~.html'
+	            ],
+				tasks:['tmod','combo']
+			},
+			jsx:{
+				files:['app/script/reactmodule/**/*.jsx','spm_modules/spm_modules/spaseed/1.1.14/component/**/*.jsx'],
+				tasks:['react','combo']
+			}
 		},
 		tmod: {
 	      spaseedtemplate: {
@@ -28,6 +34,25 @@ module.exports = function(grunt){
 	        }
 	      }
 	    },
+
+	    react: {
+		    dest: {
+		    	files:[{
+		    		expand: true,
+		    		cwd: 'app/script/reactmodule',
+		    		src: ['**/*.jsx'],
+		      		dest:'app/script/module',
+		      		ext: '.js'
+		    	},{
+		    		expand: true,
+		    		cwd:'spm_modules/spaseed/1.1.14/component',
+		    		src: ['**/*.jsx'],
+		      		dest:'dest/view/react',
+		      		ext: '.js'
+		    	}]
+		    }
+		},
+
         combo: {
 	        options: {
 	        	alias:{
@@ -56,7 +81,12 @@ module.exports = function(grunt){
 	                
 	                'apptemplate':'tmp/app/view/view',
 
-	                'request':'app/script/model/request'
+	                'Dialog':'dest/view/react/dialog/Dialog',
+                	'DialogButton':'dest/view/react/dialog/DialogButton',
+
+	                'request':'app/script/model/request',
+
+	                'react':'spm_modules/spaseed/1.1.14/lib/react'
 	        	},
 	        	base:'/',
       			destPath:'/',
@@ -76,7 +106,8 @@ module.exports = function(grunt){
 	grunt.loadNpmTasks('grunt-mocha');
 	grunt.loadNpmTasks('grunt-alan-tmod');
 	grunt.loadNpmTasks('grunt-seajs-combo');
+	grunt.loadNpmTasks('grunt-react');
 
-    grunt.registerTask('default',['tmod','combo','watch']);
+    grunt.registerTask('default',['tmod','react','combo','watch']);
     grunt.registerTask('test',['mocha:all']);
 }

@@ -99,6 +99,10 @@
     template("dialog/dialog", '<div class="cont-title"> </div> <div class="cont-wrapper"> <div class="text-content"> </div> </div> <div class="buttonpannel"> </div> '), 
     /*v:1*/
     template("loading", '<p> <span class="load-1"></span> <span class="load-2"></span> <span class="load-3"></span> <span class="load-4"></span> </p>'), 
+    /*v:1*/
+    template("sidebartemplate", '<div class="header"> </div> <div class="body"> <div class="side-bar" id="sidebar"> </div> <div id="container" class="container"> </div> </div>'), 
+    /*v:1*/
+    template("topbottomtemplate", '<div id="top"></div> <div id="container" class="scroll-content"></div> <div id="bottom"></div>'), 
     /*v:10*/
     template("page1/page1", function($data) {
         "use strict";
