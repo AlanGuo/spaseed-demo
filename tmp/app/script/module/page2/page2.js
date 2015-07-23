@@ -1,11 +1,12 @@
 'use strict';
 
 define(function (require, exports, module) {
-    var $ = require('$');
     require('react');
-    var Dialog = require('Dialog');
+    var $ = require('$'),
+        View = require('View'),
+        Dialog = require('Dialog');
 
-    var Page2 = React.createClass({displayName: "Page2",
+    var Page2 = View.extend({
         title: 'page2',
         $elem: $('#pageWrapper'),
         render: function (){

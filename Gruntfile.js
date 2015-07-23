@@ -41,7 +41,7 @@ module.exports = function(grunt){
 		    		expand: true,
 		    		cwd: 'app/script/reactmodule',
 		    		src: ['**/*.jsx'],
-		      		dest:'app/script/module',
+		      		dest:'tmp/app/script/module',
 		      		ext: '.js'
 		    	},{
 		    		expand: true,
@@ -59,13 +59,20 @@ module.exports = function(grunt){
 	        		'$':'spm_modules/spaseed/1.1.14/lib/dom',
 	                'mp':'spm_modules/spaseed/1.1.14/main/mp',
 	                'App':'spm_modules/spaseed/1.1.14/main/App',
-	                'Router':'spm_modules/spaseed/1.1.14/main/Router',
+	                //'Router':'spm_modules/spaseed/1.1.14/main/Router',
+	                'Router':'tmp/spaseed/react/main/Router',
 	                'AppRouter':'spm_modules/spaseed/1.1.14/main/H5Router',
 	                'Node':'spm_modules/spaseed/1.1.14/main/Node',
 	                'View':'spm_modules/spaseed/1.1.14/main/View',
 	                'Event':'spm_modules/spaseed/1.1.14/lib/Event',
 	                'Net':'spm_modules/spaseed/1.1.14/lib/Net',
-	                'Dialog':'spm_modules/spaseed/1.1.14/lib/Dialog',
+
+
+	                //'Dialog':'spm_modules/spaseed/1.1.14/lib/Dialog',
+	                'Dialog':'tmp/spaseed/react/component/dialog/Dialog',
+	                'DialogButton':'tmp/spaseed/react/component/dialog/DialogButton',
+
+
 	                'Mask':'spm_modules/spaseed/1.1.14/lib/Mask',
 	                'ErrorTips':'spm_modules/spaseed/1.1.14/lib/ErrorTips',
 	                'Loading':'spm_modules/spaseed/1.1.14/lib/Loading',
@@ -80,10 +87,6 @@ module.exports = function(grunt){
 	                'config':'spm_modules/spaseed/1.1.14/config',
 	                
 	                'apptemplate':'tmp/app/view/view',
-
-	                'Dialog':'dest/view/react/dialog/Dialog',
-                	'DialogButton':'dest/view/react/dialog/DialogButton',
-
 	                'request':'app/script/model/request',
 
 	                'react':'spm_modules/spaseed/1.1.14/lib/react'
@@ -96,7 +99,7 @@ module.exports = function(grunt){
 	            files: [{
 	                expand: true,
 	                cwd: './',
-	                src: ['app/script/entry.js','app/script/module/**/**.js']
+	                src: ['app/script/entry.js','tmp/app/script/module/**/**.js']
 	            }]
 	        }
 	    }
