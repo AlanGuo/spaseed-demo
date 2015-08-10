@@ -1,4 +1,4 @@
-/*TMODJS:{"version":4,"md5":"41f5825231de33c1bfaf40637d9077f7"}*/
+/*TMODJS:{"version":5,"md5":"c47256f66329b5b8a64b26252cae294e"}*/
 template('dialog/buttonpannel',function($data,$filename) {
 'use strict';var $utils=this,$helpers=$utils.$helpers,buttons=$data.buttons,$each=$utils.$each,item=$data.item,index=$data.index,$index=$data.$index,$escape=$utils.$escape,$out='';if(buttons.length==2){
 $out+=' ';

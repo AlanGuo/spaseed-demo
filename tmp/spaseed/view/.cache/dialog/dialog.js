@@ -1,2 +1,2 @@
-/*TMODJS:{"version":5,"md5":"1e180240ef4f7fb74b6c44200371dd4d"}*/
+/*TMODJS:{"version":6,"md5":"160d620ddfe52659bb82fbc441ce5841"}*/
 template('dialog/dialog','<div class="cont-title"> </div> <div class="cont-wrapper"> <div class="text-content"> </div> </div> <div class="buttonpannel"> </div> ');

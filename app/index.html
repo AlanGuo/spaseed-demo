@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>spaseed</title>
-    <link rel="stylesheet" type="text/css" href="/spm_modules/spaseed/1.1.14/style/common.css">
+    <link rel="stylesheet" type="text/css" href="/spm_modules/spaseed/1.1.19/style/common.css">
     <style>
     	html,body,a,div,span,ul,li,h1,h2,p{margin: 0; padding: 0}
     	body {font-family: 'tohoma'}
@@ -146,6 +146,7 @@
     		    <li><a data-href="/" data-click-event="router">page1</a></li>
     		    <li><a data-href="/page2" data-click-event="router">page2</a></li>
     		    <li><a data-href="/page3" data-click-event="router">page3</a></li>
+            <li><a data-href="/react" data-click-event="router">react</a></li>
     		</ul>
     		<div id="pageWrapper" class="padding"></div>
     	</div>
@@ -159,39 +160,39 @@
         seajs.config({
             base:'/',
             alias:{
-                '$':'spm_modules/spaseed/1.1.14/lib/dom',
-                'mp':'spm_modules/spaseed/1.1.14/main/mp',
-                'App':'spm_modules/spaseed/1.1.14/main/App',
-                'Router':'spm_modules/spaseed/1.1.14/main/Router',
-                'AppRouter':'spm_modules/spaseed/1.1.14/main/H5Router',
-                'Node':'spm_modules/spaseed/1.1.14/main/Node',
-                'View':'spm_modules/spaseed/1.1.14/main/View',
-                'Event':'spm_modules/spaseed/1.1.14/lib/Event',
-                'Net':'spm_modules/spaseed/1.1.14/lib/Net',
+                '$':'spm_modules/spaseed/1.1.19/lib/dom',
+                'mp':'spm_modules/spaseed/1.1.19/main/mp',
+                'App':'spm_modules/spaseed/1.1.19/main/App',
+                'Router':'spm_modules/spaseed/1.1.19/main/Router',
+                'AppRouter':'spm_modules/spaseed/1.1.19/main/H5Router',
+                'Node':'spm_modules/spaseed/1.1.19/main/Node',
+                'View':'spm_modules/spaseed/1.1.19/main/View',
+                'Event':'spm_modules/spaseed/1.1.19/lib/Event',
+                'Net':'spm_modules/spaseed/1.1.19/lib/Net',
 
 
-                //'Dialog':'spm_modules/spaseed/1.1.14/lib/Dialog',
-                'Dialog':'tmp/spaseed/react/component/dialog/Dialog',
+                'Dialog':'spm_modules/spaseed/1.1.19/lib/Dialog',
+                'ReactDialog':'tmp/spaseed/react/component/dialog/Dialog',
                 'DialogButton':'tmp/spaseed/react/component/dialog/DialogButton',
 
 
-                'Mask':'spm_modules/spaseed/1.1.14/lib/Mask',
-                'ErrorTips':'spm_modules/spaseed/1.1.14/lib/ErrorTips',
-                'Loading':'spm_modules/spaseed/1.1.14/lib/Loading',
+                'Mask':'spm_modules/spaseed/1.1.19/lib/Mask',
+                'ErrorTips':'spm_modules/spaseed/1.1.19/lib/ErrorTips',
+                'Loading':'spm_modules/spaseed/1.1.19/lib/Loading',
 
-                'binder':'spm_modules/spaseed/1.1.14/lib/binder',
-                'cookie':'spm_modules/spaseed/1.1.14/lib/cookie',
-                'env':'spm_modules/spaseed/1.1.14/lib/env',
-                'asyncrequest':'spm_modules/spaseed/1.1.14/lib/asyncrequest',
-                'stats':'spm_modules/spaseed/1.1.14/lib/stats',
-                'template':'spm_modules/spaseed/1.1.14/lib/template',
+                'binder':'spm_modules/spaseed/1.1.19/lib/binder',
+                'cookie':'spm_modules/spaseed/1.1.19/lib/cookie',
+                'env':'spm_modules/spaseed/1.1.19/lib/env',
+                'asyncrequest':'spm_modules/spaseed/1.1.19/lib/asyncrequest',
+                'stats':'spm_modules/spaseed/1.1.19/lib/stats',
+                'template':'spm_modules/spaseed/1.1.19/lib/template',
 
-                'config':'spm_modules/spaseed/1.1.14/config',
+                'config':'spm_modules/spaseed/1.1.19/config',
                 
                 'apptemplate':'tmp/app/view/view',
                 'request':'app/script/model/request',
 
-                'react':'spm_modules/spaseed/1.1.14/lib/react'
+                'react':'spm_modules/spaseed/1.1.19/lib/react'
             }
         });
         seajs.use('app/script/startup',function(startup){

@@ -4,7 +4,7 @@ define(function (require, exports, module) {
 	require('react');
     var $ = require('$'),
     	View = require('View'),
-    	Dialog = require('Dialog');
+    	Dialog = require('ReactDialog');
 
     var page3 = View.extend({
 

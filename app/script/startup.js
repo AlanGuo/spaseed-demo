@@ -9,7 +9,9 @@ define(function(require, exports, module) {
 		container = container || $('#switchWrapper');
 		var app = App.create($.extend(config,{
 			root:'/page1',
-			viewfolder:'tmp/app/script/module',
+			//for react
+			//viewfolder:'tmp/app/script/module',
+			viewfolder:'app/script/module',
 			$elem:container,
 			netback:function(options,ret,info){
 				if(ret.code === 403){

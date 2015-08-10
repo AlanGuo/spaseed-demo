@@ -2,19 +2,28 @@
 
 define(function (require, exports, module) {
     var $ = require('$');
-    require('react');
-    var Dialog = require('Dialog');
+    var template = require('template');
+    var asyncRequest = require('asyncrequest');
+    var request = require('request');
+    var View = require('View');
 
-    var Page2 = React.createClass({displayName: "Page2",
-        title: 'page2',
-        $elem: $('#pageWrapper'),
-        render: function (){
-            React.render(
-		    	React.createElement(Dialog, {text: "对话框，碉堡了!", buttons: ['确定']}),
-		    	this.$elem[0]
-		    );
+    var page2 = View.extend({
+
+        $elem:$('#pageWrapper'),
+
+        title:'page 2',
+
+        render: function (cb) {
+            var self = this;
+            asyncRequest.all(this.$net,[{
+                params:{code:0,data:{title:'page2',description:'page2 description'}},
+                request:request.sample
+            }],function(values){
+                self.$elem.html(template('page2/page2',{data:values[0]}));
+                cb && cb();
+            });
         }
     });
         
-    module.exports = Page2;
+    module.exports = page2;
 });

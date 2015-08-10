@@ -24,7 +24,7 @@
     "main": "app/main/startup",
     "dependencies": {
       "seajs": "2.3.0",
-      "spaseed": "1.1.14"
+      "spaseed": "1.1.19"
     }
   }
 }

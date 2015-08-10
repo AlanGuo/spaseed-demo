@@ -10,16 +10,16 @@ module.exports = function(grunt){
 				tasks:['tmod','combo']
 			},
 			jsx:{
-				files:['app/script/reactmodule/**/*.jsx','spm_modules/spaseed/1.1.14/**/*.jsx'],
+				files:['app/script/reactmodule/**/*.jsx','spm_modules/spaseed/1.1.19/**/*.jsx'],
 				tasks:['react','combo']
 			}
 		},
 		tmod: {
 	      spaseedtemplate: {
-	        src: ['spm_modules/spaseed/1.1.14/view/**/*.html'],
+	        src: ['spm_modules/spaseed/1.1.19/view/**/*.html'],
 	        dest: 'tmp/spaseed/view/view.js',
 	        options: {
-	            base: 'spm_modules/spaseed/1.1.14/view',
+	            base: 'spm_modules/spaseed/1.1.19/view',
 	            minify: false,
 	            namespace:'spaseedtemplate'
 	        }
@@ -35,6 +35,7 @@ module.exports = function(grunt){
 	      }
 	    },
 
+	    //for react
 	    react: {
 		    dest: {
 		    	files:[{
@@ -45,7 +46,7 @@ module.exports = function(grunt){
 		      		ext: '.js'
 		    	},{
 		    		expand: true,
-		    		cwd:'spm_modules/spaseed/1.1.14',
+		    		cwd:'spm_modules/spaseed/1.1.19',
 		    		src: ['**/*.jsx'],
 		      		dest:'tmp/spaseed/react',
 		      		ext: '.js'
@@ -56,40 +57,40 @@ module.exports = function(grunt){
         combo: {
 	        options: {
 	        	alias:{
-	        		'$':'spm_modules/spaseed/1.1.14/lib/dom',
-	                'mp':'spm_modules/spaseed/1.1.14/main/mp',
-	                'App':'spm_modules/spaseed/1.1.14/main/App',
-	                //'Router':'spm_modules/spaseed/1.1.14/main/Router',
+	        		'$':'spm_modules/spaseed/1.1.19/lib/dom',
+	                'mp':'spm_modules/spaseed/1.1.19/main/mp',
+	                'App':'spm_modules/spaseed/1.1.19/main/App',
+	                //'Router':'spm_modules/spaseed/1.1.19/main/Router',
 	                'Router':'tmp/spaseed/react/main/Router',
-	                'AppRouter':'spm_modules/spaseed/1.1.14/main/H5Router',
-	                'Node':'spm_modules/spaseed/1.1.14/main/Node',
-	                'View':'spm_modules/spaseed/1.1.14/main/View',
-	                'Event':'spm_modules/spaseed/1.1.14/lib/Event',
-	                'Net':'spm_modules/spaseed/1.1.14/lib/Net',
+	                'AppRouter':'spm_modules/spaseed/1.1.19/main/H5Router',
+	                'Node':'spm_modules/spaseed/1.1.19/main/Node',
+	                'View':'spm_modules/spaseed/1.1.19/main/View',
+	                'Event':'spm_modules/spaseed/1.1.19/lib/Event',
+	                'Net':'spm_modules/spaseed/1.1.19/lib/Net',
 
 
-	                //'Dialog':'spm_modules/spaseed/1.1.14/lib/Dialog',
-	                'Dialog':'tmp/spaseed/react/component/dialog/Dialog',
+	                'Dialog':'spm_modules/spaseed/1.1.19/lib/Dialog',
+	                'ReactDialog':'tmp/spaseed/react/component/dialog/Dialog',
 	                'DialogButton':'tmp/spaseed/react/component/dialog/DialogButton',
 
 
-	                'Mask':'spm_modules/spaseed/1.1.14/lib/Mask',
-	                'ErrorTips':'spm_modules/spaseed/1.1.14/lib/ErrorTips',
-	                'Loading':'spm_modules/spaseed/1.1.14/lib/Loading',
+	                'Mask':'spm_modules/spaseed/1.1.19/lib/Mask',
+	                'ErrorTips':'spm_modules/spaseed/1.1.19/lib/ErrorTips',
+	                'Loading':'spm_modules/spaseed/1.1.19/lib/Loading',
 
-	                'binder':'spm_modules/spaseed/1.1.14/lib/binder',
-	                'cookie':'spm_modules/spaseed/1.1.14/lib/cookie',
-	                'env':'spm_modules/spaseed/1.1.14/lib/env',
-	                'asyncrequest':'spm_modules/spaseed/1.1.14/lib/asyncrequest',
-	                'stats':'spm_modules/spaseed/1.1.14/lib/stats',
-	                'template':'spm_modules/spaseed/1.1.14/lib/template',
+	                'binder':'spm_modules/spaseed/1.1.19/lib/binder',
+	                'cookie':'spm_modules/spaseed/1.1.19/lib/cookie',
+	                'env':'spm_modules/spaseed/1.1.19/lib/env',
+	                'asyncrequest':'spm_modules/spaseed/1.1.19/lib/asyncrequest',
+	                'stats':'spm_modules/spaseed/1.1.19/lib/stats',
+	                'template':'spm_modules/spaseed/1.1.19/lib/template',
 
-	                'config':'spm_modules/spaseed/1.1.14/config',
+	                'config':'spm_modules/spaseed/1.1.19/config',
 	                
 	                'apptemplate':'tmp/app/view/view',
 	                'request':'app/script/model/request',
 
-	                'react':'spm_modules/spaseed/1.1.14/lib/react'
+	                'react':'spm_modules/spaseed/1.1.19/lib/react'
 	        	},
 	        	base:'/',
       			destPath:'/',
@@ -99,7 +100,9 @@ module.exports = function(grunt){
 	            files: [{
 	                expand: true,
 	                cwd: './',
-	                src: ['app/script/entry.js','tmp/app/script/module/**/**.js']
+	                src: ['app/script/entry.js','app/script/module/**/**.js']
+	                //for eact
+	                //src: ['app/script/entry.js','tmp/app/script/module/**/**.js']
 	            }]
 	        }
 	    }
