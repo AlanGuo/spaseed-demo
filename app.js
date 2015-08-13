@@ -41,9 +41,30 @@ function route (pathname, request, response) {
                     response.writeHead(200, {'Content-Type': 'application/octet-stream'});
             }
 
-            fs.readFile(pathname, function (err, data) {
-                response.end(data);
-            });
+            if(/\.js/.test(pathname)){
+                //如果是js文件
+                fs.readFile(pathname, function(error, content) {
+                  if(error){
+                    response.writeHead(500);
+                    response.end();
+                  }else{
+                    response.writeHead(200,{
+                      'content-type':'application/javascript'
+                    });
+                    //加cmd prefix
+                    if(/module\.exports\s*?=/.test(content) && !/define\(function\s*?\(/.test(content)){
+                      content = 'define(function (require, exports, module) {\n'+content+'\n});';
+                    }
+                    response.end(content);
+                  }
+                });
+              }
+              else{
+                fs.readFile(pathname, function (err, data) {
+                    response.end(data);
+                });
+              }
+            
             
         } else {
             response.writeHead(404, {'Content-Type': 'text/html'});

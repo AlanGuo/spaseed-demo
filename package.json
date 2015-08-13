@@ -24,7 +24,8 @@
     "main": "app/main/startup",
     "dependencies": {
       "seajs": "2.3.0",
-      "spaseed": "1.1.19"
+      "spaseed": "1.1.22",
+      "react":"0.13.3"
     }
   }
 }

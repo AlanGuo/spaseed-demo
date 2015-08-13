@@ -84,7 +84,7 @@
         }
         global.template = template;
     }
-    /*v:5*/
+    /*v:7*/
     template("dialog/buttonpannel", function($data) {
         "use strict";
         var $utils = this, buttons = ($utils.$helpers, $data.buttons), $each = $utils.$each, $escape = ($data.item, 
@@ -95,13 +95,13 @@
         }), $out += " ") : ($out += ' <a data-click-event="', $out += $escape(buttons[0].event || "hide"), 
         $out += '" class="btn btn-1">', $out += $escape(buttons[0].text || "确定"), $out += "</a> "), 
         new String($out);
-    }), /*v:6*/
+    }), /*v:8*/
     template("dialog/dialog", '<div class="cont-title"> </div> <div class="cont-wrapper"> <div class="text-content"> </div> </div> <div class="buttonpannel"> </div> '), 
-    /*v:4*/
+    /*v:6*/
     template("loading", '<p> <span class="load-1"></span> <span class="load-2"></span> <span class="load-3"></span> <span class="load-4"></span> </p>'), 
-    /*v:4*/
+    /*v:6*/
     template("sidebartemplate", '<div class="header"> </div> <div class="body"> <div class="side-bar" id="sidebar"> </div> <div id="container" class="container"> </div> </div>'), 
-    /*v:4*/
+    /*v:6*/
     template("topbottomtemplate", '<div id="top"></div> <div id="container" class="scroll-content"></div> <div id="bottom"></div>'), 
     /*v:12*/
     template("page1/page1", function($data) {
