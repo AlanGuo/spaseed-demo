@@ -14,7 +14,7 @@
     "grunt-qc-concat": "~0.1.0",
     "grunt-qc-watch": "~0.1.0",
     "grunt-react": "^0.12.2",
-    "grunt-seajs-combo": "^1.0.10"
+    "grunt-seajs-combo": "^1.0.16"
   },
   "scripts": {
     "start": "node app.js",
