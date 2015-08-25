@@ -1,0 +1,2 @@
+/*TMODJS:{"version":1,"md5":"6983b3a27e75212593f0f8e297e29118"}*/
+template('weixin/openinbrowser','<div class="popup-wxshare"><span class="pay-wx">点击右上角，用浏览器打开再支付</span><a class="icon-close"> 点击关闭</a></div>');

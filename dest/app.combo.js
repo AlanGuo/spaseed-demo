@@ -50,12 +50,16 @@ var Page1 = View.extend({
         });
     },
     title: "page1",
-    detail: 0,
+    detail: {
+        num: 0
+    },
     events: {
         click: {
             tt_click: function() {
                 //alert('tt_click');
-                this.detail++;
+                this.detail = {
+                    num: 1
+                };
             },
             opendialog: function() {
                 this.$dialog.alert("对话框，碉堡了!");
@@ -613,27 +617,47 @@ var bindEngine = {
             return getdo(object, property);
         }
         function parseExpr(expr, object) {
-            var props = expr.match(/\{.*?\}/), isexpr = false, dobjects = [], dproperties = [];
+            //{}大括号内的表示需要eval运算的
+            var props = expr.match(/\{.*?\}/), isexpr = false, objectRoutes = [], dobjects = [], dproperties = [];
             if (props) {
                 for (var i = 0; i < props.length; i++) {
                     props[i] = props[i].replace(/\{|\}/g, "");
                     expr = expr.replace(new RegExp("\\{" + props[i] + "\\}", "g"), props[i]);
                     dobjects.push(getDirectObject(object, props[i]));
                     dproperties.push(props[i].split(".").slice(-1)[0]);
+                    //objectRoutes
+                    var obj = object;
+                    props[i].split(".").map(function(prop) {
+                        objectRoutes.push({
+                            obj: obj,
+                            prop: prop
+                        });
+                        obj = obj[prop];
+                    });
                 }
                 isexpr = true;
             }
             if (!isexpr) {
                 dobjects.push(getDirectObject(object, expr));
                 dproperties.push(expr.split(".").slice(-1)[0]);
+                //objectRoutes
+                var obj = object;
+                expr.split(".").map(function(prop) {
+                    objectRoutes.push({
+                        obj: obj,
+                        prop: prop
+                    });
+                    obj = obj[prop];
+                });
             }
             return {
                 dobjects: dobjects,
+                objectRoutes: objectRoutes,
                 dproperties: dproperties,
                 isexpr: isexpr,
-                getValue: function() {
+                getValue: function(obj) {
                     if (isexpr) {
-                        with (object) {
+                        with (obj || object) {
                             return eval(expr);
                         }
                     } else {
@@ -661,6 +685,7 @@ var bindEngine = {
                     attribute: attr
                 };
             };
+            //可能存在多组属性需要绑定
             for (var i = 0; i < binderName.length; i++) {
                 objArray.push(bindProperty(binderName[i], propertyName[i]));
             }
@@ -675,17 +700,24 @@ var bindEngine = {
                 }
             };
             //数组observer
-            objArray.map(function(item, index) {
-                item.parsedObj.dobjects.map(function(dobjitem, dobjindex) {
-                    var func = function(changes) {
-                        observer(changes, dobjitem, item.parsedObj.dproperties[dobjindex], item.binder, item.parsedObj.getValue(), item.attribute);
-                    };
-                    unobserveArray.push({
-                        object: dobjitem,
-                        func: func
+            objArray.map(function(objArrayItem, objArrayIndex) {
+                (function(item, index) {
+                    // item.parsedObj.dobjects.map(function(parsedObjDobjitem,parsedObjDobjindex){
+                    // 	(function(dobjitem,dobjindex){
+                    // 		var func = function(changes){
+                    // 			observer(changes, dobjitem, item.parsedObj.dproperties[dobjindex], item.binder, item.parsedObj.getValue(), item.attribute);
+                    // 		};
+                    // 		unobserveArray.push({object:dobjitem, func:func});
+                    // 		Object.observe(dobjitem, func);
+                    // 	})(parsedObjDobjitem, parsedObjDobjindex);
+                    // });
+                    //相关的对象变更，也会反映在更新上
+                    item.parsedObj.objectRoutes.forEach(function(routeItem) {
+                        Object.observe(routeItem.obj, function(changes) {
+                            observer(changes, routeItem.obj, routeItem.prop, item.binder, item.parsedObj.getValue(), item.attribute);
+                        });
                     });
-                    Object.observe(dobjitem, func);
-                });
+                })(objArrayItem, objArrayIndex);
             });
             return {
                 unobserve: function() {
@@ -958,10 +990,20 @@ var $ = function(selector, doc) {
     elemarray.find = function(selector) {
         return $(elemarray[0].querySelectorAll(selector));
     };
-    elemarray.css = function(obj) {
-        for (var i = 0; i < elemarray.length; i++) {
-            for (var p in obj) {
-                elemarray[i].style[p] = obj[p];
+    elemarray.css = function(obj, val) {
+        if (val == null) {
+            if (/string/i.test(typeof obj)) {
+                return window.getComputedStyle(elemarray[0])[obj];
+            } else {
+                for (var i = 0; i < elemarray.length; i++) {
+                    for (var p in obj) {
+                        elemarray[i].style[p] = obj[p];
+                    }
+                }
+            }
+        } else {
+            for (var i = 0; i < elemarray.length; i++) {
+                elemarray[i].style[obj] = val;
             }
         }
     };
@@ -973,6 +1015,11 @@ var $ = function(selector, doc) {
     };
     elemarray.click = function() {
         return elemarray[0].click();
+    };
+    elemarray.each = function(func) {
+        for (var i = 0; i < elemarray.length; i++) {
+            func(elemarray[i], i);
+        }
     };
     return elemarray;
 };
@@ -1143,6 +1190,9 @@ var View = Node.extend({
         this.$off = this.$app.$event.off;
         this.$emit = this.$app.$event.emit;
         this.$router = this.$app.$router;
+        this.bindEvents();
+    },
+    bindEvents: function() {
         //绑定events
         if (this.events) {
             this.__bodyhandler = this.__bodyhandler || {};
@@ -1347,12 +1397,16 @@ module.exports = mp;;
     template("sidebartemplate", '<div class="header"> </div> <div class="body"> <div class="side-bar" id="sidebar"> </div> <div id="container" class="container"> </div> </div>'), 
     /*v:6*/
     template("topbottomtemplate", '<div id="top"></div> <div id="container" class="scroll-content"></div> <div id="bottom"></div>'), 
-    /*v:12*/
+    /*v:1*/
+    template("weixin/openinbrowser", '<div class="popup-wxshare"><span class="pay-wx">点击右上角，用浏览器打开再支付</span><a class="icon-close"> 点击关闭</a></div>'), 
+    /*v:1*/
+    template("weixin/share", '<span class="share-wx">点击右上角，分享到朋友圈</span><a class="icon-close"> 点击关闭</a>'), 
+    /*v:13*/
     template("page1/page1", function($data) {
         "use strict";
         var $utils = this, $escape = ($utils.$helpers, $utils.$escape), data = $data.data, $out = "";
         return $out += "<h1>", $out += $escape(data.title), $out += "</h1> <div>", $out += $escape(data.description), 
-        $out += '</div> <br> <div data-click-event="tt_click">点我+1: <span bind-content="detail"></span></div> <br> <div data-click-event="opendialog">弹出对话框</div> <br> <div data-click-event="openerrortips">弹出轻量错误提示</div> <br> <div data-click-event="showloading">显示loading</div> <br> ', 
+        $out += '</div> <br> <div data-click-event="tt_click">点我+1: <span bind-content="detail.num"></span></div> <br> <div data-click-event="opendialog">弹出对话框</div> <br> <div data-click-event="openerrortips">弹出轻量错误提示</div> <br> <div data-click-event="showloading">显示loading</div> <br> ', 
         new String($out);
     }), /*v:3*/
     template("page2/page2", function($data) {

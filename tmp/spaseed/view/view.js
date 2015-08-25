@@ -103,5 +103,9 @@
     template("sidebartemplate", '<div class="header"> </div> <div class="body"> <div class="side-bar" id="sidebar"> </div> <div id="container" class="container"> </div> </div>'), 
     /*v:6*/
     template("topbottomtemplate", '<div id="top"></div> <div id="container" class="scroll-content"></div> <div id="bottom"></div>'), 
+    /*v:1*/
+    template("weixin/openinbrowser", '<div class="popup-wxshare"><span class="pay-wx">点击右上角，用浏览器打开再支付</span><a class="icon-close"> 点击关闭</a></div>'), 
+    /*v:1*/
+    template("weixin/share", '<span class="share-wx">点击右上角，分享到朋友圈</span><a class="icon-close"> 点击关闭</a>'), 
     module && (module.exports = template);
 }();

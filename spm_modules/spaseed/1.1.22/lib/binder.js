@@ -2,7 +2,6 @@
  * @module binder
  * 绑定模块，提供双向绑定功能
  */
-
 var selectors = '[bind-content],[bind-value],[bind-file],[bind-attr]';
 
 var binders = {
@@ -76,7 +75,6 @@ var binders = {
 var bindEngine = {
 	bind:function(container, object){
 		function getDirectObject(object, property){
-			
 			var getdo = function(object, propertyName){
 				var val = object;
 				//properties是对象
@@ -100,8 +98,10 @@ var bindEngine = {
 		}
 
 		function parseExpr(expr, object){
+			//{}大括号内的表示需要eval运算的
 			var props = expr.match(/\{.*?\}/),
 				isexpr = false,
+				objectRoutes = [],
 				dobjects = [],
 				dproperties = [];
 
@@ -111,21 +111,42 @@ var bindEngine = {
 					expr = expr.replace(new RegExp('\\{'+props[i]+'\\}','g'), props[i]);
 					dobjects.push(getDirectObject(object,props[i]));
 					dproperties.push(props[i].split('.').slice(-1)[0]);
+
+					//objectRoutes
+					var obj = object;
+					props[i].split('.').map(function(prop){
+						objectRoutes.push({
+							obj:obj,
+							prop:prop
+						});
+						obj = obj[prop];
+					});
 				}
 				isexpr = true;
 			}
 			if(!isexpr){
 				dobjects.push(getDirectObject(object,expr));
 				dproperties.push(expr.split('.').slice(-1)[0]);
+
+				//objectRoutes
+				var obj = object;
+				expr.split('.').map(function(prop){
+					objectRoutes.push({
+						obj:obj,
+						prop:prop
+					});
+					obj = obj[prop];
+				});
 			}
 
 			return {
 				dobjects:dobjects,
+				objectRoutes:objectRoutes,
 				dproperties:dproperties,
 				isexpr:isexpr,
-				getValue:function(){
+				getValue:function(obj){
 					if(isexpr){
-						with(object){
+						with(obj || object){
 							return eval(expr);
 						}
 					}
@@ -162,6 +183,7 @@ var bindEngine = {
 		        };
 			};
 
+			//可能存在多组属性需要绑定
 			for(var i=0;i<binderName.length;i++){
 				objArray.push(bindProperty(binderName[i], propertyName[i]));
 			}
@@ -178,14 +200,25 @@ var bindEngine = {
 	        };
 
 	        //数组observer
-	        objArray.map(function(item,index){
-	        	item.parsedObj.dobjects.map(function(dobjitem,dobjindex){
-	        		var func = function(changes){
-	        			observer(changes, dobjitem, item.parsedObj.dproperties[dobjindex], item.binder, item.parsedObj.getValue(), item.attribute);
-	        		};
-	        		unobserveArray.push({object:dobjitem,func:func});
-	        		Object.observe(dobjitem, func);
-	        	});
+	        objArray.map(function(objArrayItem,objArrayIndex){
+	        	(function(item,index){
+	        		// item.parsedObj.dobjects.map(function(parsedObjDobjitem,parsedObjDobjindex){
+	        		// 	(function(dobjitem,dobjindex){
+	        		// 		var func = function(changes){
+			        // 			observer(changes, dobjitem, item.parsedObj.dproperties[dobjindex], item.binder, item.parsedObj.getValue(), item.attribute);
+			        // 		};
+			        // 		unobserveArray.push({object:dobjitem, func:func});
+			        // 		Object.observe(dobjitem, func);
+
+	        		// 	})(parsedObjDobjitem, parsedObjDobjindex);
+		        	// });
+		        	//相关的对象变更，也会反映在更新上
+	        		item.parsedObj.objectRoutes.forEach(function(routeItem){
+	        			Object.observe(routeItem.obj, function(changes){
+	        				observer(changes, routeItem.obj, routeItem.prop, item.binder, item.parsedObj.getValue(), item.attribute);
+	        			});
+	        		});
+	        	})(objArrayItem,objArrayIndex);
 	        });
 
 	        return {
