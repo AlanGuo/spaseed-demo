@@ -34,13 +34,13 @@ var Page1 = View.extend({
 
     title: 'page1',
     
-    detail: {num:0},
+    detail: {num:{c:0,d:0}},
 
     events:{
         'click':{
             'tt_click':function(){
                 //alert('tt_click');
-                this.detail = {num:1};
+                this.detail = {num:{c:1,d:1}};
             },
             'opendialog':function(){
                 this.$dialog.alert('对话框，碉堡了!');

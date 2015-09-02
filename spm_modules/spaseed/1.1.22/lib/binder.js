@@ -99,7 +99,7 @@ var bindEngine = {
 
 		function parseExpr(expr, object){
 			//{}大括号内的表示需要eval运算的
-			var props = expr.match(/\{.*?\}/),
+			var props = expr.match(/\{.*?\}/g),
 				isexpr = false,
 				objectRoutes = [],
 				dobjects = [],
@@ -187,7 +187,7 @@ var bindEngine = {
 			for(var i=0;i<binderName.length;i++){
 				objArray.push(bindProperty(binderName[i], propertyName[i]));
 			}
-			var observer = function(changes, dobject, dproperty, binder, val, attr) {
+			var observeUpdate = function(changes, dobject, dproperty, item) {
 	            var changed = changes.some(function(change) {
             		if(dproperty == change.name  && 
             			change.object == dobject){
@@ -195,27 +195,29 @@ var bindEngine = {
             		};
 	            });
 	            if (changed) {
-	                binder.updateProperty(val,attr);
+	                item.binder.updateProperty(item.parsedObj.getValue(),item.attribute);
 	            }
+	            return item;
 	        };
 
 	        //数组observer
 	        objArray.map(function(objArrayItem,objArrayIndex){
 	        	(function(item,index){
-	        		// item.parsedObj.dobjects.map(function(parsedObjDobjitem,parsedObjDobjindex){
-	        		// 	(function(dobjitem,dobjindex){
-	        		// 		var func = function(changes){
-			        // 			observer(changes, dobjitem, item.parsedObj.dproperties[dobjindex], item.binder, item.parsedObj.getValue(), item.attribute);
-			        // 		};
-			        // 		unobserveArray.push({object:dobjitem, func:func});
-			        // 		Object.observe(dobjitem, func);
-
-	        		// 	})(parsedObjDobjitem, parsedObjDobjindex);
-		        	// });
 		        	//相关的对象变更，也会反映在更新上
-	        		item.parsedObj.objectRoutes.forEach(function(routeItem){
+	        		item.parsedObj.objectRoutes.forEach(function(routeItem,routeIndex){
 	        			Object.observe(routeItem.obj, function(changes){
-	        				observer(changes, routeItem.obj, routeItem.prop, item.binder, item.parsedObj.getValue(), item.attribute);
+	        				//为了更新变化的对象, 必须找出变更对象的父对象名称
+	        				var parentObject = item.parsedObj.objectRoutes[routeIndex-1];
+	        				//更新item值
+	        				if(parentObject){
+	        					parentObject.obj = changes[0].object;
+	        				}
+	        				else{
+	        					object = changes[0].object;
+	        				}
+	        				
+	        				objArray[index] = item = bindProperty(binderName[index], propertyName[index]);
+	        				observeUpdate(changes, routeItem.obj, routeItem.prop , item);
 	        			});
 	        		});
 	        	})(objArrayItem,objArrayIndex);
